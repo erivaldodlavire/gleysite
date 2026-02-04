@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Painel Admin - EriPlay</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
+        .card { background: white; padding: 20px; border-radius: 8px; }
+        button { margin: 5px; padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Configuração de Temas Profissionais</h2>
+        <button onclick="setTheme('advogado')">⚖️ Advogado (Gleyciane)</button>
+        <button onclick="setTheme('engenheiro')">🏗️ Engenheiro</button>
+        <button onclick="setTheme('medico')">🩺 Médico</button>
+        <button onclick="setTheme('gamer')">🎮 YouTuber Gamer</button>
+        <button onclick="setTheme('cyberpunk')">⚡ CyberPunk</button>
+    </div>
+
+    <script>
+        function setTheme(tema) {
+            localStorage.setItem('site-tema', tema);
+            alert('Tema ' + tema + ' aplicado! Vá ao site principal para ver.');
+        }
+    </script>
+</body>
+</html>
