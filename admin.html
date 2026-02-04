@@ -1,27 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Painel Admin - EriPlay</title>
+    <meta charset="UTF-8">
+    <title>Admin - Gerenciador de Temas</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
-        .card { background: white; padding: 20px; border-radius: 8px; }
-        button { margin: 5px; padding: 10px; cursor: pointer; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 40px; background: #f4f4f9; text-align: center; }
+        .panel { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; }
+        button { display: block; width: 250px; margin: 10px auto; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-adv { background: #001f3f; color: #d4af37; }
+        .btn-eng { background: #2c3e50; color: #e67e22; }
+        .btn-med { background: #00a8cc; color: white; }
+        .btn-gamer { background: #6441a5; color: #00ff00; }
+        .btn-cyber { background: #fcee0a; color: black; }
+        button:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>Configuração de Temas Profissionais</h2>
-        <button onclick="setTheme('advogado')">⚖️ Advogado (Gleyciane)</button>
-        <button onclick="setTheme('engenheiro')">🏗️ Engenheiro</button>
-        <button onclick="setTheme('medico')">🩺 Médico</button>
-        <button onclick="setTheme('gamer')">🎮 YouTuber Gamer</button>
-        <button onclick="setTheme('cyberpunk')">⚡ CyberPunk</button>
+    <div class="panel">
+        <h2>EriPlay Admin - Configurar Site</h2>
+        <p>Selecione o tema para aplicar ao site principal:</p>
+        <button class="btn-adv" onclick="trocarTema('advogado')">TEMA ADVOCACIA</button>
+        <button class="btn-eng" onclick="trocarTema('engenheiro')">TEMA ENGENHARIA</button>
+        <button class="btn-med" onclick="trocarTema('medico')">TEMA MÉDICO</button>
+        <button class="btn-gamer" onclick="trocarTema('gamer')">TEMA GAMER</button>
+        <button class="btn-cyber" onclick="trocarTema('cyberpunk')">TEMA CYBERPUNK</button>
     </div>
 
     <script>
-        function setTheme(tema) {
-            localStorage.setItem('site-tema', tema);
-            alert('Tema ' + tema + ' aplicado! Vá ao site principal para ver.');
+        function trocarTema(tema) {
+            // Salva a escolha no navegador do usuário
+            localStorage.setItem('temaEscolhido', tema);
+            alert('Tema ' + tema.toUpperCase() + ' configurado com sucesso!');
         }
     </script>
 </body>
