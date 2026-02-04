@@ -2,8 +2,9 @@
 <html lang="pt-br" data-theme="advogado">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dra. Gleyciane Araújo - Advocacia</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -13,7 +14,7 @@
 
     <section id="hero">
         <div class="profile-container">
-            <img src="perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto">
+            <img src="assets/perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto">
             <h1>Gleyciane Bento de Araújo</h1>
             <p class="oab">OAB/SP 473.457</p>
         </div>
@@ -23,15 +24,17 @@
         <h2>Contato Profissional</h2>
         <p>📍 Rua 11 de Junho, 780, Sala 53, Indaiatuba - SP</p>
         <p>📞 (19) 99556-6991</p>
-        <form id="leadForm">
+        <form id="leadForm" onsubmit="enviarParaN8N(event)">
             <input type="text" placeholder="Seu Nome" id="nome" required>
             <input type="email" placeholder="Seu E-mail" id="email" required>
-            <textarea placeholder="Como posso ajudar?"></textarea>
+            <textarea id="mensagem" placeholder="Como posso ajudar?"></textarea>
             <button type="submit">Enviar via n8n</button>
         </form>
     </section>
 
-    <div id="map"></div> <script src="script.js"></script>
+    <div id="map"></div> 
+    
+    <script src="js/script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=SUA_CHAVE&callback=initMap" async defer></script>
 </body>
 </html>
