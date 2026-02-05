@@ -9,67 +9,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav>
-            <img src="assets/GGLEY.jpg.png" alt="Logo Gleyciane Araújo" class="logo-img">
-        </nav>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <img src="assets/GGLEY.jpg.png" alt="Logo" class="nav-logo">
+                <span class="logo-text">Gleyciane Araujo | Advogada</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#hero">Início</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#atuacao">Serviços</a>
+                <a href="#depoimentos">Depoimentos</a>
+                <a href="#contato" class="btn-contato-nav">Contato</a>
+            </nav>
+        </div>
     </header>
 
     <section id="hero">
-        <div class="hero-content">
-            <img src="assets/perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto">
-            <h1>Gleyciane Bento de Araújo</h1>
-            <p class="oab">OAB/SP 473.457</p>
-            <p class="slogan">Defendendo seus direitos com excelência</p>
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <div class="foto-wrapper">
+                    <img src="assets/perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto">
+                </div>
+                <h1>Gleyciane Bento de Araújo</h1>
+                <p class="oab">OAB/SP 473.457</p>
+                <p class="slogan">Defendendo seus direitos com excelência</p>
+                <div class="hero-btns">
+                    <a href="#contato" class="btn-primary">Entre em Contato</a>
+                    <a href="https://api.whatsapp.com/send/?phone=5519971284797" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                </div>
+            </div>
         </div>
     </section>
 
     <section id="sobre">
         <h2>Sobre Mim</h2>
-        <p>Com anos de experiência em direito civil, trabalhista, criminal e previdenciário, a Dra. Gleyciane Bento de Araújo dedica-se a defender os direitos de seus clientes com excelência e profissionalismo.</p>
+        <div class="sobre-container">
+            <p>Com anos de experiência em direito civil, trabalhista, criminal e previdenciário, a Dra. Gleyciane Bento de Araújo dedica-se a defender os direitos de seus clientes com excelência e profissionalismo.</p>
+        </div>
     </section>
 
     <section id="atuacao">
         <h2>Áreas de Atuação</h2>
         <div class="cards-grid">
-            <div class="card"><i class="fas fa-gavel"></i><h3>Direito Civil</h3><p>Contratos, indenizações e direitos civis.</p></div>
-            <div class="card"><i class="fas fa-user-shield"></i><h3>Direito Criminal</h3><p>Defesa e consultoria penal.</p></div>
-            <div class="card"><i class="fas fa-hand-holding-medical"></i><h3>Previdenciário</h3><p>Aposentadorias e benefícios INSS.</p></div>
-            <div class="card"><i class="fas fa-users"></i><h3>Família</h3><p>Divórcio, guarda e pensão.</p></div>
-            <div class="card"><i class="fas fa-file-signature"></i><h3>Sucessório</h3><p>Inventários e partilhas.</p></div>
-        </div>
-    </section>
-
-    <section id="depoimentos">
-        <h2>O Que Nossos Clientes Dizem</h2>
-        <div class="testimonial-slider" id="google-reviews">
-            <div class="review-card">⭐⭐⭐⭐⭐<p>"Excelente profissional!"</p><span>- Cliente Exemplo</span></div>
-        </div>
-    </section>
-
-    <section id="galeria">
-        <h2>Nosso Escritório</h2>
-        <div class="photo-grid">
-            <div class="photo-placeholder">Espaço para Foto 1</div>
-            <div class="photo-placeholder">Espaço para Foto 2</div>
+            <div class="card"><i class="fas fa-gavel gold-3d"></i><h3>Direito Civil</h3><p>Contratos, indenizações e direitos civis.</p></div>
+            <div class="card"><i class="fas fa-user-shield gold-3d"></i><h3>Direito Criminal</h3><p>Defesa e consultoria penal.</p></div>
+            <div class="card"><i class="fas fa-hand-holding-medical gold-3d"></i><h3>Previdenciário</h3><p>Aposentadorias e benefícios INSS.</p></div>
+            <div class="card"><i class="fas fa-users gold-3d"></i><h3>Família</h3><p>Divórcio, guarda e pensão.</p></div>
+            <div class="card"><i class="fas fa-file-signature gold-3d"></i><h3>Sucessório</h3><p>Inventários e partilhas.</p></div>
         </div>
     </section>
 
     <footer>
-        <div class="contato-info">
-            <p><i class="fas fa-map-marker-alt"></i> Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
-            <p><i class="fas fa-phone"></i> (19) 99556-6991</p>
-            <p><i class="fas fa-envelope"></i> gleyciane_araujo@adv.oabsp.org.br</p>
+        <div class="footer-content">
+            <div class="contato-info">
+                <p><i class="fas fa-map-marker-alt"></i> Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
+                <p><i class="fas fa-phone"></i> (19) 99556-6991</p>
+            </div>
+            <div class="social-links">
+                <a href="https://api.whatsapp.com/send/?phone=5519971284797" target="_blank" class="icon-3d"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/gleycianearaujo.adv/" target="_blank" class="icon-3d"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/gleyciane.araujo.2025" target="_blank" class="icon-3d"><i class="fab fa-facebook"></i></a>
+                <a href="https://linkedin.com/in/gleyciane-araújo-1a3b0374" target="_blank" class="icon-3d"><i class="fab fa-linkedin"></i></a>
+            </div>
         </div>
-        <div class="social-links">
-            <a href="https://api.whatsapp.com/send/?phone=5519971284797" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://www.instagram.com/gleycianearaujo.adv/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com/gleyciane.araujo.2025" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.tiktok.com/@gley.araujo" target="_blank"><i class="fab fa-tiktok"></i></a>
-            <a href="https://linkedin.com/in/gleyciane-araújo-1a3b0374" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="#" class="hidden"><i class="fab fa-youtube"></i></a>
-        </div>
-    </section>
+    </footer>
 
     <script src="js/script.js"></script>
 </body>
