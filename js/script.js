@@ -1,27 +1,20 @@
-// 1. Aplica o tema salvo no Admin
-document.addEventListener('DOMContentLoaded', () => {
-    const temaSalvo = localStorage.getItem('temaEscolhido') || 'advogado';
-    document.documentElement.setAttribute('data-theme', temaSalvo);
-});
-
-// 2. Integração com n8n (Industrial Automation Style)
-async function enviarParaN8N(event) {
+function enviarLead(event) {
     event.preventDefault();
-    const dados = {
-        nome: document.getElementById('nome').value,
-        email: document.getElementById('email').value,
-        mensagem: document.getElementById('mensagem').value,
-        data: new Date().toISOString()
-    };
+    
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const telefone = document.getElementById('telefone').value;
+    const titulo = document.getElementById('titulo').value;
+    const mensagem = document.getElementById('mensagem').value;
 
-    try {
-        const response = await fetch('SUA_URL_WEBHOOK_N8N', {
-            method: 'POST',
-            body: JSON.stringify(dados),
-            headers: {'Content-Type': 'application/json'}
-        });
-        if(response.ok) alert('Dra. Gleyciane recebeu sua mensagem!');
-    } catch (error) {
-        console.error('Erro ao conectar com n8n/SQL', error);
-    }
+    // Formata a mensagem para o WhatsApp
+    const textoParaWhats = `Olá Dra. Gleyciane! Me chamo ${nome}.%0A%0A*Assunto:* ${titulo}%0A*Telefone:* ${telefone}%0A*E-mail:* ${email}%0A%0A*Mensagem:* ${mensagem}`;
+    
+    // Abre o WhatsApp da advogada com a mensagem preenchida
+    const linkZap = `https://api.whatsapp.com/send?phone=5519971284797&text=${textoParaWhats}`;
+    
+    window.open(linkZap, '_blank');
+    
+    // Aqui no futuro adicionamos a chamada fetch('SEU_WEBHOOK_N8N') para enviar ao SQL e E-mail
+    alert('Redirecionando para o WhatsApp para concluir o atendimento!');
 }
