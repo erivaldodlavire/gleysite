@@ -20,7 +20,6 @@
                 <a href="#hero">Início</a>
                 <a href="#sobre">Sobre</a>
                 <a href="#atuacao">Serviços</a>
-                <a href="#depoimentos">Depoimentos</a>
                 <a href="#contato" class="btn-contato-nav">Contato</a>
             </nav>
         </div>
@@ -29,43 +28,65 @@
     <section id="hero">
         <div class="hero-overlay">
             <div class="hero-content">
-                <div class="foto-wrapper">
-                    <img src="assets/perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto">
-                </div>
+                <img src="assets/perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto">
                 <h1>Gleyciane Bento de Araújo</h1>
                 <p class="oab">OAB/SP 473.457</p>
                 <p class="slogan">Defendendo seus direitos com excelência</p>
                 <div class="hero-btns">
-                    <a href="#contato" class="btn-primary">Entre em Contato</a>
+                    <a href="#contato" class="btn-primary">Solicitar Consultoria</a>
                     <a href="https://api.whatsapp.com/send/?phone=5519971284797" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="sobre">
-        <h2>Sobre Mim</h2>
-        <div class="sobre-container">
+    <section id="sobre" class="full-section">
+        <div class="container">
+            <h2>Sobre Mim</h2>
             <p>Com anos de experiência em direito civil, trabalhista, criminal e previdenciário, a Dra. Gleyciane Bento de Araújo dedica-se a defender os direitos de seus clientes com excelência e profissionalismo.</p>
         </div>
     </section>
 
-    <section id="atuacao">
-        <h2>Áreas de Atuação</h2>
-        <div class="cards-grid">
-            <div class="card"><i class="fas fa-gavel gold-3d"></i><h3>Direito Civil</h3><p>Contratos, indenizações e direitos civis.</p></div>
-            <div class="card"><i class="fas fa-user-shield gold-3d"></i><h3>Direito Criminal</h3><p>Defesa e consultoria penal.</p></div>
-            <div class="card"><i class="fas fa-hand-holding-medical gold-3d"></i><h3>Previdenciário</h3><p>Aposentadorias e benefícios INSS.</p></div>
-            <div class="card"><i class="fas fa-users gold-3d"></i><h3>Família</h3><p>Divórcio, guarda e pensão.</p></div>
-            <div class="card"><i class="fas fa-file-signature gold-3d"></i><h3>Sucessório</h3><p>Inventários e partilhas.</p></div>
+    <section id="atuacao" class="full-section gray-bg">
+        <div class="container">
+            <h2>Áreas de Atuação</h2>
+            <div class="cards-grid">
+                <div class="card"><i class="fas fa-gavel gold-3d"></i><h3>Direito Civil</h3><p>Contratos, indenizações e direitos civis.</p></div>
+                <div class="card"><i class="fas fa-user-shield gold-3d"></i><h3>Direito Criminal</h3><p>Defesa e consultoria penal.</p></div>
+                <div class="card"><i class="fas fa-hand-holding-medical gold-3d"></i><h3>Previdenciário</h3><p>Aposentadorias e benefícios INSS.</p></div>
+                <div class="card"><i class="fas fa-users gold-3d"></i><h3>Família</h3><p>Divórcio, guarda e pensão.</p></div>
+                <div class="card"><i class="fas fa-file-signature gold-3d"></i><h3>Sucessório</h3><p>Inventários e partilhas.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="full-section">
+        <div class="container">
+            <h2>Fale Conosco</h2>
+            <div class="contato-wrapper">
+                <div class="contato-form">
+                    <form id="leadForm" onsubmit="enviarParaN8N(event)">
+                        <div class="form-row">
+                            <input type="text" placeholder="Seu Nome Completo" id="nome" required>
+                            <input type="email" placeholder="Seu Melhor E-mail" id="email" required>
+                        </div>
+                        <div class="form-row">
+                            <input type="tel" placeholder="Telefone/WhatsApp" id="telefone" required>
+                            <input type="text" placeholder="Título do Assunto" id="titulo" required>
+                        </div>
+                        <textarea id="mensagem" placeholder="Descreva seu caso detalhadamente..." rows="5" required></textarea>
+                        <button type="submit" class="btn-submit">Enviar Mensagem Profissional</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
 
     <footer>
-        <div class="footer-content">
-            <div class="contato-info">
-                <p><i class="fas fa-map-marker-alt"></i> Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
-                <p><i class="fas fa-phone"></i> (19) 99556-6991</p>
+        <div class="footer-container">
+            <div class="footer-info">
+                <p>📍 Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
+                <p>📞 (19) 99556-6991</p>
             </div>
             <div class="social-links">
                 <a href="https://api.whatsapp.com/send/?phone=5519971284797" target="_blank" class="icon-3d"><i class="fab fa-whatsapp"></i></a>
