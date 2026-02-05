@@ -13,7 +13,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo-area">
-                <img src="assets/GGLEY.jpg.png" alt="Logo" class="nav-logo">
+                <img src="assets/logo.png" alt="Logo" class="nav-logo">
                 <span class="logo-text">Gleyciane Araujo | Advogada</span>
             </div>
             <nav class="nav-menu">
@@ -60,24 +60,57 @@
         </div>
     </section>
 
-    <section id="contato" class="full-section">
+    <section id="info-contato" class="full-section">
+        <div class="container">
+            <h2>Entre em Contato</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt gold-3d"></i>
+                    <h3>Endereço</h3>
+                    <p>Rua 11 de Junho, 780, Sala 53, Centro<br>Indaiatuba - 13330-050</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone gold-3d"></i>
+                    <h3>Telefone</h3>
+                    <p>+55 (19) 99556-6991</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope gold-3d"></i>
+                    <h3>E-mail</h3>
+                    <p>gleyciane_araujo@adv.oabsp.org.br</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-clock gold-3d"></i>
+                    <h3>Horário</h3>
+                    <p>Segunda a Sexta, 9h às 18h</p>
+                </div>
+            </div>
+            <div class="social-links-contato">
+                <a href="https://api.whatsapp.com/send/?phone=5519971284797" target="_blank" class="icon-3d"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/gleycianearaujo.adv/" target="_blank" class="icon-3d"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/gleyciane.araujo.2025" target="_blank" class="icon-3d"><i class="fab fa-facebook"></i></a>
+                <a href="https://linkedin.com/in/gleyciane-araújo-1a3b0374" target="_blank" class="icon-3d"><i class="fab fa-linkedin"></i></a>
+                <a href="https://x.com/gleyaraujo?s=21" target="_blank" class="icon-3d"><i class="fab fa-x-twitter"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="full-section gray-bg">
         <div class="container">
             <h2>Fale Conosco</h2>
-            <div class="contato-wrapper">
-                <div class="contato-form">
-                    <form id="leadForm" onsubmit="enviarParaN8N(event)">
-                        <div class="form-row">
-                            <input type="text" placeholder="Seu Nome Completo" id="nome" required>
-                            <input type="email" placeholder="Seu Melhor E-mail" id="email" required>
-                        </div>
-                        <div class="form-row">
-                            <input type="tel" placeholder="Telefone/WhatsApp" id="telefone" required>
-                            <input type="text" placeholder="Título do Assunto" id="titulo" required>
-                        </div>
-                        <textarea id="mensagem" placeholder="Descreva seu caso detalhadamente..." rows="5" required></textarea>
-                        <button type="submit" class="btn-submit">Enviar Mensagem Profissional</button>
-                    </form>
-                </div>
+            <div class="contato-form">
+                <form id="leadForm" onsubmit="enviarLead(event)">
+                    <div class="form-row">
+                        <input type="text" placeholder="Seu Nome Completo" id="nome" required>
+                        <input type="email" placeholder="Seu Melhor E-mail" id="email" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" placeholder="Telefone/WhatsApp" id="telefone" required>
+                        <input type="text" placeholder="Título do Assunto" id="titulo" required>
+                    </div>
+                    <textarea id="mensagem" placeholder="Descreva seu caso detalhadamente..." rows="5" required></textarea>
+                    <button type="submit" class="btn-submit">Enviar Mensagem Profissional</button>
+                </form>
             </div>
         </div>
     </section>
@@ -93,6 +126,11 @@
                 <a href="https://www.instagram.com/gleycianearaujo.adv/" target="_blank" class="icon-3d"><i class="fab fa-instagram"></i></a>
                 <a href="https://www.facebook.com/gleyciane.araujo.2025" target="_blank" class="icon-3d"><i class="fab fa-facebook"></i></a>
                 <a href="https://linkedin.com/in/gleyciane-araújo-1a3b0374" target="_blank" class="icon-3d"><i class="fab fa-linkedin"></i></a>
+                <a href="https://x.com/gleyaraujo?s=21" target="_blank" class="icon-3d"><i class="fab fa-x-twitter"></i></a>
+            </div>
+            <div class="footer-credits">
+                <p>© 2026 Gleyciane Araujo | Advogada. Todos os direitos reservados.</p>
+                <p>Desenvolvido com ❤️ por <a href="admin.html" style="color:var(--accent); text-decoration:none;">Eri | Admin</a></p>
             </div>
         </div>
     </footer>
