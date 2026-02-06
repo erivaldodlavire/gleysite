@@ -1,100 +1,62 @@
 /* =========================================
-   SISTEMA DE TEMAS PROFISSIONAIS (10 TOTAL)
+   SISTEMA DE TEMAS PROFISSIONAIS
    ========================================= */
-
 :root {
-    /* PADRÃO: ADVOCACIA (OURO MARINHO) */
     --primary: #001f3f; --accent: #e5c05b;
     --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-    --white: #ffffff; --gray: #f4f4f4; --whatsapp-green: #25D366;
+    --white: #ffffff; --gray: #f4f4f4;
     --font-main: 'Montserrat', sans-serif; --font-title: 'Playfair Display', serif;
 }
 
-/* 1. ENGENHARIA (Sólido/Industrial) */
-body.tema-engenheiro {
-    --primary: #1a1a1a; --accent: #f39c12; 
-    --font-main: 'Roboto', sans-serif; --font-title: 'Oswald', sans-serif;
-}
-
-/* 2. MÉDICO (Limpo/Saúde) */
-body.tema-medico {
-    --primary: #00796b; --accent: #4db6ac; 
-    --font-main: 'Lato', sans-serif; --font-title: 'Montserrat', sans-serif;
-}
-
-/* 3. PSICOLOGIA (Acolhedor) */
-body.tema-psicologo {
-    --primary: #6d597a; --accent: #e5989b; 
-    --font-main: 'Quicksand', sans-serif; --font-title: 'Lora', serif;
-}
-
-/* 4. CONTABILIDADE (Sério/Focado) */
-body.tema-contador {
-    --primary: #0d1b2a; --accent: #e0e1dd; 
-    --font-main: 'Montserrat', sans-serif; --font-title: 'Lato', sans-serif;
-}
-
-/* 5. NUTRICIONISTA (Saúde/Energia) */
-body.tema-nutri {
-    --primary: #2d6a4f; --accent: #95d5b2; 
-    --font-main: 'Poppins', sans-serif; --font-title: 'Montserrat', sans-serif;
-}
-
-/* 6. ESTÉTICA (Elegância/Luxo) */
-body.tema-estetica {
-    --primary: #222222; --accent: #c9ada7; 
-    --font-main: 'Tenor Sans', sans-serif; --font-title: 'Cinzel', serif;
-}
-
-/* 7. ARQUITETURA (Minimalismo) */
-body.tema-arquiteto {
-    --primary: #000000; --accent: #8e8e8e; 
-    --font-main: 'Jost', sans-serif; --font-title: 'Syncopate', sans-serif;
-}
-
-/* TEMAS ESPECIAIS */
+/* Temas Opcionais (Gamer, Engenheiro, etc.) */
 body.tema-gamer { --primary: #0f0f0f; --accent: #00ff00; --font-title: 'Bangers'; }
 body.tema-cyberpunk { --primary: #03001c; --accent: #fee715; --font-title: 'Michroma'; }
-body.tema-youtuber { --primary: #f00000; --accent: #ffffff; --font-title: 'Oswald'; }
 
 /* =========================================
-   ESTRUTURA BASE
+   RESET E ESTRUTURA (CORRIGIDO)
    ========================================= */
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: var(--font-main); background: var(--white); color: var(--primary); line-height: 1.6; overflow-x: hidden; transition: all 0.5s ease; }
+body { font-family: var(--font-main); background: var(--white); color: var(--primary); overflow-x: hidden; }
 
+/* HEADER - CORREÇÃO DA LOGO GIGANTE */
 .main-header {
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-    background: rgba(0, 31, 63, 0.95); backdrop-filter: blur(5px);
-    border-bottom: 2px solid var(--accent); padding: 15px 5%;
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: var(--primary); border-bottom: 2px solid var(--accent);
+    padding: 10px 5%;
 }
-
-.header-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-.logo-text { color: white; font-weight: 600; font-size: 0.9rem; font-family: var(--font-title); }
+.header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+.nav-logo { height: 50px; width: auto; max-width: 200px; object-fit: contain; } /* Trava o tamanho da logo */
+.logo-text { color: white; font-size: 0.9rem; margin-left: 10px; font-family: var(--font-title); }
 .nav-menu a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.8rem; text-transform: uppercase; }
 
+/* HERO SECTION */
 #hero {
-    width: 100%; min-height: 90vh;
+    height: 90vh; margin-top: 70px;
     background: url('../assets/perfil_fundo.png') no-repeat center center/cover;
-    margin-top: 70px;
 }
+.hero-overlay { background: rgba(0, 31, 63, 0.7); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.hero-content { text-align: center; color: white; max-width: 800px; padding: 20px; }
+.perfil-foto { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); object-fit: cover; object-position: top; margin-bottom: 20px; }
 
-.hero-overlay { background: rgba(0, 31, 63, 0.75); width: 100%; min-height: 90vh; display: flex; align-items: center; justify-content: center; }
-.perfil-foto { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 20px; object-fit: cover; }
+/* SEÇÕES - CORREÇÃO DO ESPAÇAMENTO */
+.full-section { width: 100%; padding: 60px 5%; }
+.container { max-width: 1200px; margin: 0 auto; text-align: center; }
+.gray-bg { background: var(--gray); }
 
-.full-section { width: 100%; padding: 80px 5%; text-align: center; }
-h2 { font-family: var(--font-title); font-size: 2.2rem; margin-bottom: 40px; position: relative; padding-bottom: 15px; color: var(--primary); }
-h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 3px; background: var(--accent); }
+h2 { font-family: var(--font-title); font-size: 2.2rem; margin-bottom: 30px; color: var(--primary); }
 
-.card { background: var(--white); padding: 40px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
-.gold-3d { font-size: 45px; background: var(--gold-gradient); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; display: inline-block; }
-
-/* FOCO NO ROSTO PRESERVADO */
+/* GRID DE FOTOS E CARDS */
+.photo-grid, .cards-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 20px; 
+    margin-top: 30px;
+}
 .office-photo img { 
     width: 100%; height: 250px; object-fit: cover; object-position: top; 
-    border-radius: 10px; border: 2px solid var(--accent); transition: 0.3s; 
+    border-radius: 10px; border: 2px solid var(--accent); 
 }
 
-footer { background: var(--primary); color: white; padding: 60px 5%; text-align: center; border-top: 5px solid var(--accent); }
-.social-links a { color: var(--accent); font-size: 2rem; margin: 0 15px; transition: 0.3s; display: inline-block; }
+/* FOOTER */
+footer { background: var(--primary); color: white; padding: 40px 5%; text-align: center; }
+.social-links a { color: var(--accent); font-size: 1.5rem; margin: 0 10px; }
