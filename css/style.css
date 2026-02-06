@@ -1,82 +1,55 @@
-/* =========================================
-   VARIÁVEIS DE TEMA (MEDIDAS PRESERVADAS)
-   ========================================= */
 :root {
     --primary: #001f3f; --accent: #e5c05b;
     --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
     --white: #ffffff; --gray: #f4f4f4; --whatsapp-green: #25D366;
-    --font-main: 'Montserrat', sans-serif; --font-title: 'Playfair Display', serif;
 }
 
-/* 10 TEMAS PRONTOS */
-body.tema-engenheiro { --primary: #1a1a1a; --accent: #f39c12; --font-title: 'Oswald'; }
-body.tema-medico { --primary: #00796b; --accent: #4db6ac; --font-title: 'Lato'; }
-body.tema-psicologo { --primary: #6d597a; --accent: #e5989b; --font-title: 'Lora'; }
-body.tema-contador { --primary: #0d1b2a; --accent: #e0e1dd; --font-title: 'Lato'; }
-body.tema-nutri { --primary: #2d6a4f; --accent: #95d5b2; --font-title: 'Montserrat'; }
-body.tema-estetica { --primary: #222222; --accent: #c9ada7; --font-title: 'Cinzel'; }
-body.tema-arquiteto { --primary: #000000; --accent: #8e8e8e; --font-title: 'Syncopate'; }
-body.tema-gamer { --primary: #0b0e11; --accent: #00ff41; --font-title: 'Bangers'; }
-body.tema-cyberpunk { --primary: #03001c; --accent: #fee715; --font-title: 'Michroma'; }
-body.tema-youtuber { --primary: #f00000; --accent: #ffffff; --font-title: 'Oswald'; }
-
-/* =========================================
-   ESTRUTURA BASE (RESOLVE O PROBLEMA DO ZOOM)
-   ========================================= */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Montserrat', sans-serif; background: var(--white); color: var(--primary); overflow-x: hidden; }
 
-body { 
-    font-family: var(--font-main); 
-    background: var(--white); 
-    color: var(--primary); 
-    line-height: 1.6; 
-    overflow-x: hidden; 
-    width: 100%; /* Garante largura total */
-    transition: all 0.5s ease;
-}
-
+/* HEADER CORRIGIDO */
 .main-header {
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+    position: fixed; top: 0; width: 100%; z-index: 1000;
     background: rgba(0, 31, 63, 0.95); backdrop-filter: blur(5px);
-    border-bottom: 2px solid var(--accent); padding: 15px 5%;
+    border-bottom: 2px solid var(--accent); padding: 10px 5%;
 }
-
-.header-container { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto; }
+.header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
 .nav-logo { height: 45px; }
-.logo-text { color: white; font-weight: 600; font-size: 0.9rem; font-family: var(--font-title); }
-.nav-menu a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.8rem; text-transform: uppercase; }
-.btn-contato-nav { background: var(--accent); color: var(--primary) !important; padding: 8px 15px; border-radius: 4px; font-weight: bold; }
+.logo-text { color: white; font-weight: 600; font-size: 0.9rem; margin-left: 10px; }
 
-#hero {
-    width: 100%; min-height: 90vh;
+/* HERO E BOTÃO WHATSAPP */
+#hero { 
+    height: 90vh; margin-top: 65px;
     background: url('../assets/perfil_fundo.png') no-repeat center center/cover;
-    margin-top: 70px;
 }
+.hero-overlay { background: rgba(0, 31, 63, 0.75); height: 100%; display: flex; align-items: center; justify-content: center; }
+.perfil-foto { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); object-fit: cover; object-position: top; }
+.hero-btns { display: flex; gap: 20px; justify-content: center; margin-top: 25px; }
+.btn-primary, .btn-whatsapp { 
+    padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 900; transition: 0.3s; 
+}
+.btn-whatsapp { background: var(--whatsapp-green); color: white; border: 2px solid white; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
 
-.hero-overlay { background: rgba(0, 31, 63, 0.75); width: 100%; min-height: 90vh; display: flex; align-items: center; justify-content: center; }
-.perfil-foto { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 20px; object-fit: cover; object-position: top; }
-
-.full-section { width: 100%; padding: 80px 5%; text-align: center; }
-.container { max-width: 1200px; margin: 0 auto; }
+/* GRIDS E DOURADOS 3D */
+.full-section { padding: 60px 5%; text-align: center; }
 .gray-bg { background: var(--gray); }
-
-h2 { font-family: var(--font-title); font-size: 2.2rem; margin-bottom: 40px; position: relative; padding-bottom: 15px; color: var(--primary); }
-h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 3px; background: var(--accent); }
-
 .cards-grid, .photo-grid, .pub-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-    gap: 30px; 
-    width: 100%;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 30px auto 0;
+}
+.card { background: white; padding: 40px 20px; border-radius: 8px; border-top: 4px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.gold-3d { 
+    font-size: 45px; background: var(--gold-gradient); background-clip: text; 
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; display: inline-block;
 }
 
-.card { background: var(--white); padding: 40px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
-.gold-3d { font-size: 45px; background: var(--gold-gradient); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; margin-bottom: 20px; }
+/* FOTOS DO ESPAÇO */
+.office-photo img { width: 100%; height: 250px; object-fit: cover; object-position: top; border-radius: 10px; border: 2px solid var(--accent); }
 
-.office-photo img { 
-    width: 100%; height: 250px; object-fit: cover; object-position: top; 
-    border-radius: 10px; border: 2px solid var(--accent); transition: 0.3s; 
-}
+/* FORMULÁRIO E RODAPÉ */
+.contato-form { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; }
+.btn-submit { width: 100%; padding: 15px; background: var(--primary); color: white; border: 2px solid var(--accent); font-weight: 900; cursor: pointer; }
 
-footer { background: var(--primary); color: white; padding: 60px 5%; text-align: center; border-top: 5px solid var(--accent); }
-.social-links a { color: var(--accent); font-size: 2rem; margin: 0 15px; display: inline-block; }
+footer { background: var(--primary); color: white; padding: 40px 5%; text-align: center; }
+.social-links a { color: var(--accent); font-size: 1.8rem; margin: 0 10px; }
