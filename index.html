@@ -1,20 +1,18 @@
 <!DOCTYPE html>
-<html lang="pt-br" data-theme="advogado">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gleyciane Araújo | Advogada</title>
+    <title id="site-title">Gleyciane Araújo | Advogada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&family=Roboto:wght@700&family=Oswald:wght@700&family=Lato:wght@700&family=Quicksand&family=Lora&family=Poppins:wght@600&family=Cinzel:wght@700&family=Jost&family=Bangers&family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body>
-
-    <header class="main-header">
+<body class="tema-advogado"> <header class="main-header">
         <div class="header-container">
             <div class="logo-area">
-                <img src="assets/logo.png" alt="Logo" class="nav-logo">
-                <span class="logo-text">Gleyciane Araujo | Advogada</span>
+                <img src="assets/logo.png" alt="Logo" class="nav-logo" id="edit-logo">
+                <span class="logo-text" id="edit-header-nome">Gleyciane Araujo | Advogada</span>
             </div>
             <nav class="nav-menu">
                 <a href="#hero">Início</a>
@@ -28,13 +26,15 @@
     <section id="hero">
         <div class="hero-overlay">
             <div class="hero-content">
-                <img src="assets/perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto">
-                <h1>Gleyciane Bento de Araújo</h1>
-                <p class="oab">OAB/SP 473.457</p>
-                <p class="slogan">Defendendo seus direitos com excelência</p>
+                <img src="assets/perfilrosto.jpg" alt="Dra. Gleyciane" class="perfil-foto" id="edit-foto-perfil">
+                <h1 id="edit-nome">Gleyciane Bento de Araújo</h1>
+                <p class="oab" id="edit-oab">OAB/SP 473.457</p>
+                <p class="slogan" id="edit-slogan">Defendendo seus direitos com excelência</p>
                 <div class="hero-btns">
-                    <a href="#contato" class="btn-primary">Solicitar Consultoria</a>
-                    <a href="https://api.whatsapp.com/send/?phone=5519971284797" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="#contato" class="btn-primary" id="edit-btn-primario">Solicitar Consultoria</a>
+                    <a href="https://api.whatsapp.com/send/?phone=5519971284797" class="btn-whatsapp" id="edit-link-whatsapp">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
@@ -42,43 +42,31 @@
 
     <section id="sobre" class="full-section">
         <div class="container">
-            <h2>Sobre Mim</h2>
-            <p>Com anos de experiência em direito civil, trabalhista, criminal e previdenciário, a Dra. Gleyciane Bento de Araújo dedica-se a defender os direitos de seus clientes com excelência e profissionalismo.</p>
+            <h2 id="edit-sobre-titulo">Sobre Mim</h2>
+            <p id="edit-sobre-texto">Com anos de experiência em direito civil, trabalhista, criminal e previdenciário, a Dra. Gleyciane Bento de Araújo dedica-se a defender os direitos de seus clientes com excelência e profissionalismo.</p>
         </div>
     </section>
 
     <section id="atuacao" class="full-section gray-bg">
         <div class="container">
-            <h2>Áreas de Atuação</h2>
-            <div class="cards-grid">
+            <h2 id="edit-atuacao-titulo">Áreas de Atuação</h2>
+            <div class="cards-grid" id="container-servicos">
                 <div class="card"><i class="fas fa-gavel gold-3d"></i><h3>Direito Civil</h3><p>Contratos, indenizações e direitos civis.</p></div>
                 <div class="card"><i class="fas fa-user-shield gold-3d"></i><h3>Direito Criminal</h3><p>Defesa e consultoria penal.</p></div>
                 <div class="card"><i class="fas fa-hand-holding-medical gold-3d"></i><h3>Previdenciário</h3><p>Aposentadorias e benefícios INSS.</p></div>
-                <div class="card"><i class="fas fa-users gold-3d"></i><h3>Família</h3><p>Divórcio, guarda e pensão.</p></div>
-                <div class="card"><i class="fas fa-file-signature gold-3d"></i><h3>Sucessório</h3><p>Inventários e partilhas.</p></div>
             </div>
         </div>
     </section>
 
     <section id="depoimentos" class="full-section">
         <div class="container">
-            <h2>O Que Nossos Clientes Dizem</h2>
+            <h2 id="edit-depoimentos-titulo">O Que Nossos Clientes Dizem</h2>
             <div class="testimonial-wrapper">
-                <div class="testimonial-slider">
+                <div class="testimonial-slider" id="container-depoimentos">
                     <div class="review-card">
                         <div class="stars">⭐⭐⭐⭐⭐</div>
-                        <p>"Excelente atendimento e profissionalismo. Dra. Gleyciane resolveu meu caso civil com muita agilidade."</p>
+                        <p>"Excelente atendimento e profissionalismo."</p>
                         <span class="client-name">- João Silva</span>
-                    </div>
-                    <div class="review-card">
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                        <p>"Muito atenciosa e explica tudo com clareza. Recomendo para causas previdenciárias."</p>
-                        <span class="client-name">- Maria Oliveira</span>
-                    </div>
-                    <div class="review-card">
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
-                        <p>"A melhor advogada de Indaiatuba. Honestidade e competência definem o trabalho dela."</p>
-                        <span class="client-name">- Carlos Santos</span>
                     </div>
                 </div>
             </div>
@@ -87,124 +75,43 @@
 
     <section id="nosso-espaco" class="full-section gray-bg">
         <div class="container">
-            <h2>Nosso Espaço</h2>
-            <div class="photo-grid">
-                <div class="office-photo"><img src="assets/foto_escritorio1.jpg" alt="Escritório 1"></div>
-                <div class="office-photo"><img src="assets/foto_escritorio2.jpg" alt="Escritório 2"></div>
-                <div class="office-photo"><img src="assets/foto_escritorio3.jpg" alt="Escritório 3"></div>
+            <h2 id="edit-espaco-titulo">Nosso Espaço</h2>
+            <div class="photo-grid" id="container-fotos-espaco">
+                <div class="office-photo"><img src="assets/foto_escritorio1.jpg" alt="Escritório 1" id="img-espaco-1"></div>
+                <div class="office-photo"><img src="assets/foto_escritorio2.jpg" alt="Escritório 2" id="img-espaco-2"></div>
+                <div class="office-photo"><img src="assets/foto_escritorio3.jpg" alt="Escritório 3" id="img-espaco-3"></div>
             </div>
         </div>
     </section>
 
     <section id="publicacoes" class="full-section">
         <div class="container">
-            <h2>Minhas Publicações</h2>
-            <div class="pub-grid">
+            <h2 id="edit-publicacoes-titulo">Minhas Publicações</h2>
+            <div class="pub-grid" id="container-publicacoes">
                 <div class="pub-container">
                     <p class="pub-desc">Análise sobre Direitos Civis</p>
                     <div class="pub-item">
-                        <a href="https://www.youtube.com/watch?v=5FuYmOuuQOI" target="_blank">
-                            <img src="https://img.youtube.com/vi/5FuYmOuuQOI/hqdefault.jpg" alt="Youtube Video">
+                        <a href="https://www.youtube.com/watch?v=5FuYmOuuQOI" target="_blank" id="pub-link-1">
+                            <img src="https://img.youtube.com/vi/5FuYmOuuQOI/hqdefault.jpg" alt="Youtube" id="pub-img-1">
                             <div class="play-overlay"><i class="fab fa-youtube"></i></div>
                         </a>
                     </div>
                 </div>
-                <div class="pub-container">
-                    <p class="pub-desc">Planejamento Previdenciário</p>
-                    <div class="pub-item">
-                        <a href="https://www.youtube.com/watch?v=iq8cS63uKgQ" target="_blank">
-                            <img src="https://img.youtube.com/vi/iq8cS63uKgQ/hqdefault.jpg" alt="Youtube Video">
-                            <div class="play-overlay"><i class="fab fa-youtube"></i></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="pub-container">
-                    <p class="pub-desc">Casos de Defesa Criminal</p>
-                    <div class="pub-item">
-                        <a href="https://www.youtube.com/watch?v=8YoJIm-uBRU" target="_blank">
-                            <img src="https://img.youtube.com/vi/8YoJIm-uBRU/hqdefault.jpg" alt="Youtube Video">
-                            <div class="play-overlay"><i class="fab fa-youtube"></i></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="pub-container">
-                    <p class="pub-desc">Ética na Advocacia</p>
-                    <div class="pub-item">
-                        <a href="https://www.instagram.com/reel/DJ0JZ8du7hp/" target="_blank">
-                            <div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>
-                        </a>
-                    </div>
-                </div>
-                <div class="pub-container">
-                    <p class="pub-desc">Prazos Processuais 2026</p>
-                    <div class="pub-item">
-                        <a href="https://www.instagram.com/reel/DOJHhPTDgfq/" target="_blank">
-                            <div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>
-                        </a>
-                    </div>
-                </div>
-                <div class="pub-container">
-                    <p class="pub-desc">Direito de Família</p>
-                    <div class="pub-item">
-                        <a href="https://www.instagram.com/reel/DJ5JRFZO47h/" target="_blank">
-                            <div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="info-contato" class="full-section gray-bg">
-        <div class="container">
-            <h2>Entre em Contato</h2>
-            <div class="info-grid">
-                <div class="info-item">
-                    <i class="fas fa-map-marker-alt gold-3d"></i>
-                    <h3>Endereço</h3>
-                    <p>Rua 11 de Junho, 780, Sala 53, Centro<br>Indaiatuba - 13330-050</p>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-phone gold-3d"></i>
-                    <h3>Telefone</h3>
-                    <p>+55 (19) 99556-6991</p>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-envelope gold-3d"></i>
-                    <h3>E-mail</h3>
-                    <p>gleyciane_araujo@adv.oabsp.org.br</p>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-clock gold-3d"></i>
-                    <h3>Horário</h3>
-                    <p>Segunda a Sexta, 9h às 18h</p>
-                </div>
-            </div>
-            <div class="social-links-contato">
-                <a href="https://api.whatsapp.com/send/?phone=5519971284797" target="_blank" class="icon-3d"><i class="fab fa-whatsapp"></i></a>
-                <a href="https://www.instagram.com/gleycianearaujo.adv/" target="_blank" class="icon-3d"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com/gleyciane.araujo.2025" target="_blank" class="icon-3d"><i class="fab fa-facebook"></i></a>
-                <a href="https://linkedin.com/in/gleyciane-araújo-1a3b0374" target="_blank" class="icon-3d"><i class="fab fa-linkedin"></i></a>
-                <a href="https://x.com/gleyaraujo?s=21" target="_blank" class="icon-3d"><i class="fab fa-x-twitter"></i></a>
             </div>
         </div>
     </section>
 
     <section id="contato" class="full-section">
         <div class="container">
-            <h2>Fale Conosco</h2>
+            <h2 id="edit-contato-titulo">Fale Conosco</h2>
             <div class="contato-form">
-                <form id="leadForm" onsubmit="enviarLead(event)">
+                <form id="leadForm">
                     <div class="form-row">
                         <input type="text" placeholder="Seu Nome Completo" id="nome" required>
                         <input type="email" placeholder="Seu Melhor E-mail" id="email" required>
                     </div>
-                    <div class="form-row">
-                        <input type="tel" placeholder="Telefone/WhatsApp" id="telefone" required>
-                        <input type="text" placeholder="Título do Assunto" id="titulo" required>
-                    </div>
-                    <textarea id="mensagem" placeholder="Descreva seu caso detalhadamente..." rows="5" required></textarea>
-                    <button type="submit" class="btn-submit">Enviar Mensagem Profissional</button>
+                    <textarea id="mensagem" placeholder="Descreva seu caso..." rows="5" required></textarea>
+                    <button type="submit" class="btn-submit" id="edit-btn-enviar">Enviar Mensagem Profissional</button>
                 </form>
             </div>
         </div>
@@ -213,19 +120,17 @@
     <footer>
         <div class="footer-container">
             <div class="footer-info">
-                <p>📍 Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
-                <p>📞 (19) 99556-6991</p>
+                <p id="edit-footer-endereco">📍 Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
+                <p id="edit-footer-fone">📞 (19) 99556-6991</p>
             </div>
-            <div class="social-links">
-                <a href="https://api.whatsapp.com/send/?phone=5519971284797" target="_blank" class="icon-3d"><i class="fab fa-whatsapp"></i></a>
-                <a href="https://www.instagram.com/gleycianearaujo.adv/" target="_blank" class="icon-3d"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com/gleyciane.araujo.2025" target="_blank" class="icon-3d"><i class="fab fa-facebook"></i></a>
-                <a href="https://linkedin.com/in/gleyciane-araújo-1a3b0374" target="_blank" class="icon-3d"><i class="fab fa-linkedin"></i></a>
-                <a href="https://x.com/gleyaraujo?s=21" target="_blank" class="icon-3d"><i class="fab fa-x-twitter"></i></a>
+            <div class="social-links" id="edit-redes-sociais">
+                <a href="#" id="link-inst"><i class="fab fa-instagram"></i></a>
+                <a href="#" id="link-face"><i class="fab fa-facebook"></i></a>
+                <a href="#" id="link-link"><i class="fab fa-linkedin"></i></a>
             </div>
             <div class="footer-credits">
-                <p>© 2026 Gleyciane Araujo | Advogada. Todos os direitos reservados.</p>
-                <p>Desenvolvido com ❤️ por <a href="admin.html" style="color:var(--accent); text-decoration:none;">Eri | Admin</a></p>
+                <p id="edit-copyright">© 2026 Gleyciane Araujo | Advogada.</p>
+                <p id="edit-desenvolvedor">Desenvolvido com ❤️ por <a href="admin.html">Eri | Admin</a></p>
             </div>
         </div>
     </footer>
