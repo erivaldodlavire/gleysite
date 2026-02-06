@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-br" data-theme="advogado">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="site-title">Gleyciane Araújo | Advogada</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&family=Roboto:wght@700&family=Oswald:wght@700&family=Lato:wght@700&family=Quicksand&family=Lora&family=Poppins:wght@600&family=Cinzel:wght@700&family=Jost&family=Bangers&family=Michroma&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&family=Roboto:wght@700&family=Oswald:wght@700&family=Lato:wght@700&family=Quicksand:wght@500&family=Lora&family=Poppins:wght@600&family=Cinzel:wght@700&family=Jost:wght@500&family=Bangers&family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body class="tema-advogado"> <header class="main-header">
+<body class="tema-advogado">
+
+    <header class="main-header">
         <div class="header-container">
             <div class="logo-area">
                 <img src="assets/logo.png" alt="Logo" class="nav-logo" id="edit-logo">
@@ -32,7 +34,9 @@
                 <p class="slogan" id="edit-slogan">Defendendo seus direitos com excelência</p>
                 <div class="hero-btns">
                     <a href="#contato" class="btn-primary" id="edit-btn-primario">Solicitar Consultoria</a>
-                    <a href="https://api.whatsapp.com/send/?phone=5519971284797" class="btn-whatsapp" id="edit-whatsapp-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="https://api.whatsapp.com/send/?phone=5519971284797" class="btn-whatsapp" id="edit-whatsapp-link">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
@@ -99,52 +103,23 @@
             <h2 id="edit-publicacoes-titulo">Minhas Publicações</h2>
             <div class="pub-grid" id="container-publicacoes">
                 <div class="pub-container">
-                    <p class="pub-desc">Análise sobre Direitos Civis</p>
+                    <p class="pub-desc" id="pub-desc-1">Análise sobre Direitos Civis</p>
                     <div class="pub-item">
-                        <a href="https://www.youtube.com/watch?v=5FuYmOuuQOI" target="_blank" id="link-pub-1">
-                            <img src="https://img.youtube.com/vi/5FuYmOuuQOI/hqdefault.jpg" alt="Youtube Video" id="img-pub-1">
+                        <a href="https://www.youtube.com/watch?v=5FuYmOuuQOI" target="_blank">
+                            <img src="https://img.youtube.com/vi/5FuYmOuuQOI/hqdefault.jpg" alt="Youtube" id="img-pub-1">
                             <div class="play-overlay"><i class="fab fa-youtube"></i></div>
                         </a>
                     </div>
                 </div>
-                </div>
-        </div>
-    </section>
-
-    <section id="info-contato" class="full-section gray-bg">
-        <div class="container">
-            <h2 id="edit-contato-info-titulo">Entre em Contato</h2>
-            <div class="info-grid">
-                <div class="info-item">
-                    <i class="fas fa-map-marker-alt gold-3d"></i>
-                    <h3>Endereço</h3>
-                    <p id="edit-endereco">Rua 11 de Junho, 780, Sala 53, Centro<br>Indaiatuba - 13330-050</p>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-phone gold-3d"></i>
-                    <h3>Telefone</h3>
-                    <p id="edit-telefone">+55 (19) 99556-6991</p>
-                </div>
-            </div>
-            <div class="social-links-contato" id="edit-social-links-area">
-                <a href="#" class="icon-3d"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="icon-3d"><i class="fab fa-facebook"></i></a>
-            </div>
-        </div>
-    </section>
-
-    <section id="contato" class="full-section">
-        <div class="container">
-            <h2 id="edit-form-titulo">Fale Conosco</h2>
-            <div class="contato-form">
-                <form id="leadForm">
-                    <div class="form-row">
-                        <input type="text" placeholder="Seu Nome Completo" id="nome" required>
-                        <input type="email" placeholder="Seu Melhor E-mail" id="email" required>
+                <div class="pub-container">
+                    <p class="pub-desc" id="pub-desc-2">Planejamento Previdenciário</p>
+                    <div class="pub-item">
+                        <a href="https://www.youtube.com/watch?v=iq8cS63uKgQ" target="_blank">
+                            <img src="https://img.youtube.com/vi/iq8cS63uKgQ/hqdefault.jpg" alt="Youtube" id="img-pub-2">
+                            <div class="play-overlay"><i class="fab fa-youtube"></i></div>
+                        </a>
                     </div>
-                    <textarea id="mensagem" placeholder="Descreva seu caso..." rows="5" required></textarea>
-                    <button type="submit" class="btn-submit" id="edit-btn-enviar">Enviar Mensagem Profissional</button>
-                </form>
+                </div>
             </div>
         </div>
     </section>
@@ -152,12 +127,16 @@
     <footer>
         <div class="footer-container">
             <div class="footer-info">
-                <p id="footer-end-text">📍 Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
-                <p id="footer-tel-text">📞 (19) 99556-6991</p>
+                <p id="edit-footer-endereco">📍 Rua 11 de Junho, 780, Sala 53, Centro - Indaiatuba/SP</p>
+                <p id="edit-footer-fone">📞 (19) 99556-6991</p>
+            </div>
+            <div class="social-links" id="edit-redes-sociais">
+                <a href="https://api.whatsapp.com/send/?phone=5519971284797" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/gleycianearaujo.adv/" target="_blank"><i class="fab fa-instagram"></i></a>
             </div>
             <div class="footer-credits">
                 <p id="edit-copyright">© 2026 Gleyciane Araujo | Advogada.</p>
-                <p id="edit-criador">Desenvolvido com ❤️ por <a href="admin.html" id="edit-criador-link">Eri | Admin</a></p>
+                <p id="edit-desenvolvedor">Desenvolvido com ❤️ por <a href="admin.html">Eri | Admin</a></p>
             </div>
         </div>
     </footer>
