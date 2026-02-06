@@ -5,51 +5,47 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Montserrat', sans-serif; background: var(--white); color: var(--primary); overflow-x: hidden; }
+body { font-family: 'Montserrat', sans-serif; background: var(--white); color: var(--primary); overflow-x: hidden; scroll-behavior: smooth; }
 
-/* HEADER CORRIGIDO */
+/* HEADER - LOGO MAIOR */
 .main-header {
     position: fixed; top: 0; width: 100%; z-index: 1000;
-    background: rgba(0, 31, 63, 0.95); backdrop-filter: blur(5px);
-    border-bottom: 2px solid var(--accent); padding: 10px 5%;
+    background: rgba(0, 31, 63, 0.95); border-bottom: 2px solid var(--accent); padding: 12px 5%;
 }
 .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
-.nav-logo { height: 45px; }
-.logo-text { color: white; font-weight: 600; font-size: 0.9rem; margin-left: 10px; }
+.nav-logo { height: 60px; } /* Logo aumentada */
+.logo-text { color: white; font-weight: 900; font-size: 1.1rem; margin-left: 12px; }
+.nav-menu a { color: white; text-decoration: none; margin-left: 20px; font-weight: 600; font-size: 0.85rem; }
+.btn-contato-nav { background: var(--accent); color: var(--primary) !important; padding: 10px 20px; border-radius: 5px; }
 
-/* HERO E BOTÃO WHATSAPP */
-#hero { 
-    height: 90vh; margin-top: 65px;
-    background: url('../assets/perfil_fundo.png') no-repeat center center/cover;
-}
+/* HERO - BOTÕES GRANDES E COLORIDOS */
+#hero { height: 95vh; background: url('../assets/perfil_fundo.png') no-repeat center center/cover; margin-top: 80px; }
 .hero-overlay { background: rgba(0, 31, 63, 0.75); height: 100%; display: flex; align-items: center; justify-content: center; }
-.perfil-foto { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); object-fit: cover; object-position: top; }
-.hero-btns { display: flex; gap: 20px; justify-content: center; margin-top: 25px; }
+.perfil-foto { width: 200px; height: 200px; border-radius: 50%; border: 5px solid var(--accent); object-fit: cover; object-position: top; margin-bottom: 25px; }
+.hero-btns { display: flex; gap: 20px; margin-top: 30px; }
 .btn-primary, .btn-whatsapp { 
-    padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 900; transition: 0.3s; 
+    padding: 18px 35px; border-radius: 10px; text-decoration: none; font-weight: 900; font-size: 1rem; transition: 0.3s; 
 }
-.btn-whatsapp { background: var(--whatsapp-green); color: white; border: 2px solid white; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+.btn-primary { background: var(--accent); color: var(--primary); border: 2px solid white; }
+.btn-whatsapp { background: var(--whatsapp-green); color: white; border: 2px solid white; box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); }
 
-/* GRIDS E DOURADOS 3D */
-.full-section { padding: 60px 5%; text-align: center; }
-.gray-bg { background: var(--gray); }
+/* SEÇÕES E GRIDS */
+.full-section { padding: 80px 5%; text-align: center; }
+h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 50px; color: var(--primary); position: relative; }
+h2::after { content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 100px; height: 4px; background: var(--accent); }
+
 .cards-grid, .photo-grid, .pub-grid { 
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 30px auto 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; 
 }
-.card { background: white; padding: 40px 20px; border-radius: 8px; border-top: 4px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-.gold-3d { 
-    font-size: 45px; background: var(--gold-gradient); background-clip: text; 
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; display: inline-block;
-}
+.card { background: white; padding: 50px 30px; border-radius: 12px; border-top: 6px solid var(--accent); shadow: 0 15px 35px rgba(0,0,0,0.1); }
+.gold-3d { font-size: 50px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; display: inline-block; }
 
-/* FOTOS DO ESPAÇO */
-.office-photo img { width: 100%; height: 250px; object-fit: cover; object-position: top; border-radius: 10px; border: 2px solid var(--accent); }
+/* FORMULÁRIO */
+.contato-form { max-width: 850px; margin: 0 auto; background: white; padding: 50px; border-radius: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
+.form-row { display: flex; gap: 20px; margin-bottom: 25px; }
+input, textarea { width: 100%; padding: 18px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem; }
+.btn-submit { width: 100%; padding: 20px; background: var(--primary); color: white; border: 2px solid var(--accent); font-weight: 900; font-size: 1.1rem; cursor: pointer; border-radius: 8px; }
 
-/* FORMULÁRIO E RODAPÉ */
-.contato-form { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; }
-.btn-submit { width: 100%; padding: 15px; background: var(--primary); color: white; border: 2px solid var(--accent); font-weight: 900; cursor: pointer; }
-
-footer { background: var(--primary); color: white; padding: 40px 5%; text-align: center; }
-.social-links a { color: var(--accent); font-size: 1.8rem; margin: 0 10px; }
+/* FOOTER */
+footer { background: var(--primary); color: white; padding: 60px 5%; text-align: center; }
+footer .social-links a i { font-size: 2.5rem; color: var(--accent); margin: 20px; }
