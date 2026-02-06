@@ -1,103 +1,100 @@
 /* =========================================
-   SISTEMA DINÂMICO DE TEMAS - 10 OPÇÕES
+   SISTEMA DE TEMAS PROFISSIONAIS (10 TOTAL)
    ========================================= */
 
 :root {
-    /* TEMA PADRÃO: ADVOCACIA (OURO MARINHO) */
+    /* PADRÃO: ADVOCACIA (OURO MARINHO) */
     --primary: #001f3f; --accent: #e5c05b;
+    --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+    --white: #ffffff; --gray: #f4f4f4; --whatsapp-green: #25D366;
     --font-main: 'Montserrat', sans-serif; --font-title: 'Playfair Display', serif;
-    --white: #ffffff; --transition: 0.5s ease;
 }
 
-/* 1. ENGENHARIA (Laranja/Industrial) */
+/* 1. ENGENHARIA (Sólido/Industrial) */
 body.tema-engenheiro {
-    --primary: #1a1a1a; --accent: #f39c12;
+    --primary: #1a1a1a; --accent: #f39c12; 
     --font-main: 'Roboto', sans-serif; --font-title: 'Oswald', sans-serif;
 }
 
-/* 2. MÉDICO (Verde Água/Saúde) */
+/* 2. MÉDICO (Limpo/Saúde) */
 body.tema-medico {
-    --primary: #00796b; --accent: #4db6ac;
-    --font-main: 'Open Sans', sans-serif; --font-title: 'Lato', sans-serif;
+    --primary: #00796b; --accent: #4db6ac; 
+    --font-main: 'Lato', sans-serif; --font-title: 'Montserrat', sans-serif;
 }
 
-/* 3. PSICOLOGIA (Lavanda/Calma) */
+/* 3. PSICOLOGIA (Acolhedor) */
 body.tema-psicologo {
-    --primary: #6d597a; --accent: #e5989b;
+    --primary: #6d597a; --accent: #e5989b; 
     --font-main: 'Quicksand', sans-serif; --font-title: 'Lora', serif;
 }
 
-/* 4. CONTABILIDADE (Azul Marinho/Sério) */
+/* 4. CONTABILIDADE (Sério/Focado) */
 body.tema-contador {
-    --primary: #0d1b2a; --accent: #e0e1dd;
-    --font-main: 'Inter', sans-serif; --font-title: 'Merriweather', serif;
+    --primary: #0d1b2a; --accent: #e0e1dd; 
+    --font-main: 'Montserrat', sans-serif; --font-title: 'Lato', sans-serif;
 }
 
-/* 5. NUTRICIONISTA (Verde Folha) */
+/* 5. NUTRICIONISTA (Saúde/Energia) */
 body.tema-nutri {
-    --primary: #2d6a4f; --accent: #95d5b2;
+    --primary: #2d6a4f; --accent: #95d5b2; 
     --font-main: 'Poppins', sans-serif; --font-title: 'Montserrat', sans-serif;
 }
 
-/* 6. ESTÉTICA (Rose Gold/Luxo) */
+/* 6. ESTÉTICA (Elegância/Luxo) */
 body.tema-estetica {
-    --primary: #222222; --accent: #c9ada7;
+    --primary: #222222; --accent: #c9ada7; 
     --font-main: 'Tenor Sans', sans-serif; --font-title: 'Cinzel', serif;
 }
 
-/* 7. ARQUITETURA (Preto/Minimalista) */
+/* 7. ARQUITETURA (Minimalismo) */
 body.tema-arquiteto {
-    --primary: #000000; --accent: #8e8e8e;
+    --primary: #000000; --accent: #8e8e8e; 
     --font-main: 'Jost', sans-serif; --font-title: 'Syncopate', sans-serif;
 }
 
-/* 8. GAMER (Preto/Verde Neon) */
-body.tema-gamer {
-    --primary: #0b0e11; --accent: #00ff41;
-    --font-main: 'Poppins', sans-serif; --font-title: 'Bangers', cursive;
-}
-
-/* 9. CYBERPUNK (Neon Pink/Yellow) */
-body.tema-cyberpunk {
-    --primary: #03001c; --accent: #fee715;
-    --font-main: 'Exo 2', sans-serif; --font-title: 'Michroma', sans-serif;
-}
-
-/* 10. YOUTUBER (Vermelho/Moderno) */
-body.tema-youtuber {
-    --primary: #f00000; --accent: #ffffff;
-    --font-main: 'Roboto', sans-serif; --font-title: 'Oswald', sans-serif;
-}
+/* TEMAS ESPECIAIS */
+body.tema-gamer { --primary: #0f0f0f; --accent: #00ff00; --font-title: 'Bangers'; }
+body.tema-cyberpunk { --primary: #03001c; --accent: #fee715; --font-title: 'Michroma'; }
+body.tema-youtuber { --primary: #f00000; --accent: #ffffff; --font-title: 'Oswald'; }
 
 /* =========================================
-   ESTRUTURA BASE (NÃO ALTERAR)
+   ESTRUTURA BASE
    ========================================= */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: var(--font-main); color: var(--primary); transition: var(--transition); }
+body { font-family: var(--font-main); background: var(--white); color: var(--primary); line-height: 1.6; overflow-x: hidden; transition: all 0.5s ease; }
 
 .main-header {
-    background: var(--primary); border-bottom: 3px solid var(--accent);
-    padding: 15px 5%; position: fixed; width: 100%; top: 0; z-index: 1000;
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+    background: rgba(0, 31, 63, 0.95); backdrop-filter: blur(5px);
+    border-bottom: 2px solid var(--accent); padding: 15px 5%;
 }
 
-.header-container { display: flex; justify-content: space-between; align-items: center; }
-.logo-text { color: white; font-family: var(--font-title); }
+.header-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.logo-text { color: white; font-weight: 600; font-size: 0.9rem; font-family: var(--font-title); }
+.nav-menu a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.8rem; text-transform: uppercase; }
 
 #hero {
-    height: 90vh; background: url('../assets/perfil_fundo.png') no-repeat center center/cover;
-    margin-top: 70px; display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 90vh;
+    background: url('../assets/perfil_fundo.png') no-repeat center center/cover;
+    margin-top: 70px;
 }
 
-.hero-overlay { background: rgba(0,0,0,0.6); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-.hero-content { text-align: center; color: white; }
-.perfil-foto { width: 200px; height: 200px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 20px; }
+.hero-overlay { background: rgba(0, 31, 63, 0.75); width: 100%; min-height: 90vh; display: flex; align-items: center; justify-content: center; }
+.perfil-foto { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 20px; object-fit: cover; }
 
-h1, h2 { font-family: var(--font-title); }
-.btn-primary { background: var(--accent); color: var(--primary); padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; }
+.full-section { width: 100%; padding: 80px 5%; text-align: center; }
+h2 { font-family: var(--font-title); font-size: 2.2rem; margin-bottom: 40px; position: relative; padding-bottom: 15px; color: var(--primary); }
+h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 3px; background: var(--accent); }
 
-.full-section { padding: 80px 5%; text-align: center; }
-.card { border: 1px solid #ddd; padding: 30px; border-radius: 10px; border-top: 5px solid var(--accent); }
+.card { background: var(--white); padding: 40px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
+.gold-3d { font-size: 45px; background: var(--gold-gradient); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; display: inline-block; }
 
-footer { background: var(--primary); color: white; padding: 40px; text-align: center; }
-.social-links i { color: var(--accent); font-size: 1.8rem; margin: 0 10px; }
+/* FOCO NO ROSTO PRESERVADO */
+.office-photo img { 
+    width: 100%; height: 250px; object-fit: cover; object-position: top; 
+    border-radius: 10px; border: 2px solid var(--accent); transition: 0.3s; 
+}
+
+footer { background: var(--primary); color: white; padding: 60px 5%; text-align: center; border-top: 5px solid var(--accent); }
+.social-links a { color: var(--accent); font-size: 2rem; margin: 0 15px; transition: 0.3s; display: inline-block; }
