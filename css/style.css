@@ -21,7 +21,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--white); color: v
 .header-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 .logo-area { display: flex; align-items: center; gap: 10px; }
 .nav-logo { height: 45px; }
-.logo-text { color: white; font-weight: 600; font-size: 1.4rem; }
+.logo-text { color: white; font-weight: 600; font-size: 1.2rem; }
 .nav-menu a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.8rem; text-transform: uppercase; }
 .btn-contato-nav { background: var(--accent); color: var(--primary) !important; padding: 8px 15px; border-radius: 4px; font-weight: bold; }
 
