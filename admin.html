@@ -3,190 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle Avançado | EriPlay</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>Master Painel | EriPlay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --primary: #001f3f; --accent: #e5c05b; --success: #28a745; --danger: #dc3545; }
-        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
-        .admin-container { max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h1 { color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
-        .section-group { margin-bottom: 35px; padding: 25px; border: 1px solid #e0e0e0; border-radius: 10px; background: #fafafa; }
-        h3 { margin-top: 0; color: var(--primary); border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 20px; }
-        label { display: block; margin-top: 15px; font-weight: bold; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 1rem; }
+        :root { --primary: #001f3f; --accent: #e5c05b; --bg: #f4f7f6; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding-top: 80px; }
         
-        /* Sistema de Listas Dinâmicas */
-        .dynamic-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; position: relative; }
-        .btn-add { background: var(--success); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .btn-del { background: var(--danger); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; position: absolute; top: 10px; right: 10px; }
-        
-        /* Upload de Fotos */
-        .photo-upload-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .upload-card { background: #fff; padding: 15px; border: 2px dashed #ccc; border-radius: 8px; text-align: center; }
-        .preview-circle { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent); margin: 10px auto; object-fit: cover; display: none; }
-        .status-ok { color: var(--success); font-size: 0.8rem; margin-top: 5px; display: none; }
+        /* HEADER FIXO */
+        header.admin-nav { position: fixed; top: 0; width: 100%; height: 70px; background: var(--primary); color: white; display: flex; align-items: center; justify-content: space-around; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .nav-item { cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; opacity: 0.7; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { opacity: 1; color: var(--accent); }
 
-        .btn-save-main { background: var(--primary); color: white; border: none; padding: 25px; border-radius: 10px; cursor: pointer; font-weight: 900; width: 100%; font-size: 1.3rem; margin-top: 40px; box-shadow: 0 5px 15px rgba(0,31,63,0.3); transition: 0.3s; }
-        .btn-save-main:hover { background: #003366; transform: scale(1.01); }
+        .container { max-width: 1000px; margin: 20px auto; background: white; padding: 40px; border-radius: 12px; display: none; }
+        .container.active { display: block; }
+        
+        .section-box { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+
+        /* UPLOAD DE FOTOS */
+        .upload-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .photo-card { text-align: center; padding: 15px; border: 2px dashed #ccc; border-radius: 10px; }
+        .btn-upload { background: var(--accent); color: var(--primary); border: none; padding: 10px; margin-top: 10px; width: 100%; cursor: pointer; font-weight: bold; border-radius: 5px; }
+        .preview-img { width: 100%; height: 120px; object-fit: cover; margin-bottom: 10px; border-radius: 5px; background: #eee; display: block; }
+
+        .btn-save-all { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; border: none; padding: 20px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h1><i class="fas fa-sliders-h"></i> Painel de Controle EriPlay</h1>
-    
-    <div class="section-group">
-        <h3>1. Identidade Visual e Sobre Mim</h3>
-        <label>Escolha um dos 10 Temas Profissionais</label>
-        <select id="theme-selector">
-            <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
-            <option value="tema-engenheiro">Engenharia (Industrial)</option>
-            <option value="tema-medico">Medicina (Limpo)</option>
-            <option value="tema-psicologo">Psicologia (Acolhedor)</option>
-            <option value="tema-contador">Contabilidade (Sério)</option>
-            <option value="tema-nutri">Nutrição (Saúde)</option>
-            <option value="tema-estetica">Estética (Luxo)</option>
-            <option value="tema-arquiteto">Arquitetura (Minimalista)</option>
-            <option value="tema-gamer">Gamer (Neon)</option>
-            <option value="tema-cyberpunk">Cyberpunk (Futurista)</option>
-        </select>
+<header class="admin-nav">
+    <div class="nav-item active" onclick="showTab('geral', this)">Geral / Sobre</div>
+    <div class="nav-item" onclick="showTab('redes', this)">Redes Sociais</div>
+    <div class="nav-item" onclick="showTab('temas', this)">Temas & Ícones</div>
+    <div class="nav-item" onclick="showTab('sql', this)">SQL & Banco</div>
+</header>
 
-        <label>Texto da Seção "Sobre Mim"</label>
-        <textarea id="input-sobre" rows="5" placeholder="Escreva aqui a biografia profissional..."></textarea>
+<div id="geral" class="container active">
+    <h3>Informações Gerais e Espaço</h3>
+    <div class="section-box">
+        <label>Nome / Título</label><input type="text" id="in-nome">
+        <label>Sobre Mim</label><textarea id="in-sobre" rows="5"></textarea>
     </div>
-
-    <div class="section-group">
-        <h3>2. Nosso Espaço (Fotos Reais)</h3>
-        <p style="font-size: 0.8rem; color: #666;">Clique em carregar para cada uma das 3 fotos:</p>
-        <div class="photo-upload-box">
-            <div class="upload-card">
-                <label>Foto do Escritório 1</label>
-                <input type="file" id="file-1" accept="image/*" onchange="uploadImage(1)">
-                <img id="prev-1" class="preview-circle">
-                <div id="status-1" class="status-ok"><i class="fas fa-check"></i> Imagem Pronta</div>
-            </div>
-            <div class="upload-card">
-                <label>Foto do Escritório 2</label>
-                <input type="file" id="file-2" accept="image/*" onchange="uploadImage(2)">
-                <img id="prev-2" class="preview-circle">
-                <div id="status-2" class="status-ok"><i class="fas fa-check"></i> Imagem Pronta</div>
-            </div>
-            <div class="upload-card">
-                <label>Foto do Escritório 3</label>
-                <input type="file" id="file-3" accept="image/*" onchange="uploadImage(3)">
-                <img id="prev-3" class="preview-circle">
-                <div id="status-3" class="status-ok"><i class="fas fa-check"></i> Imagem Pronta</div>
-            </div>
+    <h3>Fotos do Nosso Espaço</h3>
+    <div class="upload-row">
+        <div class="photo-card">
+            <img id="prev-1" class="preview-img">
+            <input type="file" id="file-1" hidden onchange="preview(1)">
+            <button class="btn-upload" onclick="document.getElementById('file-1').click()">Escolher Foto 1</button>
+        </div>
+        <div class="photo-card">
+            <img id="prev-2" class="preview-img">
+            <input type="file" id="file-2" hidden onchange="preview(2)">
+            <button class="btn-upload" onclick="document.getElementById('file-2').click()">Escolher Foto 2</button>
+        </div>
+        <div class="photo-card">
+            <img id="prev-3" class="preview-img">
+            <input type="file" id="file-3" hidden onchange="preview(3)">
+            <button class="btn-upload" onclick="document.getElementById('file-3').click()">Escolher Foto 3</button>
         </div>
     </div>
-
-    <div class="section-group">
-        <h3>3. Áreas de Atuação (Serviços)</h3>
-        <div id="area-list"></div>
-        <button class="btn-add" onclick="addNewArea()"><i class="fas fa-plus"></i> Adicionar Nova Área</button>
-    </div>
-
-    <div class="section-group">
-        <h3>4. Publicações e Redes Sociais</h3>
-        <label>E-mail Exibido</label>
-        <input type="text" id="input-email" placeholder="email@exemplo.com">
-        <label>Horário de Atendimento</label>
-        <input type="text" id="input-horario" placeholder="Segunda a Sexta, 9h às 18h">
-        
-        <label style="margin-top: 25px;">Gerenciar Links (Vídeos/Instagram)</label>
-        <div id="pub-list"></div>
-        <button class="btn-add" onclick="addNewPub()"><i class="fas fa-share-alt"></i> Incluir Rede Social/Vídeo</button>
-    </div>
-
-    <div class="section-group">
-        <h3>5. Rodapé e Copyright</h3>
-        <label>Endereço Completo</label>
-        <input type="text" id="input-endereco">
-        <label>Texto de Copyright</label>
-        <input type="text" id="input-copy" placeholder="© 2026 Nome | Todos os direitos reservados">
-    </div>
-
-    <button class="btn-save-main" onclick="finalSave()"><i class="fas fa-cloud-upload-alt"></i> APLICAR TODAS AS MUDANÇAS NO SITE</button>
 </div>
 
-<script>
-    let currentData = JSON.parse(localStorage.getItem('siteData')) || { areas: [], pubs: [], fotos: {} };
+<div id="redes" class="container">
+    <h3>Links e Redes Sociais</h3>
+    <div class="section-box">
+        <label>WhatsApp (Ex: 5519995566991)</label><input type="text" id="in-whatsapp">
+        <label>Instagram URL</label><input type="text" id="in-insta">
+        <label>YouTube Link (Principal)</label><input type="text" id="in-yt">
+        <label>E-mail</label><input type="text" id="in-email">
+    </div>
+</div>
 
-    // Função para Upload Real de Imagem (Converte para Base64)
-    function uploadImage(id) {
+<div id="temas" class="container">
+    <h3>Personalização de Tema</h3>
+    <div class="section-box">
+        <label>Selecione o Tema Pronto</label>
+        <select id="in-tema">
+            <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
+            <option value="tema-engenheiro">Engenharia</option>
+            <option value="tema-medico">Medicina</option>
+            <option value="tema-nutri">Nutrição</option>
+            <option value="tema-estetica">Estética</option>
+            <option value="tema-arquiteto">Arquitetura</option>
+            <option value="tema-psicologo">Psicologia</option>
+            <option value="tema-contador">Contabilidade</option>
+            <option value="tema-gamer">Gamer</option>
+            <option value="tema-cyberpunk">Cyberpunk</option>
+        </select>
+    </div>
+</div>
+
+<div id="sql" class="container">
+    <h3>Estrutura SQL e Mensagens</h3>
+    <textarea readonly style="height: 200px; background: #222; color: #0f0; font-family: monospace;">
+CREATE TABLE leads (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    mensagem TEXT,
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+    </textarea>
+</div>
+
+<button class="btn-save-all" onclick="saveAll()">SALVAR TUDO</button>
+
+<script>
+    let siteData = JSON.parse(localStorage.getItem('siteData')) || { fotos: {} };
+
+    function showTab(id, el) {
+        document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        el.classList.add('active');
+    }
+
+    function preview(id) {
         const file = document.getElementById(`file-${id}`).files[0];
         const reader = new FileReader();
-        reader.onloadend = function() {
-            currentData.fotos[`f${id}`] = reader.result;
+        reader.onloadend = () => {
+            siteData.fotos[`f${id}`] = reader.result;
             document.getElementById(`prev-${id}`).src = reader.result;
-            document.getElementById(`prev-${id}`).style.display = 'block';
-            document.getElementById(`status-${id}`).style.display = 'block';
-        }
-        if (file) reader.readAsDataURL(file);
+        };
+        if(file) reader.readAsDataURL(file);
     }
 
-    function addNewArea() {
-        currentData.areas.push({ titulo: '', icone: 'fas fa-gavel' });
-        renderAll();
-    }
+    function saveAll() {
+        siteData.nome = document.getElementById('in-nome').value;
+        siteData.sobre = document.getElementById('in-sobre').value;
+        siteData.whatsapp = document.getElementById('in-whatsapp').value;
+        siteData.insta = document.getElementById('in-insta').value;
+        siteData.tema = document.getElementById('in-tema').value;
+        siteData.email = document.getElementById('in-email').value;
 
-    function addNewPub() {
-        currentData.pubs.push({ link: '', desc: '' });
-        renderAll();
-    }
-
-    function removeItem(type, index) {
-        currentData[type].splice(index, 1);
-        renderAll();
-    }
-
-    function renderAll() {
-        // Renderizar Áreas
-        document.getElementById('area-list').innerHTML = currentData.areas.map((a, i) => `
-            <div class="dynamic-item">
-                <button class="btn-del" onclick="removeItem('areas', ${i})">X</button>
-                <label>Título do Serviço</label>
-                <input type="text" value="${a.titulo}" onchange="currentData.areas[${i}].titulo=this.value">
-                <label>Ícone (FontAwesome Class)</label>
-                <input type="text" value="${a.icone}" onchange="currentData.areas[${i}].icone=this.value">
-            </div>
-        `).join('');
-
-        // Renderizar Publicações
-        document.getElementById('pub-list').innerHTML = currentData.pubs.map((p, i) => `
-            <div class="dynamic-item">
-                <button class="btn-del" onclick="removeItem('pubs', ${i})">X</button>
-                <label>Descrição do Link</label>
-                <input type="text" value="${p.desc}" onchange="currentData.pubs[${i}].desc=this.value">
-                <label>Link (URL Completa)</label>
-                <input type="text" value="${p.link}" onchange="currentData.pubs[${i}].link=this.value">
-            </div>
-        `).join('');
-    }
-
-    function finalSave() {
-        currentData.tema = document.getElementById('theme-selector').value;
-        currentData.sobre = document.getElementById('input-sobre').value;
-        currentData.email = document.getElementById('input-email').value;
-        currentData.horario = document.getElementById('input-horario').value;
-        currentData.endereco = document.getElementById('input-endereco').value;
-        currentData.copy = document.getElementById('input-copy').value;
-
-        localStorage.setItem('siteData', JSON.stringify(currentData));
-        alert('SISTEMA ATUALIZADO COM SUCESSO!');
+        localStorage.setItem('siteData', JSON.stringify(siteData));
+        alert("Sistema EriPlay Atualizado com Sucesso!");
         window.location.href = 'index.html';
     }
 
     window.onload = () => {
-        document.getElementById('theme-selector').value = currentData.tema || 'tema-advogado';
-        document.getElementById('input-sobre').value = currentData.sobre || '';
-        document.getElementById('input-email').value = currentData.email || '';
-        document.getElementById('input-horario').value = currentData.horario || '';
-        document.getElementById('input-endereco').value = currentData.endereco || '';
-        document.getElementById('input-copy').value = currentData.copy || '';
-        renderAll();
-    }
+        document.getElementById('in-nome').value = siteData.nome || '';
+        document.getElementById('in-sobre').value = siteData.sobre || '';
+        document.getElementById('in-tema').value = siteData.tema || 'tema-advogado';
+        if(siteData.fotos.f1) document.getElementById('prev-1').src = siteData.fotos.f1;
+        if(siteData.fotos.f2) document.getElementById('prev-2').src = siteData.fotos.f2;
+        if(siteData.fotos.f3) document.getElementById('prev-3').src = siteData.fotos.f3;
+    };
 </script>
 </body>
 </html>
