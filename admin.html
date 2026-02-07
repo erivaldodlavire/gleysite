@@ -3,109 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel EriPlay v2.0</title>
+    <title>Master Admin EriPlay | v3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root { --primary: #001f3f; --accent: #e5c05b; --success: #28a745; --danger: #dc3545; }
-        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding-top: 90px; padding-bottom: 100px; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding-top: 100px; padding-bottom: 120px; }
         
-        header.admin-nav { position: fixed; top: 0; width: 100%; height: 80px; background: var(--primary); color: white; display: flex; align-items: center; justify-content: space-around; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .nav-item { cursor: pointer; font-weight: 900; text-transform: uppercase; font-size: 0.8rem; opacity: 0.6; transition: 0.3s; border-bottom: 3px solid transparent; }
-        .nav-item.active { opacity: 1; color: var(--accent); border-bottom: 3px solid var(--accent); }
+        /* HEADER FIXO E NAVEGAÇÃO */
+        header.admin-nav { position: fixed; top: 0; width: 100%; height: 80px; background: var(--primary); color: white; display: flex; align-items: center; justify-content: space-around; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .nav-item { cursor: pointer; font-weight: 900; text-transform: uppercase; font-size: 0.75rem; opacity: 0.6; transition: 0.3s; padding: 15px; border-bottom: 4px solid transparent; }
+        .nav-item.active { opacity: 1; color: var(--accent); border-bottom: 4px solid var(--accent); }
 
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 15px; display: none; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
-        .container.active { display: block; }
-        
-        .section-box { border: 1px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #fafafa; position: relative; }
-        .dynamic-item { border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 5px; }
-        
-        label { display: block; margin-top: 10px; font-weight: 700; font-size: 0.85rem; }
-        input, textarea, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; }
+        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 40px; border-radius: 15px; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .container.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
 
-        .btn-add { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-        .btn-del { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; float: right; }
-        
-        .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .preview-img { width: 100%; height: 100px; object-fit: cover; border-radius: 5px; margin-bottom: 10px; background: #eee; }
-        .btn-up-confirm { background: var(--success); color: white; border: none; padding: 8px; width: 100%; cursor: pointer; border-radius: 5px; font-weight: 900; margin-top: 5px; display: none; }
+        .section-box { border: 1px solid #eee; padding: 25px; border-radius: 10px; margin-bottom: 25px; background: #fafafa; position: relative; }
+        h3 { color: var(--primary); margin-top: 0; border-left: 6px solid var(--accent); padding-left: 15px; text-transform: uppercase; font-size: 1.1rem; }
+        label { display: block; margin-top: 15px; font-weight: 900; font-size: 0.8rem; color: #555; }
+        input, textarea, select { width: 100%; padding: 14px; margin-top: 5px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 1rem; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; }
 
-        .btn-save-all { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 2px solid var(--accent); padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        /* UPLOAD DE FOTOS ROBUSTO */
+        .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .photo-card { text-align: center; padding: 20px; border: 2px dashed #ccc; border-radius: 12px; background: white; transition: 0.3s; }
+        .photo-card:hover { border-color: var(--accent); }
+        .preview-img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; background: #eee; border: 1px solid #ddd; }
+        .btn-sel { background: #666; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; border-radius: 6px; font-weight: bold; margin-bottom: 8px; }
+        .btn-confirm { background: var(--success); color: white; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 6px; font-weight: 900; display: none; }
+        .success-badge { color: var(--success); font-size: 0.75rem; font-weight: 900; margin-top: 10px; display: none; }
+
+        /* LISTAS DINÂMICAS */
+        .dynamic-item { background: white; border: 2px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 15px; position: relative; }
+        .btn-add { background: var(--success); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 900; margin-bottom: 20px; }
+        .btn-del { background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; position: absolute; top: 15px; right: 15px; font-weight: 900; }
+
+        .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 60px; border-radius: 60px; font-weight: 900; cursor: pointer; font-size: 1.2rem; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: 0.3s; z-index: 1001; }
+        .btn-save-master:hover { transform: translateY(-5px) scale(1.05); background: var(--accent); color: var(--primary); }
     </style>
 </head>
 <body>
 
 <header class="admin-nav">
-    <div class="nav-item active" onclick="showTab('geral', this)">1. Geral / Espaço</div>
+    <div class="nav-item active" onclick="showTab('geral', this)">1. Geral / Sobre</div>
     <div class="nav-item" onclick="showTab('atuacao', this)">2. Áreas de Atuação</div>
-    <div class="nav-item" onclick="showTab('redes', this)">3. Redes Sociais & Pubs</div>
-    <div class="nav-item" onclick="showTab('sql', this)">4. SQL / Temas</div>
+    <div class="nav-item" onclick="showTab('redes', this)">3. Redes Sociais / Pubs</div>
+    <div class="nav-item" onclick="showTab('temas', this)">4. Temas & Ícones</div>
+    <div class="nav-item" onclick="showTab('sql', this)">5. SQL & Banco</div>
 </header>
 
 <div id="geral" class="container active">
-    <h3>Informações Básicas</h3>
+    <h3>Informações Básicas e Espaço</h3>
     <div class="section-box">
-        <label>Nome Principal</label><input type="text" id="in-nome">
-        <label>Sobre Mim</label><textarea id="in-sobre" rows="4"></textarea>
-        <label>Endereço</label><input type="text" id="in-endereco">
+        <label>Nome Completo</label><input type="text" id="in-nome">
+        <label>OAB / Registro</label><input type="text" id="in-oab">
+        <label>Slogan</label><input type="text" id="in-slogan">
+        <label>Sobre Mim (Biografia)</label><textarea id="in-sobre" rows="5"></textarea>
+        <label>Endereço Completo</label><input type="text" id="in-endereco">
+        <label>Telefone</label><input type="text" id="in-tel">
+        <label>E-mail</label><input type="text" id="in-email">
+        <label>Horário</label><input type="text" id="in-horario">
+        <label>Copyright Rodapé</label><input type="text" id="in-copy">
     </div>
-    <h3>Fotos do Espaço (Upload Direto)</h3>
+
+    <h3>Fotos do Espaço (Envio PNG/JPG)</h3>
     <div class="upload-grid">
-        <div class="section-box" style="text-align:center">
+        <div class="photo-card">
             <img id="prev-1" class="preview-img">
-            <input type="file" id="file-1" hidden onchange="handleImg(1)">
-            <button onclick="document.getElementById('file-1').click()">Escolher Foto 1</button>
-            <button id="up-1" class="btn-up-confirm" onclick="confirmImg(1)">ENVIAR PARA SITE</button>
+            <input type="file" id="file-1" hidden accept="image/*" onchange="previewImg(1)">
+            <button class="btn-sel" onclick="document.getElementById('file-1').click()">Escolher Foto 1</button>
+            <button id="btn-up-1" class="btn-confirm" onclick="confirmImg(1)">ENVIAR PARA SITE</button>
+            <div id="ok-1" class="success-badge"><i class="fas fa-check"></i> FOTO PROCESSADA</div>
         </div>
-        <div class="section-box" style="text-align:center">
+        <div class="photo-card">
             <img id="prev-2" class="preview-img">
-            <input type="file" id="file-2" hidden onchange="handleImg(2)">
-            <button onclick="document.getElementById('file-2').click()">Escolher Foto 2</button>
-            <button id="up-2" class="btn-up-confirm" onclick="confirmImg(2)">ENVIAR PARA SITE</button>
+            <input type="file" id="file-2" hidden accept="image/*" onchange="previewImg(2)">
+            <button class="btn-sel" onclick="document.getElementById('file-2').click()">Escolher Foto 2</button>
+            <button id="btn-up-2" class="btn-confirm" onclick="confirmImg(2)">ENVIAR PARA SITE</button>
+            <div id="ok-2" class="success-badge"><i class="fas fa-check"></i> FOTO PROCESSADA</div>
         </div>
-        <div class="section-box" style="text-align:center">
+        <div class="photo-card">
             <img id="prev-3" class="preview-img">
-            <input type="file" id="file-3" hidden onchange="handleImg(3)">
-            <button onclick="document.getElementById('file-3').click()">Escolher Foto 3</button>
-            <button id="up-3" class="btn-up-confirm" onclick="confirmImg(3)">ENVIAR PARA SITE</button>
+            <input type="file" id="file-3" hidden accept="image/*" onchange="previewImg(3)">
+            <button class="btn-sel" onclick="document.getElementById('file-3').click()">Escolher Foto 3</button>
+            <button id="btn-up-3" class="btn-confirm" onclick="confirmImg(3)">ENVIAR PARA SITE</button>
+            <div id="ok-3" class="success-badge"><i class="fas fa-check"></i> FOTO PROCESSADA</div>
         </div>
     </div>
 </div>
 
 <div id="atuacao" class="container">
-    <h3>Gerenciar Áreas de Atuação</h3>
+    <h3>Gestão de Serviços</h3>
     <button class="btn-add" onclick="addArea()">+ Adicionar Nova Área</button>
     <div id="area-list"></div>
 </div>
 
 <div id="redes" class="container">
     <h3>Links das Redes Sociais (Fale Conosco e Rodapé)</h3>
-    <div id="social-list" class="section-box">
+    <div id="social-grid" class="section-box">
         </div>
 
-    <h3>Minhas Publicações (3 YouTube / 3 Instagram)</h3>
-    <div id="pub-list" class="section-box">
+    <h3>Publicações (3 YouTube / 3 Instagram)</h3>
+    <div id="pub-grid">
         </div>
+</div>
+
+<div id="temas" class="container">
+    <h3>Seletor de 10 Temas Profissionais</h3>
+    <div class="section-box">
+        <label>Escolha o Estilo Visual</label>
+        <select id="in-tema">
+            <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
+            <option value="tema-engenheiro">Engenharia</option>
+            <option value="tema-medico">Medicina</option>
+            <option value="tema-psicologo">Psicologia</option>
+            <option value="tema-contador">Contabilidade</option>
+            <option value="tema-nutri">Nutrição</option>
+            <option value="tema-estetica">Estética</option>
+            <option value="tema-arquiteto">Arquitetura</option>
+            <option value="tema-gamer">Gamer</option>
+            <option value="tema-cyberpunk">Cyberpunk</option>
+        </select>
+    </div>
 </div>
 
 <div id="sql" class="container">
-    <h3>Configurações de Sistema</h3>
-    <label>Tema Ativo</label>
-    <select id="in-tema">
-        <option value="tema-advogado">Advocacia</option>
-        <option value="tema-gamer">Gamer</option>
-        <option value="tema-cyberpunk">Cyberpunk</option>
-        </select>
+    <h3>Banco de Dados SQL (Estrutura)</h3>
+    <div class="section-box">
+        <textarea readonly style="height:250px; background:#111; color:#0f0; font-family:monospace;">
+-- TABELA DE LEADS (MENSAGENS DO SITE)
+CREATE TABLE site_leads (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    whatsapp VARCHAR(20),
+    assunto VARCHAR(150),
+    mensagem TEXT,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TABELA DE CONFIGURAÇÕES (ADMIN)
+CREATE TABLE site_config (
+    chave VARCHAR(50) PRIMARY KEY,
+    valor LONGTEXT
+);</textarea>
+    </div>
 </div>
 
-<button class="btn-save-all" onclick="saveData()">SALVAR TODAS ALTERAÇÕES</button>
+<button class="btn-save-master" onclick="saveMaster()">APLICAR TODAS ALTERAÇÕES</button>
 
 <script>
-    let siteData = JSON.parse(localStorage.getItem('siteData')) || { 
-        areas: [], 
-        redes: Array(10).fill(''), 
-        pubs: Array(6).fill({link:'', desc:''}),
-        fotos: {} 
+    let db = JSON.parse(localStorage.getItem('siteData')) || {
+        areas: [
+            {t:'Direito Civil', d:'Contratos, indenizações e direitos civis.', i:'fas fa-gavel'},
+            {t:'Direito Criminal', d:'Defesa e consultoria penal.', i:'fas fa-user-shield'},
+            {t:'Previdenciário', d:'Aposentadorias e benefícios INSS.', i:'fas fa-hand-holding-medical'},
+            {t:'Família', d:'Divórcio, guarda e pensão.', i:'fas fa-users'},
+            {t:'Sucessório', d:'Inventários e partilhas.', i:'fas fa-file-signature'}
+        ],
+        redes: Array(10).fill(''),
+        pubs: Array(6).fill({l:'', d:''}),
+        fotos: {}
     };
 
     function showTab(id, el) {
@@ -115,77 +174,83 @@
         el.classList.add('active');
     }
 
-    // Gerenciar Áreas
-    function addArea() {
-        siteData.areas.push({ titulo: '', desc: '', icone: 'fas fa-gavel' });
-        renderAreas();
-    }
-    function delArea(i) { siteData.areas.splice(i,1); renderAreas(); }
-    function renderAreas() {
-        document.getElementById('area-list').innerHTML = siteData.areas.map((a, i) => `
-            <div class="dynamic-item">
-                <button class="btn-del" onclick="delArea(${i})">Excluir</button>
-                <label>Título</label><input type="text" value="${a.titulo}" onchange="siteData.areas[${i}].titulo=this.value">
-                <label>Descrição Curta</label><input type="text" value="${a.desc}" onchange="siteData.areas[${i}].desc=this.value">
-                <label>Ícone (FontAwesome)</label><input type="text" value="${a.icone}" onchange="siteData.areas[${i}].icone=this.value">
-            </div>
-        `).join('');
-    }
-
-    // Upload de Imagens
+    // Gerenciador de Fotos
     let tempImg = "";
-    function handleImg(id) {
+    function previewImg(id) {
         const file = document.getElementById(`file-${id}`).files[0];
         const reader = new FileReader();
         reader.onloadend = () => {
             document.getElementById(`prev-${id}`).src = reader.result;
-            document.getElementById(`up-${id}`).style.display = 'block';
+            document.getElementById(`btn-up-${id}`).style.display = 'block';
             tempImg = reader.result;
         };
         if(file) reader.readAsDataURL(file);
     }
     function confirmImg(id) {
-        siteData.fotos[`f${id}`] = tempImg;
-        alert("Foto "+id+" pronta para salvar!");
-        document.getElementById(`up-${id}`).style.display = 'none';
+        db.fotos[`f${id}`] = tempImg;
+        document.getElementById(`btn-up-${id}`).style.display = 'none';
+        document.getElementById(`ok-${id}`).style.display = 'block';
     }
 
-    // Renderizar Redes e Pubs
-    function renderRedes() {
-        let htmlRedes = "";
-        for(let i=0; i<10; i++) {
-            htmlRedes += `<label>Link Rede Social ${i+1}</label><input type="text" value="${siteData.redes[i]}" onchange="siteData.redes[${i}]=this.value">`;
-        }
-        document.getElementById('social-list').innerHTML = htmlRedes;
-
-        let htmlPubs = "";
-        for(let i=0; i<6; i++) {
-            htmlPubs += `
-                <div class="dynamic-item">
-                    <label>Descrição Publicação ${i+1}</label><input type="text" value="${siteData.pubs[i].desc}" onchange="siteData.pubs[${i}].desc=this.value">
-                    <label>Link (YouTube ou Insta) ${i+1}</label><input type="text" value="${siteData.pubs[i].link}" onchange="siteData.pubs[${i}].link=this.value">
-                </div>`;
-        }
-        document.getElementById('pub-list').innerHTML = htmlPubs;
+    // Gerenciador de Áreas
+    function addArea() { db.areas.push({t:'', d:'', i:'fas fa-star'}); renderAreas(); }
+    function delArea(i) { db.areas.splice(i,1); renderAreas(); }
+    function renderAreas() {
+        document.getElementById('area-list').innerHTML = db.areas.map((a, i) => `
+            <div class="dynamic-item">
+                <button class="btn-del" onclick="delArea(${i})">Excluir</button>
+                <label>Título</label><input type="text" value="${a.t}" onchange="db.areas[${i}].t=this.value">
+                <label>Descrição</label><input type="text" value="${a.d}" onchange="db.areas[${i}].d=this.value">
+                <label>Ícone (Ex: fas fa-gavel)</label><input type="text" value="${a.i}" onchange="db.areas[${i}].i=this.value">
+            </div>
+        `).join('');
     }
 
-    function saveData() {
-        siteData.nome = document.getElementById('in-nome').value;
-        siteData.sobre = document.getElementById('in-sobre').value;
-        siteData.endereco = document.getElementById('in-endereco').value;
-        siteData.tema = document.getElementById('in-tema').value;
-        localStorage.setItem('siteData', JSON.stringify(siteData));
-        alert("SITE ATUALIZADO!");
+    function renderRedesEPubs() {
+        document.getElementById('social-grid').innerHTML = db.redes.map((r, i) => `
+            <label>Link Social ${i+1}</label><input type="text" value="${r}" onchange="db.redes[${i}]=this.value">
+        `).join('');
+
+        document.getElementById('pub-grid').innerHTML = db.pubs.map((p, i) => `
+            <div class="dynamic-item">
+                <label>Descrição Pub ${i+1}</label><input type="text" value="${p.d}" onchange="db.pubs[${i}].d=this.value">
+                <label>Link (YT/Insta) ${i+1}</label><input type="text" value="${p.l}" onchange="db.pubs[${i}].l=this.value">
+            </div>
+        `).join('');
+    }
+
+    function saveMaster() {
+        db.nome = document.getElementById('in-nome').value;
+        db.oab = document.getElementById('in-oab').value;
+        db.slogan = document.getElementById('in-slogan').value;
+        db.sobre = document.getElementById('in-sobre').value;
+        db.endereco = document.getElementById('in-endereco').value;
+        db.tel = document.getElementById('in-tel').value;
+        db.email = document.getElementById('in-email').value;
+        db.horario = document.getElementById('in-horario').value;
+        db.copy = document.getElementById('in-copy').value;
+        db.tema = document.getElementById('in-tema').value;
+
+        localStorage.setItem('siteData', JSON.stringify(db));
+        alert("SISTEMA ATUALIZADO COM SUCESSO!");
         window.location.href = 'index.html';
     }
 
     window.onload = () => {
-        document.getElementById('in-nome').value = siteData.nome || '';
-        document.getElementById('in-sobre').value = siteData.sobre || '';
-        document.getElementById('in-endereco').value = siteData.endereco || '';
-        document.getElementById('in-tema').value = siteData.tema || 'tema-advogado';
+        document.getElementById('in-nome').value = db.nome || '';
+        document.getElementById('in-oab').value = db.oab || '';
+        document.getElementById('in-slogan').value = db.slogan || '';
+        document.getElementById('in-sobre').value = db.sobre || '';
+        document.getElementById('in-endereco').value = db.endereco || '';
+        document.getElementById('in-tel').value = db.tel || '';
+        document.getElementById('in-email').value = db.email || '';
+        document.getElementById('in-horario').value = db.horario || '';
+        document.getElementById('in-copy').value = db.copy || '';
+        document.getElementById('in-tema').value = db.tema || 'tema-advogado';
+        
+        for(let i=1; i<=3; i++) if(db.fotos[`f${i}`]) document.getElementById(`prev-${i}`).src = db.fotos[`f${i}`];
         renderAreas();
-        renderRedes();
+        renderRedesEPubs();
     };
 </script>
 </body>
