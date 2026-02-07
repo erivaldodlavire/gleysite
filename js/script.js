@@ -1,20 +1,34 @@
+// FUNÇÃO QUE APLICA AS MUDANÇAS DO ADMIN AO CARREGAR O SITE
+window.onload = function() {
+    const savedData = JSON.parse(localStorage.getItem('siteData'));
+
+    if (savedData) {
+        // 1. Aplica o Tema (Muda a classe do body)
+        document.body.className = savedData.tema;
+
+        // 2. Aplica os Textos Principais
+        if(savedData.nome) {
+            document.getElementById('edit-nome').innerText = savedData.nome;
+            document.getElementById('edit-header-nome').innerText = savedData.nome;
+        }
+        if(savedData.oab) document.getElementById('edit-oab').innerText = savedData.oab;
+        if(savedData.slogan) document.getElementById('edit-slogan').innerText = savedData.slogan;
+        
+        // 3. Aplica Links de Contato
+        if(savedData.whatsapp) {
+            const waLink = `https://api.whatsapp.com/send/?phone=${savedData.whatsapp}`;
+            document.getElementById('edit-link-whatsapp').href = waLink;
+        }
+        
+        // 4. Aplica Endereço
+        if(savedData.endereco) {
+            document.getElementById('edit-endereco').innerHTML = savedData.endereco;
+        }
+    }
+};
+
+// FUNÇÃO PARA ENVIAR LEAD (OPCIONAL)
 function enviarLead(event) {
     event.preventDefault();
-    
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
-    const telefone = document.getElementById('telefone').value;
-    const titulo = document.getElementById('titulo').value;
-    const mensagem = document.getElementById('mensagem').value;
-
-    // Formata a mensagem para o WhatsApp
-    const textoParaWhats = `Olá Dra. Gleyciane! Me chamo ${nome}.%0A%0A*Assunto:* ${titulo}%0A*Telefone:* ${telefone}%0A*E-mail:* ${email}%0A%0A*Mensagem:* ${mensagem}`;
-    
-    // Abre o WhatsApp da advogada com a mensagem preenchida
-    const linkZap = `https://api.whatsapp.com/send?phone=5519971284797&text=${textoParaWhats}`;
-    
-    window.open(linkZap, '_blank');
-    
-    // Aqui no futuro adicionamos a chamada fetch('SEU_WEBHOOK_N8N') para enviar ao SQL e E-mail
-    alert('Redirecionando para o WhatsApp para concluir o atendimento!');
+    alert('Mensagem enviada com sucesso! Em breve entraremos em contato.');
 }
