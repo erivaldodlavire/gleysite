@@ -7,9 +7,21 @@
     --whatsapp-green: #25D366;
 }
 
+/* --- BLOCO DE TEMAS PARA ADMIN (REQUISITO 1) --- */
+body.tema-engenheiro { --primary: #1a1a1a; --accent: #f39c12; }
+body.tema-medico { --primary: #00796b; --accent: #4db6ac; }
+body.tema-psicologo { --primary: #6d597a; --accent: #e5989b; }
+body.tema-contador { --primary: #0d1b2a; --accent: #e0e1dd; }
+body.tema-nutri { --primary: #2d6a4f; --accent: #95d5b2; }
+body.tema-estetica { --primary: #222222; --accent: #c9ada7; }
+body.tema-arquiteto { --primary: #000000; --accent: #8e8e8e; }
+body.tema-gamer { --primary: #0b0e11; --accent: #00ff41; }
+body.tema-cyberpunk { --primary: #03001c; --accent: #fee715; }
+body.tema-youtuber { --primary: #f00000; --accent: #ffffff; }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body { font-family: 'Montserrat', sans-serif; background: var(--white); color: var(--primary); line-height: 1.6; overflow-x: hidden; }
+body { font-family: 'Montserrat', sans-serif; background: var(--white); color: var(--primary); line-height: 1.6; overflow-x: hidden; transition: 0.5s; }
 
 /* HEADER */
 .main-header {
@@ -21,7 +33,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--white); color: v
 .header-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 .logo-area { display: flex; align-items: center; gap: 10px; }
 .nav-logo { height: 45px; }
-.logo-text { color: white; font-weight: 600; font-size: 1.0rem; }
+.logo-text { color: white; font-weight: 600; font-size: 1.1rem; }
 .nav-menu a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.8rem; text-transform: uppercase; }
 .btn-contato-nav { background: var(--accent); color: var(--primary) !important; padding: 8px 15px; border-radius: 4px; font-weight: bold; }
 
@@ -70,7 +82,7 @@ h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: tr
     width: 100%; 
     height: 250px; 
     object-fit: cover; 
-    object-position: top; /* ESTA LINHA AJUSTA O FOCO PARA A CABEÇA */
+    object-position: top; 
     border-radius: 10px; 
     border: 2px solid var(--accent); 
     transition: 0.3s; 
@@ -100,7 +112,7 @@ input, textarea { width: 100%; padding: 15px; border: 1px solid #ddd; border-rad
 .btn-submit:hover { background: var(--accent); color: var(--primary); }
 
 @media (max-width: 768px) {
-    .form-row { flex-direction: column; gap: 16px; }
+    .form-row { flex-direction: column; gap: 15px; }
     .nav-menu { display: none; }
     .hero-btns { flex-direction: column; align-items: center; }
 }
