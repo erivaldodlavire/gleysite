@@ -3,105 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin | EriPlay</title>
+    <title>Painel Avançado | EriPlay</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --primary: #001f3f; --accent: #e5c05b; --white: #ffffff; }
+        :root { --primary: #001f3f; --accent: #e5c05b; }
         body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; padding: 20px; }
-        .admin-container { max-width: 900px; margin: 0 auto; background: var(--white); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h1 { color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 30px; }
-        .section-group { margin-bottom: 25px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        h3 { margin-top: 0; color: var(--primary); }
-        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn-save { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1rem; margin-top: 20px; transition: 0.3s; }
-        .btn-save:hover { background: #003366; transform: translateY(-2px); }
-        .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-        .theme-btn { padding: 10px; border: 2px solid #ddd; border-radius: 5px; cursor: pointer; text-align: center; background: #f9f9f9; }
-        .theme-btn.active { border-color: var(--accent); background: #fff9e6; }
+        .admin-container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .section-group { margin-bottom: 25px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
+        h1, h3 { color: var(--primary); }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85rem; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        .btn-save { background: var(--primary); color: white; border: none; padding: 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1rem; margin-top: 20px; }
+        .dynamic-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 5px; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .btn-del { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .preview-img { height: 50px; border-radius: 5px; border: 1px solid #ddd; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
-    <h1><i class="fas fa-user-cog"></i> Painel de Controle EriPlay</h1>
-    
+    <h1><i class="fas fa-tools"></i> Painel de Controle EriPlay</h1>
+
     <div class="section-group">
-        <h3>1. Escolha o Tema Profissional</h3>
-        <select id="theme-selector" onchange="previewTheme()">
-            <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
+        <h3>1. Identidade e Sobre Mim</h3>
+        <label>Escolha o Tema Profissional</label>
+        <select id="theme-selector">
+            <option value="tema-advogado">Advocacia</option>
             <option value="tema-engenheiro">Engenharia</option>
             <option value="tema-medico">Medicina</option>
-            <option value="tema-psicologo">Psicologia</option>
-            <option value="tema-contador">Contabilidade</option>
-            <option value="tema-nutri">Nutrição</option>
-            <option value="tema-estetica">Estética</option>
-            <option value="tema-arquiteto">Arquitetura</option>
-            <option value="tema-gamer">Gamer / Streamer</option>
+            <option value="tema-gamer">Gamer</option>
             <option value="tema-cyberpunk">Cyberpunk</option>
         </select>
+        <label>Texto Sobre Mim</label>
+        <textarea id="input-sobre" rows="4"></textarea>
     </div>
 
     <div class="section-group">
-        <h3>2. Informações Principais</h3>
-        <label>Nome do Profissional/Empresa</label>
-        <input type="text" id="input-nome" placeholder="Ex: Gleyciane Araújo">
-        
-        <label>Registro (OAB, CRM, CREA)</label>
-        <input type="text" id="input-oab" placeholder="Ex: OAB/SP 473.457">
-        
-        <label>Slogan / Chamada Hero</label>
-        <input type="text" id="input-slogan" placeholder="Ex: Defendendo seus direitos com excelência">
+        <h3>2. Nosso Espaço (Fotos Local)</h3>
+        <div id="foto-inputs">
+            <label>Foto 1</label><input type="file" id="file-1" accept="image/*" onchange="encodeImg(1)">
+            <label>Foto 2</label><input type="file" id="file-2" accept="image/*" onchange="encodeImg(2)">
+            <label>Foto 3</label><input type="file" id="file-3" accept="image/*" onchange="encodeImg(3)">
+        </div>
     </div>
 
     <div class="section-group">
-        <h3>3. Contatos e Redes Sociais</h3>
-        <label>WhatsApp (Somente números com DDD)</label>
-        <input type="text" id="input-whatsapp" placeholder="Ex: 5519995566991">
-        
-        <label>Instagram (Link completo)</label>
-        <input type="text" id="input-instagram" placeholder="https://instagram.com/usuario">
-        
-        <label>Endereço</label>
-        <textarea id="input-endereco" rows="2"></textarea>
+        <h3>3. Áreas de Atuação</h3>
+        <div id="area-container"></div>
+        <button class="btn-add" onclick="addItem('area')">+ Adicionar Área</button>
     </div>
 
-    <button class="btn-save" onclick="salvarAlteracoes()">APLICAR ALTERAÇÕES NO SITE</button>
+    <div class="section-group">
+        <h3>4. Publicações (YouTube/Insta)</h3>
+        <div id="pub-container"></div>
+        <button class="btn-add" onclick="addItem('pub')">+ Adicionar Link</button>
+    </div>
+
+    <div class="section-group">
+        <h3>5. Contato e Rodapé</h3>
+        <label>E-mail Profissional</label>
+        <input type="text" id="input-email">
+        <label>Horário de Atendimento</label>
+        <input type="text" id="input-horario">
+        <label>Copyright (Rodapé)</label>
+        <input type="text" id="input-copy">
+    </div>
+
+    <button class="btn-save" onclick="salvarGeral()">APLICAR ALTERAÇÕES NO SITE</button>
 </div>
 
 <script>
-    function salvarAlteracoes() {
-        const dados = {
-            tema: document.getElementById('theme-selector').value,
-            nome: document.getElementById('input-nome').value,
-            oab: document.getElementById('input-oab').value,
-            slogan: document.getElementById('input-slogan').value,
-            whatsapp: document.getElementById('input-whatsapp').value,
-            instagram: document.getElementById('input-instagram').value,
-            endereco: document.getElementById('input-endereco').value
-        };
+    let siteData = JSON.parse(localStorage.getItem('siteData')) || { areas: [], pubs: [], fotos: {} };
 
-        // Salva localmente para persistência
-        localStorage.setItem('siteData', JSON.stringify(dados));
-        alert('Alterações enviadas com sucesso! Verifique o seu site.');
+    function addItem(type) {
+        if(type === 'area') siteData.areas.push({ titulo: '', desc: '', icone: 'fas fa-gavel' });
+        if(type === 'pub') siteData.pubs.push({ link: '', desc: '' });
+        renderDynamic();
+    }
+
+    function delItem(type, index) {
+        if(type === 'area') siteData.areas.splice(index, 1);
+        if(type === 'pub') siteData.pubs.splice(index, 1);
+        renderDynamic();
+    }
+
+    function encodeImg(id) {
+        const file = document.getElementById(`file-${id}`).files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => { siteData.fotos[`f${id}`] = reader.result; };
+        if (file) reader.readAsDataURL(file);
+    }
+
+    function renderDynamic() {
+        document.getElementById('area-container').innerHTML = siteData.areas.map((a, i) => `
+            <div class="dynamic-item">
+                <input type="text" value="${a.titulo}" placeholder="Título" onchange="siteData.areas[${i}].titulo=this.value">
+                <input type="text" value="${a.icone}" placeholder="Classe Icone (FontAwesome)" onchange="siteData.areas[${i}].icone=this.value">
+                <button class="btn-del" onclick="delItem('area', ${i})">X</button>
+            </div>
+        `).join('');
+        
+        document.getElementById('pub-container').innerHTML = siteData.pubs.map((p, i) => `
+            <div class="dynamic-item">
+                <input type="text" value="${p.link}" placeholder="Link" onchange="siteData.pubs[${i}].link=this.value">
+                <input type="text" value="${p.desc}" placeholder="Descrição" onchange="siteData.pubs[${i}].desc=this.value">
+                <button class="btn-del" onclick="delItem('pub', ${i})">X</button>
+            </div>
+        `).join('');
+    }
+
+    function salvarGeral() {
+        siteData.tema = document.getElementById('theme-selector').value;
+        siteData.sobre = document.getElementById('input-sobre').value;
+        siteData.email = document.getElementById('input-email').value;
+        siteData.horario = document.getElementById('input-horario').value;
+        siteData.copy = document.getElementById('input-copy').value;
+        
+        localStorage.setItem('siteData', JSON.stringify(siteData));
+        alert('Site Atualizado!');
         window.location.href = 'index.html';
     }
 
-    // Carregar dados salvos ao abrir
-    window.onload = function() {
-        const savedData = JSON.parse(localStorage.getItem('siteData'));
-        if(savedData) {
-            document.getElementById('theme-selector').value = savedData.tema;
-            document.getElementById('input-nome').value = savedData.nome;
-            document.getElementById('input-oab').value = savedData.oab;
-            document.getElementById('input-slogan').value = savedData.slogan;
-            document.getElementById('input-whatsapp').value = savedData.whatsapp;
-            document.getElementById('input-instagram').value = savedData.instagram;
-            document.getElementById('input-endereco').value = savedData.endereco;
-        }
+    window.onload = () => {
+        document.getElementById('theme-selector').value = siteData.tema || 'tema-advogado';
+        document.getElementById('input-sobre').value = siteData.sobre || '';
+        document.getElementById('input-email').value = siteData.email || '';
+        document.getElementById('input-horario').value = siteData.horario || '';
+        document.getElementById('input-copy').value = siteData.copy || '';
+        renderDynamic();
     };
 </script>
-
 </body>
 </html>
