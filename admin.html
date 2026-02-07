@@ -101,12 +101,10 @@
 
 <div id="redes" class="container">
     <h3>Links das Redes Sociais (Fale Conosco e Rodapé)</h3>
-    <div id="social-grid" class="section-box">
-        </div>
+    <div id="social-grid" class="section-box"></div>
 
     <h3>Publicações (3 YouTube / 3 Instagram)</h3>
-    <div id="pub-grid">
-        </div>
+    <div id="pub-grid"></div>
 </div>
 
 <div id="temas" class="container">
@@ -174,40 +172,31 @@ CREATE TABLE site_config (
         el.classList.add('active');
     }
 
-// --- NOVO MOTOR DE UPLOAD (CORRIGIDO) ---
-let tempFotos = { f1: "", f2: "", f3: "" }; // Cache temporário para PNG/JPG
+    let tempFotos = { f1: "", f2: "", f3: "" };
 
-function previewImg(id) {
-    const file = document.getElementById(`file-${id}`).files[0];
-    const reader = new FileReader();
-    
-    reader.onloadend = () => {
-        document.getElementById(`prev-${id}`).src = reader.result;
-        // O botão "ENVIAR PARA SITE" agora aparece para confirmar a ação
-        document.getElementById(`btn-up-${id}`).style.display = 'block';
-        document.getElementById(`ok-${id}`).style.display = 'none';
-        tempFotos[`f${id}`] = reader.result; // Armazena no cache temporário
-    };
-    
-    if (file) {
-        reader.readAsDataURL(file);
-    }
+    function previewImg(id) {
+        const file = document.getElementById(`file-${id}`).files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            document.getElementById(`prev-${id}`).src = reader.result;
+            document.getElementById(`btn-up-${id}`).style.display = 'block';
+            document.getElementById(`ok-${id}`).style.display = 'none';
+            tempFotos[`f${id}`] = reader.result;
+        };
+        if (file) reader.readAsDataURL(file);
     }
 
     function confirmImg(id) {
-    if (tempFotos[`f${id}`]) {
-        db.fotos[`f${id}`] = tempFotos[`f${id}`]; // Grava definitivamente no objeto do banco
-        document.getElementById(`btn-up-${id}`).style.display = 'none';
-        document.getElementById(`ok-${id}`).style.display = 'block';
-        
-        // Feedback visual imediato de sucesso (Requisito do Usuário)
-        alert("Sucesso! Foto " + id + " processada e pronta para o site."); 
-    } else {
-        alert("Erro: Selecione uma foto primeiro.");
-    }
+        if (tempFotos[`f${id}`]) {
+            db.fotos[`f${id}`] = tempFotos[`f${id}`];
+            document.getElementById(`btn-up-${id}`).style.display = 'none';
+            document.getElementById(`ok-${id}`).style.display = 'block';
+            alert("Sucesso! Foto " + id + " processada e pronta para o site."); 
+        } else {
+            alert("Erro: Selecione uma foto primeiro.");
+        }
     }
 
-    // Gerenciador de Áreas
     function addArea() { db.areas.push({t:'', d:'', i:'fas fa-star'}); renderAreas(); }
     function delArea(i) { db.areas.splice(i,1); renderAreas(); }
     function renderAreas() {
@@ -235,23 +224,20 @@ function previewImg(id) {
     }
 
     function saveMaster() {
-    // Captura TODOS os campos de texto da Aba 1
-    db.nome = document.getElementById('in-nome').value;
-    db.oab = document.getElementById('in-oab').value;
-    db.slogan = document.getElementById('in-slogan').value;
-    db.sobre = document.getElementById('in-sobre').value;
-    db.endereco = document.getElementById('in-endereco').value;
-    db.tel = document.getElementById('in-tel').value;
-    db.email = document.getElementById('in-email').value;
-    db.horario = document.getElementById('in-horario').value;
-    db.copy = document.getElementById('in-copy').value;
-    db.tema = document.getElementById('in-tema').value;
+        db.nome = document.getElementById('in-nome').value;
+        db.oab = document.getElementById('in-oab').value;
+        db.slogan = document.getElementById('in-slogan').value;
+        db.sobre = document.getElementById('in-sobre').value;
+        db.endereco = document.getElementById('in-endereco').value;
+        db.tel = document.getElementById('in-tel').value;
+        db.email = document.getElementById('in-email').value;
+        db.horario = document.getElementById('in-horario').value;
+        db.copy = document.getElementById('in-copy').value;
+        db.tema = document.getElementById('in-tema').value;
 
-    // Salva o objeto completo no LocalStorage
-    localStorage.setItem('siteData', JSON.stringify(db));
-    
-    alert("SISTEMA ERI PLAY ATUALIZADO!\nO site principal refletirá as mudanças agora.");
-    window.location.href = 'index.html';
+        localStorage.setItem('siteData', JSON.stringify(db));
+        alert("SISTEMA ERI PLAY ATUALIZADO!\nO site principal refletirá as mudanças agora.");
+        window.location.href = 'index.html';
     }
 
     window.onload = () => {
@@ -266,7 +252,10 @@ function previewImg(id) {
         document.getElementById('in-copy').value = db.copy || '';
         document.getElementById('in-tema').value = db.tema || 'tema-advogado';
         
-        for(let i=1; i<=3; i++) if(db.fotos[`f${i}`]) document.getElementById(`prev-${i}`).src = db.fotos[`f${i}`];
+        for(let i=1; i<=3; i++) if(db.fotos[`f${i}`]) {
+            document.getElementById(`prev-${i}`).src = db.fotos[`f${i}`];
+            document.getElementById(`ok-${i}`).style.display = 'block';
+        }
         renderAreas();
         renderRedesEPubs();
     };
