@@ -100,7 +100,7 @@ input, textarea { width: 100%; padding: 15px; border: 1px solid #ddd; border-rad
 .btn-submit:hover { background: var(--accent); color: var(--primary); }
 
 @media (max-width: 768px) {
-    .form-row { flex-direction: column; gap: 15px; }
+    .form-row { flex-direction: column; gap: 16px; }
     .nav-menu { display: none; }
     .hero-btns { flex-direction: column; align-items: center; }
 }
