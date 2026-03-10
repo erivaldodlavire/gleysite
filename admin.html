@@ -3,114 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Admin EriPlay | v4.0</title>
+    <title>Master Admin EriPlay | Completo</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root { --primary: #001f3f; --accent: #e5c05b; --success: #28a745; --danger: #dc3545; }
         body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 120px; }
-        
         header.admin-nav { background: var(--primary); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.4); margin-bottom: 30px; }
         .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); margin-bottom: 30px; }
-        
-        .section-box { border: 1px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #fafafa; }
+        .section-box { border: 1px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 25px; background: #fafafa; }
         h3 { color: var(--primary); border-left: 6px solid var(--accent); padding-left: 15px; text-transform: uppercase; font-size: 1.1rem; margin-bottom: 20px; }
-        label { display: block; margin-top: 10px; font-weight: 900; font-size: 0.8rem; color: #555; }
+        label { display: block; margin-top: 15px; font-weight: 900; font-size: 0.8rem; color: #555; }
         input, textarea, select { width: 100%; padding: 12px; margin-top: 5px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; }
-
+        .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .preview-img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; background: #ddd; margin-bottom: 10px; }
+        .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: 0.3s; }
+        .btn-save-master:hover { transform: scale(1.05); background: var(--accent); color: var(--primary); }
         .dynamic-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; position: relative; }
         .btn-add { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
-        .btn-del { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; position: absolute; top: 10px; right: 10px; }
-
-        .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
 
 <header class="admin-nav">
-    <h1>Painel de Controle Gleysite</h1>
-    <p>Role para baixo para editar todas as seções</p>
+    <h1>Painel de Controle Gleysite v5.0</h1>
+    <p>Todos os campos em uma única página para facilitar!</p>
 </header>
 
 <div class="container">
-    <h3>1. Informações Gerais</h3>
+    <h3>1. Informações de Contato e Cabeçalho</h3>
     <div class="section-box">
-        <label>Nome no Site</label><input type="text" id="in-nome">
-        <label>Slogan</label><input type="text" id="in-slogan">
-        <label>Sobre Mim</label><textarea id="in-sobre" rows="4"></textarea>
+        <label>Nome Completo</label><input type="text" id="in-nome">
+        <label>OAB / Registro Profissional</label><input type="text" id="in-oab">
+        <label>Slogan (Frase de Impacto)</label><input type="text" id="in-slogan">
+        <label>Sobre Mim (Biografia)</label><textarea id="in-sobre" rows="4"></textarea>
+        <label>Endereço</label><input type="text" id="in-endereco">
+        <label>Telefone/WhatsApp</label><input type="text" id="in-tel">
+        <label>E-mail Profissional</label><input type="text" id="in-email">
+        <label>Horário de Atendimento</label><input type="text" id="in-horario">
+        <label>Texto de Copyright (Rodapé)</label><input type="text" id="in-copy">
     </div>
 
-    <h3>2. Áreas de Atuação</h3>
-    <button class="btn-add" onclick="addArea()">+ Nova Área</button>
+    <h3>2. Áreas de Atuação (Serviços)</h3>
+    <button class="btn-add" onclick="addArea()">+ Adicionar Nova Área</button>
     <div id="area-list"></div>
 
-    <h3>3. Redes Sociais</h3>
+    <h3>3. Links de Redes Sociais</h3>
     <div id="social-grid" class="section-box"></div>
 
-    <h3>4. Vídeos do YouTube</h3>
+    <h3>4. Vídeos e Publicações (YouTube/Insta)</h3>
     <div id="pub-grid"></div>
 
-    <h3>5. Estilo Visual</h3>
-    <select id="in-tema">
-        <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
-        <option value="tema-gamer">Gamer (Neon)</option>
-        <option value="tema-cyberpunk">Cyberpunk</option>
-    </select>
+    <h3>5. Estilo e Fotos</h3>
+    <div class="section-box">
+        <label>Escolha o Tema</label>
+        <select id="in-tema">
+            <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
+            <option value="tema-gamer">Gamer (EriPlay Style)</option>
+            <option value="tema-cyberpunk">Cyberpunk (Neon)</option>
+            <option value="tema-engenheiro">Engenharia</option>
+        </select>
+    </div>
 </div>
 
-<button class="btn-save-master" onclick="saveMaster()">SALVAR TODAS AS ALTERAÇÕES</button>
+<button class="btn-save-master" onclick="saveMaster()">SALVAR E ATUALIZAR SITE</button>
 
 <script>
-    // Inicia os dados ou cria um padrão se estiver vazio
     let db = JSON.parse(localStorage.getItem('siteData')) || {
-        areas: [{t:'Exemplo', d:'Descrição', i:'fas fa-star'}],
-        redes: ["", "", ""],
-        pubs: [{l:'', d:''}, {l:'', d:''}],
-        fotos: {}
+        areas: [], redes: Array(5).fill(""), pubs: Array(6).fill({l:"", d:""}), fotos: {}
     };
 
     function renderAll() {
-        // Renderiza Áreas
+        // Áreas de Atuação
         document.getElementById('area-list').innerHTML = db.areas.map((a, i) => `
             <div class="dynamic-item">
-                <button class="btn-del" onclick="db.areas.splice(${i},1); renderAll()">X</button>
-                <input type="text" placeholder="Título" value="${a.t}" onchange="db.areas[${i}].t=this.value">
-                <input type="text" placeholder="Descrição" value="${a.d}" onchange="db.areas[${i}].d=this.value">
+                <input type="text" placeholder="Título" value="${a.t}" onchange="db.areas[${i}].t=this.value" style="width:30%">
+                <input type="text" placeholder="Descrição" value="${a.d}" onchange="db.areas[${i}].d=this.value" style="width:60%">
+                <button onclick="db.areas.splice(${i},1); renderAll()" style="color:red">Remover</button>
             </div>
         `).join('');
 
-        // Renderiza Redes (mostra 5 campos fixos para facilitar)
-        if(db.redes.length < 5) db.redes = Array(5).fill("");
-        document.getElementById('social-grid').innerHTML = db.redes.slice(0,5).map((r, i) => `
-            <label>Link Social ${i+1}</label><input type="text" value="${r}" onchange="db.redes[${i}]=this.value">
+        // Redes Sociais
+        document.getElementById('social-grid').innerHTML = db.redes.map((r, i) => `
+            <label>Link Social ${i+1}</label><input type="text" value="${r}" onchange="db.redes[${i}]=this.value" placeholder="https://...">
         `).join('');
 
-        // Renderiza Pubs
+        // Publicações
         document.getElementById('pub-grid').innerHTML = db.pubs.map((p, i) => `
             <div class="dynamic-item">
-                <label>Link do Vídeo ${i+1}</label><input type="text" value="${p.l}" onchange="db.pubs[${i}].l=this.value">
-                <label>Descrição</label><input type="text" value="${p.d}" onchange="db.pubs[${i}].d=this.value">
+                <label>Descrição Vídeo ${i+1}</label><input type="text" value="${p.d}" onchange="db.pubs[${i}].d=this.value">
+                <label>Link (YouTube/Instagram)</label><input type="text" value="${p.l}" onchange="db.pubs[${i}].l=this.value">
             </div>
         `).join('');
     }
 
-    function addArea() { db.areas.push({t:'', d:'', i:'fas fa-star'}); renderAll(); }
+    function addArea() { db.areas.push({t:"", d:"", i:"fas fa-star"}); renderAll(); }
 
     function saveMaster() {
         db.nome = document.getElementById('in-nome').value;
+        db.oab = document.getElementById('in-oab').value;
         db.slogan = document.getElementById('in-slogan').value;
         db.sobre = document.getElementById('in-sobre').value;
+        db.endereco = document.getElementById('in-endereco').value;
+        db.tel = document.getElementById('in-tel').value;
+        db.email = document.getElementById('in-email').value;
+        db.horario = document.getElementById('in-horario').value;
+        db.copy = document.getElementById('in-copy').value;
         db.tema = document.getElementById('in-tema').value;
 
         localStorage.setItem('siteData', JSON.stringify(db));
-        alert("Site Atualizado com Sucesso!");
+        alert("SISTEMA ATUALIZADO!");
         window.location.href = 'index.html';
     }
 
     window.onload = () => {
         document.getElementById('in-nome').value = db.nome || '';
+        document.getElementById('in-oab').value = db.oab || '';
         document.getElementById('in-slogan').value = db.slogan || '';
         document.getElementById('in-sobre').value = db.sobre || '';
+        document.getElementById('in-endereco').value = db.endereco || '';
+        document.getElementById('in-tel').value = db.tel || '';
+        document.getElementById('in-email').value = db.email || '';
+        document.getElementById('in-horario').value = db.horario || '';
+        document.getElementById('in-copy').value = db.copy || '';
         document.getElementById('in-tema').value = db.tema || 'tema-advogado';
         renderAll();
     };
