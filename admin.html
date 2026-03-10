@@ -6,6 +6,7 @@
     <title>Master Admin EriPlay | v9.0 Oficial</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --primary: #001f3f; --accent: #e5c05b; --success: #28a745; --danger: #dc3545; }
         body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 120px; }
@@ -17,7 +18,8 @@
         input, textarea, select { width: 100%; padding: 12px; margin-top: 5px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
         .dynamic-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
         .btn-add { background: var(--success); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 900; margin-bottom: 20px; }
-        .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 50px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); font-size: 1.1rem; }
+        .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 50px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); font-size: 1.1rem; transition: 0.3s; }
+        .btn-save-master:disabled { background: #666; border-color: #888; cursor: not-allowed; }
         .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 10px; }
         .preview-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 2px solid #ddd; background: #eee; }
     </style>
@@ -26,7 +28,7 @@
 
 <header class="admin-nav">
     <h1>Painel de Controle Gleysite v9.0</h1>
-    <p>Gestão de Conteúdo e Fotos do Escritório</p>
+    <p>Gestão de Conteúdo e Fotos do Escritório (Sincronizado com Nuvem)</p>
 </header>
 
 <div class="container">
@@ -76,7 +78,11 @@
 <button class="btn-save-master" onclick="saveMaster()">SALVAR ALTERAÇÕES</button>
 
 <script>
-    // Áreas padrão para não vir vazio
+    // CONEXÃO SUPABASE
+    const SUPABASE_URL = 'https://ueduzgoewlivkluiyqql.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZHV6Z29ld2xpdmtsdWl5cXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODAxMzAsImV4cCI6MjA4ODc1NjEzMH0.EM2s38El81fZYT-WVrxa7P_xX0e58EHQxdwreVgQecA';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const defaultAreas = [
         {t:'Direito Civil', d:'Contratos, indenizações e direitos civis.', i:'fas fa-gavel'},
         {t:'Direito Criminal', d:'Defesa e consultoria penal.', i:'fas fa-user-shield'},
@@ -94,7 +100,6 @@
     };
 
     function renderAll() {
-        // Render Áreas
         document.getElementById('area-list').innerHTML = db.areas.map((a, i) => `
             <div class="dynamic-item">
                 <div style="flex:1"><label>Ícone</label><input type="text" value="${a.i}" oninput="db.areas[${i}].i=this.value"></div>
@@ -104,12 +109,10 @@
             </div>
         `).join('');
 
-        // Redes Sociais
         document.getElementById('social-grid').innerHTML = db.redes.map((r, i) => `
             <label>Link Social ${i+1}</label><input type="text" value="${r}" oninput="db.redes[${i}]=this.value" placeholder="https://...">
         `).join('');
 
-        // Publicações
         document.getElementById('pub-grid').innerHTML = db.pubs.map((p, i) => `
             <div class="dynamic-item">
                 <input type="text" placeholder="Título" value="${p.d}" oninput="db.pubs[${i}].d=this.value" style="flex:1">
@@ -117,7 +120,6 @@
             </div>
         `).join('');
         
-        // Fotos Espaço
         for(let i=1; i<=3; i++) {
             if(db.fotos['f'+i]) document.getElementById('prev-'+i).src = db.fotos['f'+i];
         }
@@ -135,7 +137,14 @@
         if (file) reader.readAsDataURL(file);
     }
 
-    function saveMaster() {
+    // FUNÇÃO SALVAR ATUALIZADA PARA SUPABASE
+    async function saveMaster() {
+        const btn = document.querySelector('.btn-save-master');
+        const originalText = btn.innerText;
+        btn.innerText = "☁️ Sincronizando com a Nuvem...";
+        btn.disabled = true;
+
+        // Atualizar objeto db antes de enviar
         db.nome = document.getElementById('in-nome').value;
         db.oab = document.getElementById('in-oab').value;
         db.slogan = document.getElementById('in-slogan').value;
@@ -144,19 +153,49 @@
         db.email = document.getElementById('in-email').value;
         db.tema = document.getElementById('in-tema').value;
 
-        localStorage.setItem('siteData', JSON.stringify(db));
-        alert("SISTEMA ATUALIZADO!");
-        window.location.href = 'index.html';
+        // Tentar salvar no Supabase
+        const { error } = await supabaseClient
+            .from('site_config')
+            .update({
+                nome: db.nome,
+                oab: db.oab,
+                slogan: db.slogan,
+                sobre: db.sobre,
+                tel: db.tel,
+                email: db.email,
+                tema: db.tema,
+                areas: db.areas,
+                pubs: db.pubs,
+                fotos: db.fotos,
+                redes: db.redes
+            })
+            .eq('id', 1);
+
+        if (!error) {
+            localStorage.setItem('siteData', JSON.stringify(db));
+            alert("🚀 SITE ATUALIZADO NA NUVEM! Agora as mudanças aparecem em todos os dispositivos.");
+            window.location.href = 'index.html';
+        } else {
+            console.error(error);
+            alert("❌ Erro ao salvar na nuvem: " + error.message);
+        }
+
+        btn.innerText = originalText;
+        btn.disabled = false;
     }
 
-    window.onload = () => {
-        document.getElementById('in-nome').value = db.nome || "Gleyciane Bento de Araújo";
-        document.getElementById('in-oab').value = db.oab || "OAB/SP 473.457";
+    window.onload = async () => {
+        // Tentar carregar os dados mais recentes da nuvem ao abrir o admin
+        const { data } = await supabaseClient.from('site_config').select('*').eq('id', 1).single();
+        if (data) db = data;
+
+        document.getElementById('in-nome').value = db.nome || "";
+        document.getElementById('in-oab').value = db.oab || "";
         document.getElementById('in-slogan').value = db.slogan || "";
         document.getElementById('in-sobre').value = db.sobre || "";
         document.getElementById('in-tel').value = db.tel || "";
         document.getElementById('in-email').value = db.email || "";
-        document.getElementById('in-tema').value = db.tema;
+        document.getElementById('in-tema').value = db.tema || "tema-advogado";
         renderAll();
     };
 </script>
