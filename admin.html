@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Admin EriPlay | v6.0 Blindada</title>
+    <title>Master Admin EriPlay | v7.0 Inteligente</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -15,46 +15,43 @@
         h3 { color: var(--primary); border-left: 6px solid var(--accent); padding-left: 15px; text-transform: uppercase; font-size: 1.1rem; margin-bottom: 20px; }
         label { display: block; margin-top: 15px; font-weight: 900; font-size: 0.8rem; color: #555; }
         input, textarea, select { width: 100%; padding: 12px; margin-top: 5px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
-        .dynamic-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; position: relative; }
+        .dynamic-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; position: relative; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
         .btn-add { background: var(--success); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 900; margin-bottom: 20px; }
         .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .preview-img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; background: #eee; border: 1px solid #ccc; margin-bottom: 5px; }
+        .preview-img { width: 100px; height: 70px; object-fit: cover; border-radius: 8px; background: #eee; }
     </style>
 </head>
 <body>
 
 <header class="admin-nav">
-    <h1>Painel EriPlay v6.0</h1>
-    <p>Edição Direta e Blindada contra Erros</p>
+    <h1>Painel EriPlay v7.0</h1>
+    <p>Configurações preservadas e suporte a Shorts</p>
 </header>
 
 <div class="container">
-    <h3>1. Informações Principais</h3>
+    <h3>1. Dados do Profissional</h3>
     <div class="section-box">
         <label>Nome Completo</label><input type="text" id="in-nome">
         <label>OAB / Registro</label><input type="text" id="in-oab">
         <label>Slogan</label><input type="text" id="in-slogan">
-        <label>Sobre Mim</label><textarea id="in-sobre" rows="4"></textarea>
-        <label>Telefone/WhatsApp (Ex: 55199...) </label><input type="text" id="in-tel">
-        <label>E-mail</label><input type="text" id="in-email">
+        <label>Biografia</label><textarea id="in-sobre" rows="4"></textarea>
     </div>
 
-    <h3>2. Áreas de Atuação</h3>
+    <h3>2. Áreas de Atuação (Serviços)</h3>
+    <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Use ícones do FontAwesome (ex: fas fa-gavel)</p>
     <button class="btn-add" onclick="addArea()">+ Adicionar Nova Área</button>
     <div id="area-list"></div>
 
-    <h3>3. Redes Sociais (Links Completos)</h3>
-    <div id="social-grid" class="section-box"></div>
-
-    <h3>4. Vídeos e Publicações</h3>
+    <h3>3. Publicações (YouTube, Shorts e Instagram)</h3>
     <div id="pub-grid"></div>
 
-    <h3>5. Estilo e Fotos</h3>
+    <h3>4. Estilo Visual</h3>
     <div class="section-box">
-        <label>Tema Profissional</label>
+        <label>Tema do Site</label>
         <select id="in-tema">
             <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
+            <option value="tema-gamer">Gamer (EriPlay Style)</option>
+            <option value="tema-cyberpunk">Cyberpunk</option>
             <option value="tema-engenheiro">Engenharia</option>
             <option value="tema-medico">Medicina</option>
             <option value="tema-psicologo">Psicologia</option>
@@ -62,95 +59,73 @@
             <option value="tema-nutri">Nutrição</option>
             <option value="tema-estetica">Estética</option>
             <option value="tema-arquiteto">Arquitetura</option>
-            <option value="tema-gamer">Gamer (EriPlay Style)</option>
-            <option value="tema-cyberpunk">Cyberpunk</option>
         </select>
-        
-        <label style="margin-top:20px">Fotos do Espaço (Selecione arquivos PNG/JPG)</label>
-        <div class="upload-grid">
-            <div><img id="prev-1" class="preview-img"><input type="file" onchange="encodeImg(1, this)" accept="image/*"></div>
-            <div><img id="prev-2" class="preview-img"><input type="file" onchange="encodeImg(2, this)" accept="image/*"></div>
-            <div><img id="prev-3" class="preview-img"><input type="file" onchange="encodeImg(3, this)" accept="image/*"></div>
-        </div>
     </div>
 </div>
 
-<button class="btn-save-master" onclick="saveMaster()">APLICAR ALTERAÇÕES NO SITE</button>
+<button class="btn-save-master" onclick="saveMaster()">SALVAR ALTERAÇÕES</button>
 
 <script>
-    // Garantir que a estrutura básica exista
-    let db = JSON.parse(localStorage.getItem('siteData')) || {};
-    if (!db.areas) db.areas = [];
-    if (!db.redes || db.redes.length < 5) db.redes = Array(5).fill("");
-    if (!db.pubs || db.pubs.length < 6) db.pubs = Array(6).fill({l:"", d:""});
-    if (!db.fotos) db.fotos = {f1:"", f2:"", f3:""};
+    // Carrega dados ou define os PADRÕES do seu site atual
+    const defaultAreas = [
+        {t:'Direito Civil', d:'Contratos, indenizações e direitos civis.', i:'fas fa-gavel'},
+        {t:'Direito Criminal', d:'Defesa e consultoria penal.', i:'fas fa-user-shield'},
+        {t:'Previdenciário', d:'Aposentadorias e benefícios INSS.', i:'fas fa-hand-holding-medical'},
+        {t:'Família', d:'Divórcio, guarda e pensão.', i:'fas fa-users'},
+        {t:'Sucessório', d:'Inventários e partilhas.', i:'fas fa-file-signature'}
+    ];
+
+    let db = JSON.parse(localStorage.getItem('siteData')) || {
+        areas: defaultAreas,
+        pubs: Array(6).fill({l:"", d:""}),
+        nome: "Gleyciane Bento de Araújo",
+        oab: "OAB/SP 473.457",
+        slogan: "Defendendo seus direitos com excelência",
+        tema: "tema-advogado"
+    };
 
     function renderAll() {
-        // Renderizar Áreas
+        // Áreas de Atuação
         const areaDiv = document.getElementById('area-list');
         areaDiv.innerHTML = db.areas.map((a, i) => `
             <div class="dynamic-item">
-                <input type="text" placeholder="Título" value="${a.t || ''}" oninput="db.areas[${i}].t=this.value" style="width:30%">
-                <input type="text" placeholder="Descrição" value="${a.d || ''}" oninput="db.areas[${i}].d=this.value" style="width:55%">
-                <button onclick="removeArea(${i})" style="color:red; font-weight:bold; cursor:pointer">X</button>
+                <input type="text" placeholder="Ícone" value="${a.i}" oninput="db.areas[${i}].i=this.value" style="width:15%">
+                <input type="text" placeholder="Título" value="${a.t}" oninput="db.areas[${i}].t=this.value" style="width:25%">
+                <input type="text" placeholder="Descrição" value="${a.d}" oninput="db.areas[${i}].d=this.value" style="width:45%">
+                <button onclick="db.areas.splice(${i},1); renderAll()" style="background:red; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer">Lixeira</button>
             </div>
         `).join('');
 
-        // Renderizar Redes
-        document.getElementById('social-grid').innerHTML = db.redes.map((r, i) => `
-            <label>Link Social ${i+1}</label>
-            <input type="text" value="${r || ''}" oninput="db.redes[${i}]=this.value" placeholder="https://instagram.com/seu-perfil">
-        `).join('');
-
-        // Renderizar Pubs
+        // Publicações
         document.getElementById('pub-grid').innerHTML = db.pubs.map((p, i) => `
             <div class="dynamic-item">
-                <label>Descrição ${i+1}</label><input type="text" value="${p.d || ''}" oninput="db.pubs[${i}].d=this.value">
-                <label>Link (YouTube/Instagram)</label><input type="text" value="${p.l || ''}" oninput="db.pubs[${i}].l=this.value">
+                <div style="width:100%"><strong>Publicação ${i+1}</strong></div>
+                <input type="text" placeholder="Descrição" value="${p.d}" oninput="db.pubs[${i}].d=this.value" style="width:40%">
+                <input type="text" placeholder="Link YouTube/Shorts/Insta" value="${p.l}" oninput="db.pubs[${i}].l=this.value" style="width:55%">
             </div>
         `).join('');
-        
-        // Renderizar Previews de Fotos
-        for(let i=1; i<=3; i++) {
-            if(db.fotos['f'+i]) document.getElementById('prev-'+i).src = db.fotos['f'+i];
-        }
     }
 
-    function addArea() { db.areas.push({t:"", d:"", i:"fas fa-star"}); renderAll(); }
-    function removeArea(i) { db.areas.splice(i, 1); renderAll(); }
-
-    function encodeImg(id, input) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            db.fotos['f'+id] = reader.result;
-            document.getElementById('prev-'+id).src = reader.result;
-        };
-        if (file) reader.readAsDataURL(file);
-    }
+    function addArea() { db.areas.push({t:"Novo Serviço", d:"Descrição do serviço", i:"fas fa-briefcase"}); renderAll(); }
 
     function saveMaster() {
         db.nome = document.getElementById('in-nome').value;
         db.oab = document.getElementById('in-oab').value;
         db.slogan = document.getElementById('in-slogan').value;
         db.sobre = document.getElementById('in-sobre').value;
-        db.tel = document.getElementById('in-tel').value;
-        db.email = document.getElementById('in-email').value;
         db.tema = document.getElementById('in-tema').value;
 
         localStorage.setItem('siteData', JSON.stringify(db));
-        alert("SITE ATUALIZADO COM SUCESSO!");
+        alert("SITE ATUALIZADO!");
         window.location.href = 'index.html';
     }
 
     window.onload = () => {
-        document.getElementById('in-nome').value = db.nome || '';
-        document.getElementById('in-oab').value = db.oab || '';
-        document.getElementById('in-slogan').value = db.slogan || '';
-        document.getElementById('in-sobre').value = db.sobre || '';
-        document.getElementById('in-tel').value = db.tel || '';
-        document.getElementById('in-email').value = db.email || '';
-        document.getElementById('in-tema').value = db.tema || 'tema-advogado';
+        document.getElementById('in-nome').value = db.nome;
+        document.getElementById('in-oab').value = db.oab;
+        document.getElementById('in-slogan').value = db.slogan;
+        document.getElementById('in-sobre').value = db.sobre || "";
+        document.getElementById('in-tema').value = db.tema;
         renderAll();
     };
 </script>

@@ -20,12 +20,14 @@ window.onload = function() {
     if(data.copy) document.getElementById('edit-copyright').innerText = data.copy;
 
     // 3. Fotos com Suporte a PNG (Base64)
-    for(let i=1; i<=3; i++) {
-        const img = document.getElementById(`img-espaco-${i}`);
-        if(img && data.fotos[`f${i}`]) img.src = data.fotos[`f${i}`];
+    if (data.fotos) {
+        for(let i=1; i<=3; i++) {
+            const img = document.getElementById(`img-espaco-${i}`);
+            if(img && data.fotos[`f${i}`]) img.src = data.fotos[`f${i}`];
+        }
     }
 
-    // 4. Áreas de Atuação Dinâmicas (Espelho do Padrão)
+    // 4. Áreas de Atuação Dinâmicas
     if(data.areas && data.areas.length > 0) {
         const container = document.getElementById('container-servicos');
         if(container) {
@@ -38,37 +40,63 @@ window.onload = function() {
         }
     }
 
-    // 5. Redes Sociais e Publicações (Auto-Icone)
+    // 5. Redes Sociais (Filtro de segurança)
     const getIcon = (u) => {
         if(u.includes('instagram')) return 'fab fa-instagram';
         if(u.includes('youtube')) return 'fab fa-youtube';
         if(u.includes('whatsapp') || u.includes('wa.me')) return 'fab fa-whatsapp';
         if(u.includes('linkedin')) return 'fab fa-linkedin';
+        if(u.includes('facebook')) return 'fab fa-facebook';
+        if(u.includes('x.com') || u.includes('twitter')) return 'fab fa-x-twitter';
         return 'fas fa-link';
     };
 
     const redesArea = document.getElementById('edit-redes-sociais-icones');
     const footerRedes = document.getElementById('edit-social-links-footer');
     
-    const redesHTML = data.redes.filter(l => l !== '').map(l => `
-        <a href="${l}" target="_blank" class="icon-3d"><i class="${getIcon(l)}"></i></a>`).join('');
-    
-    if(redesArea) redesArea.innerHTML = redesHTML;
-    if(footerRedes) footerRedes.innerHTML = redesHTML;
+    if (data.redes) {
+        const redesHTML = data.redes.filter(l => l !== '').map(l => `
+            <a href="${l}" target="_blank" class="icon-3d"><i class="${getIcon(l)}"></i></a>`).join('');
+        
+        if(redesArea) redesArea.innerHTML = redesHTML;
+        if(footerRedes) footerRedes.innerHTML = redesHTML;
+    }
 
-    // Publicações YT/Insta
+    // 6. Publicações YT (Normal e Shorts) / Insta
     const pubArea = document.getElementById('container-publicacoes');
-    if(pubArea) {
-        pubArea.innerHTML = data.pubs.filter(p => p.l !== '').map(p => `
-            <div class="pub-container">
-                <p class="pub-desc">${p.d}</p>
-                <div class="pub-item">
-                    <a href="${p.l}" target="_blank">
-                        ${p.l.includes('instagram') 
-                            ? `<div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>`
-                            : `<img src="https://img.youtube.com/vi/${p.l.split('v=')[1]}/hqdefault.jpg"><div class="play-overlay"><i class="fab fa-youtube"></i></div>`}
-                    </a>
-                </div>
-            </div>`).join('');
+    if(pubArea && data.pubs) {
+        pubArea.innerHTML = data.pubs.filter(p => p.l !== '').map(p => {
+            let thumbContent = "";
+            
+            if (p.l.includes('instagram.com')) {
+                // Layout para Instagram
+                thumbContent = `<div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>`;
+            } else {
+                // Lógica para extrair ID do YouTube (Vídeo Normal, Shorts ou Link Curto)
+                let videoId = "";
+                if (p.l.includes('shorts/')) {
+                    videoId = p.l.split('shorts/')[1].split(/[?#]/)[0];
+                } else if (p.l.includes('v=')) {
+                    videoId = p.l.split('v=')[1].split('&')[0];
+                } else if (p.l.includes('youtu.be/')) {
+                    videoId = p.l.split('youtu.be/')[1].split(/[?#]/)[0];
+                }
+
+                thumbContent = `
+                    <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg">
+                    <div class="play-overlay"><i class="fab fa-youtube"></i></div>
+                `;
+            }
+
+            return `
+                <div class="pub-container">
+                    <p class="pub-desc">${p.d}</p>
+                    <div class="pub-item">
+                        <a href="${p.l}" target="_blank">
+                            ${thumbContent}
+                        </a>
+                    </div>
+                </div>`;
+        }).join('');
     }
 };
