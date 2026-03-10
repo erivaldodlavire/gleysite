@@ -19,7 +19,7 @@
         .dynamic-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
         .btn-add { background: var(--success); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 900; margin-bottom: 20px; }
         .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 50px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); font-size: 1.1rem; transition: 0.3s; }
-        .btn-save-master:disabled { background: #666; border-color: #888; cursor: not-allowed; }
+        .btn-save-master:disabled { background: #666; border-color: #888; cursor: not-allowed; opacity: 0.8; }
         .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 10px; }
         .preview-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 2px solid #ddd; background: #eee; }
     </style>
@@ -110,18 +110,19 @@
         `).join('');
 
         document.getElementById('social-grid').innerHTML = db.redes.map((r, i) => `
-            <label>Link Social ${i+1}</label><input type="text" value="${r}" oninput="db.redes[${i}]=this.value" placeholder="https://...">
+            <label>Link Social ${i+1}</label><input type="text" value="${r || ''}" oninput="db.redes[${i}]=this.value" placeholder="https://...">
         `).join('');
 
         document.getElementById('pub-grid').innerHTML = db.pubs.map((p, i) => `
             <div class="dynamic-item">
-                <input type="text" placeholder="Título" value="${p.d}" oninput="db.pubs[${i}].d=this.value" style="flex:1">
-                <input type="text" placeholder="Link YouTube/Insta" value="${p.l}" oninput="db.pubs[${i}].l=this.value" style="flex:2">
+                <input type="text" placeholder="Título" value="${p.d || ''}" oninput="db.pubs[${i}].d=this.value" style="flex:1">
+                <input type="text" placeholder="Link YouTube/Insta" value="${p.l || ''}" oninput="db.pubs[${i}].l=this.value" style="flex:2">
             </div>
         `).join('');
         
         for(let i=1; i<=3; i++) {
-            if(db.fotos['f'+i]) document.getElementById('prev-'+i).src = db.fotos['f'+i];
+            const preview = document.getElementById('prev-'+i);
+            if(db.fotos && db.fotos['f'+i]) preview.src = db.fotos['f'+i];
         }
     }
 
@@ -129,22 +130,22 @@
 
     function encodeImg(id, input) {
         const file = input.files[0];
+        if (!file) return;
         const reader = new FileReader();
         reader.onloadend = () => {
             db.fotos['f'+id] = reader.result;
             document.getElementById('prev-'+id).src = reader.result;
         };
-        if (file) reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
     }
 
-    // FUNÇÃO SALVAR ATUALIZADA PARA SUPABASE
     async function saveMaster() {
         const btn = document.querySelector('.btn-save-master');
         const originalText = btn.innerText;
-        btn.innerText = "☁️ Sincronizando com a Nuvem...";
+        btn.innerText = "☁️ Sincronizando...";
         btn.disabled = true;
 
-        // Atualizar objeto db antes de enviar
+        // Capturar valores atuais dos campos de texto
         db.nome = document.getElementById('in-nome').value;
         db.oab = document.getElementById('in-oab').value;
         db.slogan = document.getElementById('in-slogan').value;
@@ -153,41 +154,43 @@
         db.email = document.getElementById('in-email').value;
         db.tema = document.getElementById('in-tema').value;
 
-        // Tentar salvar no Supabase
-        const { error } = await supabaseClient
-            .from('site_config')
-            .update({
-                nome: db.nome,
-                oab: db.oab,
-                slogan: db.slogan,
-                sobre: db.sobre,
-                tel: db.tel,
-                email: db.email,
-                tema: db.tema,
-                areas: db.areas,
-                pubs: db.pubs,
-                fotos: db.fotos,
-                redes: db.redes
-            })
-            .eq('id', 1);
+        try {
+            const { error } = await supabaseClient
+                .from('site_config')
+                .update({
+                    nome: db.nome,
+                    oab: db.oab,
+                    slogan: db.slogan,
+                    sobre: db.sobre,
+                    tel: db.tel,
+                    email: db.email,
+                    tema: db.tema,
+                    areas: db.areas,
+                    pubs: db.pubs,
+                    fotos: db.fotos,
+                    redes: db.redes
+                })
+                .eq('id', 1);
 
-        if (!error) {
+            if (error) throw error;
+
             localStorage.setItem('siteData', JSON.stringify(db));
-            alert("🚀 SITE ATUALIZADO NA NUVEM! Agora as mudanças aparecem em todos os dispositivos.");
+            alert("🚀 SUCESSO! Site atualizado na nuvem.");
             window.location.href = 'index.html';
-        } else {
-            console.error(error);
-            alert("❌ Erro ao salvar na nuvem: " + error.message);
+        } catch (err) {
+            console.error(err);
+            alert("❌ Erro ao salvar: " + err.message);
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
         }
-
-        btn.innerText = originalText;
-        btn.disabled = false;
     }
 
     window.onload = async () => {
-        // Tentar carregar os dados mais recentes da nuvem ao abrir o admin
-        const { data } = await supabaseClient.from('site_config').select('*').eq('id', 1).single();
-        if (data) db = data;
+        try {
+            const { data, error } = await supabaseClient.from('site_config').select('*').eq('id', 1).single();
+            if (data) db = data;
+        } catch (e) { console.log("Usando dados locais temporariamente"); }
 
         document.getElementById('in-nome').value = db.nome || "";
         document.getElementById('in-oab').value = db.oab || "";

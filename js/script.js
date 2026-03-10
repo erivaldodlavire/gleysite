@@ -3,28 +3,28 @@ const SUPABASE_URL = 'https://ueduzgoewlivkluiyqql.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZHV6Z29ld2xpdmtsdWl5cXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODAxMzAsImV4cCI6MjA4ODc1NjEzMH0.EM2s38El81fZYT-WVrxa7P_xX0e58EHQxdwreVgQecA';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 2. FUNÇÃO PRINCIPAL QUE APLICA OS DADOS NO HTML (Sua lógica original preservada)
+// 2. FUNÇÃO PRINCIPAL QUE APLICA OS DADOS NO HTML
 function aplicarDadosNoSite(data) {
     if (!data) return;
 
     // Aplicar Tema e Cabeçalho
-    document.body.className = data.tema;
+    document.body.className = data.tema || 'tema-advogado';
     if(data.nome) {
-        document.getElementById('edit-nome').innerText = data.nome;
-        document.getElementById('edit-header-nome').innerText = data.nome;
+        if(document.getElementById('edit-nome')) document.getElementById('edit-nome').innerText = data.nome;
+        if(document.getElementById('edit-header-nome')) document.getElementById('edit-header-nome').innerText = data.nome;
     }
-    if(data.oab) document.getElementById('edit-oab').innerText = data.oab;
-    if(data.slogan) document.getElementById('edit-slogan').innerText = data.slogan;
-    if(data.sobre) document.getElementById('edit-sobre-texto').innerText = data.sobre;
+    if(data.oab && document.getElementById('edit-oab')) document.getElementById('edit-oab').innerText = data.oab;
+    if(data.slogan && document.getElementById('edit-slogan')) document.getElementById('edit-slogan').innerText = data.slogan;
+    if(data.sobre && document.getElementById('edit-sobre-texto')) document.getElementById('edit-sobre-texto').innerText = data.sobre;
 
     // Aplicar Contatos e Rodapé
-    if(data.endereco) document.getElementById('edit-endereco').innerText = data.endereco;
-    if(data.tel) document.getElementById('edit-telefone').innerText = data.tel;
-    if(data.email) document.getElementById('edit-email').innerText = data.email;
-    if(data.horario) document.getElementById('edit-horario').innerText = data.horario;
-    if(data.copy) document.getElementById('edit-copyright').innerText = data.copy;
+    if(data.endereco && document.getElementById('edit-endereco')) document.getElementById('edit-endereco').innerText = data.endereco;
+    if(data.tel && document.getElementById('edit-telefone')) document.getElementById('edit-telefone').innerText = data.tel;
+    if(data.email && document.getElementById('edit-email')) document.getElementById('edit-email').innerText = data.email;
+    if(data.horario && document.getElementById('edit-horario')) document.getElementById('edit-horario').innerText = data.horario;
+    if(data.copy && document.getElementById('edit-copyright')) document.getElementById('edit-copyright').innerText = data.copy;
 
-    // Fotos do Espaço
+    // Fotos do Espaço (Garante que as fotos do banco apareçam)
     if (data.fotos) {
         for(let i=1; i<=3; i++) {
             const img = document.getElementById(`img-espaco-${i}`);
@@ -60,16 +60,16 @@ function aplicarDadosNoSite(data) {
     const footerRedes = document.getElementById('edit-social-links-footer');
     
     if (data.redes) {
-        const redesHTML = data.redes.filter(l => l !== '').map(l => `
+        const redesHTML = data.redes.filter(l => l && l !== '').map(l => `
             <a href="${l}" target="_blank" class="icon-3d"><i class="${getIcon(l)}"></i></a>`).join('');
         if(redesArea) redesArea.innerHTML = redesHTML;
         if(footerRedes) footerRedes.innerHTML = redesHTML;
     }
 
-    // Publicações YT (Normal e Shorts) / Insta
+    // Publicações YT / Insta
     const pubArea = document.getElementById('container-publicacoes');
     if(pubArea && data.pubs) {
-        pubArea.innerHTML = data.pubs.filter(p => p.l !== '').map(p => {
+        pubArea.innerHTML = data.pubs.filter(p => p.l && p.l !== '').map(p => {
             let thumbContent = "";
             if (p.l.includes('instagram.com')) {
                 thumbContent = `<div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>`;
@@ -82,48 +82,60 @@ function aplicarDadosNoSite(data) {
                 } else if (p.l.includes('youtu.be/')) {
                     videoId = p.l.split('youtu.be/')[1].split(/[?#]/)[0];
                 }
-                thumbContent = `
-                    <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg">
-                    <div class="play-overlay"><i class="fab fa-youtube"></i></div>`;
+                thumbContent = `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg"><div class="play-overlay"><i class="fab fa-youtube"></i></div>`;
             }
-            return `
-                <div class="pub-container">
-                    <p class="pub-desc">${p.d}</p>
-                    <div class="pub-item">
-                        <a href="${p.l}" target="_blank">${thumbContent}</a>
-                    </div>
-                </div>`;
+            return `<div class="pub-container"><p class="pub-desc">${p.d}</p><div class="pub-item"><a href="${p.l}" target="_blank">${thumbContent}</a></div></div>`;
         }).join('');
     }
 }
 
-// 3. REGISTRAR ACESSO E CARREGAR TUDO AO ABRIR O SITE
-async function inicializarSite() {
-    // Registrar Visita (Analytics)
-    await supabaseClient.from('site_visitas').insert([
-        { 
-            pagina: window.location.pathname, 
-            origem: document.referrer || "Direto",
-            dispositivo: window.innerWidth < 768 ? "Celular" : "Desktop"
-        }
-    ]);
+// 3. FUNÇÃO PARA ENVIAR CONTATO (NOVO)
+async function enviarLead(event) {
+    event.preventDefault();
+    const btn = event.target.querySelector('button');
+    const originalText = btn.innerText;
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
 
-    // Buscar dados do Supabase
-    const { data, error } = await supabaseClient
-        .from('site_config')
-        .select('*')
-        .eq('id', 1)
-        .single();
+    const novoLead = {
+        nome: document.getElementById('nome').value,
+        email: document.getElementById('email').value,
+        whatsapp: document.getElementById('telefone').value,
+        assunto: document.getElementById('titulo').value,
+        mensagem: document.getElementById('mensagem').value
+    };
 
-    if (error) {
-        console.error("Erro ao carregar dados da nuvem:", error);
-        // Fallback para localStorage se a nuvem falhar
-        const localData = JSON.parse(localStorage.getItem('siteData'));
-        if (localData) aplicarDadosNoSite(localData);
+    const { error } = await supabaseClient.from('site_leads').insert([novoLead]);
+
+    if (!error) {
+        alert("Mensagem enviada com sucesso! Dra. Gleyciane entrará em contato.");
+        event.target.reset();
     } else {
-        aplicarDadosNoSite(data);
+        alert("Erro ao enviar mensagem. Tente pelo WhatsApp.");
+        console.error(error);
     }
+    btn.innerText = originalText;
+    btn.disabled = false;
 }
 
-// Executar ao carregar a página
+// 4. INICIALIZAÇÃO
+async function inicializarSite() {
+    // Carregar dados da nuvem
+    const { data, error } = await supabaseClient.from('site_config').select('*').eq('id', 1).single();
+
+    if (data) {
+        aplicarDadosNoSite(data);
+    } else {
+        const localData = JSON.parse(localStorage.getItem('siteData'));
+        if (localData) aplicarDadosNoSite(localData);
+    }
+
+    // Registrar Analytics (depois de carregar o site para não atrasar o visual)
+    supabaseClient.from('site_visitas').insert([{ 
+        pagina: window.location.pathname, 
+        origem: document.referrer || "Direto",
+        dispositivo: window.innerWidth < 768 ? "Celular" : "Desktop"
+    }]).then(() => {});
+}
+
 window.onload = inicializarSite;
