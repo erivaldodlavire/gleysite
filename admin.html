@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Admin EriPlay | v8.0 Final</title>
+    <title>Master Admin EriPlay | v9.0 Oficial</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -18,56 +18,65 @@
         .dynamic-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
         .btn-add { background: var(--success); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 900; margin-bottom: 20px; }
         .btn-save-master { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: var(--accent); border: 3px solid var(--accent); padding: 20px 50px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); font-size: 1.1rem; }
-        .btn-del { background: var(--danger); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
+        .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 10px; }
+        .preview-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 2px solid #ddd; background: #eee; }
     </style>
 </head>
 <body>
 
 <header class="admin-nav">
-    <h1>Painel de Controle Gleysite v8.0</h1>
-    <p>Ajuste áreas, vídeos e redes sociais em tempo real</p>
+    <h1>Painel de Controle Gleysite v9.0</h1>
+    <p>Gestão de Conteúdo e Fotos do Escritório</p>
 </header>
 
 <div class="container">
     <h3>1. Dados Gerais e Contato</h3>
     <div class="section-box">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-            <div><label>Nome</label><input type="text" id="in-nome"></div>
-            <div><label>OAB/Registro</label><input type="text" id="in-oab"></div>
-        </div>
+        <label>Nome Completo</label><input type="text" id="in-nome">
+        <label>OAB / Registro</label><input type="text" id="in-oab">
         <label>Slogan</label><input type="text" id="in-slogan">
-        <label>Sobre Mim / Biografia</label><textarea id="in-sobre" rows="3"></textarea>
+        <label>Sobre Mim</label><textarea id="in-sobre" rows="3"></textarea>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-            <div><label>WhatsApp (Link ou Número)</label><input type="text" id="in-tel"></div>
+            <div><label>WhatsApp (Ex: 55199...)</label><input type="text" id="in-tel"></div>
             <div><label>E-mail</label><input type="text" id="in-email"></div>
         </div>
     </div>
 
     <h3>2. Áreas de Atuação (Serviços)</h3>
-    <button class="btn-add" onclick="addArea()">+ Nova Área</button>
+    <button class="btn-add" onclick="addArea()">+ Adicionar Nova Área</button>
     <div id="area-list"></div>
 
-    <h3>3. Redes Sociais (Facebook, Instagram, LinkedIn, etc.)</h3>
+    <h3>3. Redes Sociais e Ícones</h3>
     <div id="social-grid" class="section-box"></div>
 
-    <h3>4. YouTube & Publicações</h3>
+    <h3>4. Fotos do "Nosso Espaço"</h3>
+    <div class="section-box">
+        <div class="upload-grid">
+            <div><label>Foto 1</label><img id="prev-1" class="preview-img"><input type="file" onchange="encodeImg(1, this)" accept="image/*"></div>
+            <div><label>Foto 2</label><img id="prev-2" class="preview-img"><input type="file" onchange="encodeImg(2, this)" accept="image/*"></div>
+            <div><label>Foto 3</label><img id="prev-3" class="preview-img"><input type="file" onchange="encodeImg(3, this)" accept="image/*"></div>
+        </div>
+    </div>
+
+    <h3>5. YouTube & Publicações</h3>
     <div id="pub-grid"></div>
 
-    <h3>5. Aparência</h3>
+    <h3>6. Estilo Visual</h3>
     <div class="section-box">
         <label>Tema Profissional</label>
         <select id="in-tema">
             <option value="tema-advogado">Advocacia (Ouro Marinho)</option>
             <option value="tema-gamer">Gamer (EriPlay)</option>
+            <option value="tema-cyberpunk">Cyberpunk</option>
             <option value="tema-engenheiro">Engenharia</option>
-            <option value="tema-psicologo">Psicologia</option>
         </select>
     </div>
 </div>
 
-<button class="btn-save-master" onclick="saveMaster()">SALVAR TUDO</button>
+<button class="btn-save-master" onclick="saveMaster()">SALVAR ALTERAÇÕES</button>
 
 <script>
+    // Áreas padrão para não vir vazio
     const defaultAreas = [
         {t:'Direito Civil', d:'Contratos, indenizações e direitos civis.', i:'fas fa-gavel'},
         {t:'Direito Criminal', d:'Defesa e consultoria penal.', i:'fas fa-user-shield'},
@@ -78,41 +87,53 @@
 
     let db = JSON.parse(localStorage.getItem('siteData')) || {
         areas: defaultAreas,
-        redes: Array(4).fill(""),
+        redes: Array(5).fill(""),
         pubs: Array(6).fill({l:"", d:""}),
+        fotos: {f1:"", f2:"", f3:""},
         tema: "tema-advogado"
     };
 
-    // Garantir que não sumam as redes
-    if(!db.redes || db.redes.length === 0) db.redes = Array(4).fill("");
-
     function renderAll() {
-        // Áreas
+        // Render Áreas
         document.getElementById('area-list').innerHTML = db.areas.map((a, i) => `
             <div class="dynamic-item">
-                <div style="flex:1"><label>Ícone (FontAwesome)</label><input type="text" value="${a.i}" oninput="db.areas[${i}].i=this.value"></div>
+                <div style="flex:1"><label>Ícone</label><input type="text" value="${a.i}" oninput="db.areas[${i}].i=this.value"></div>
                 <div style="flex:2"><label>Título</label><input type="text" value="${a.t}" oninput="db.areas[${i}].t=this.value"></div>
                 <div style="flex:3"><label>Descrição</label><input type="text" value="${a.d}" oninput="db.areas[${i}].d=this.value"></div>
-                <button class="btn-del" onclick="db.areas.splice(${i},1); renderAll()"><i class="fas fa-trash"></i></button>
+                <button onclick="db.areas.splice(${i},1); renderAll()" style="background:red; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer">X</button>
             </div>
         `).join('');
 
         // Redes Sociais
         document.getElementById('social-grid').innerHTML = db.redes.map((r, i) => `
-            <label>Link Rede Social ${i+1}</label>
-            <input type="text" value="${r}" oninput="db.redes[${i}]=this.value" placeholder="https://facebook.com/...">
+            <label>Link Social ${i+1}</label><input type="text" value="${r}" oninput="db.redes[${i}]=this.value" placeholder="https://...">
         `).join('');
 
         // Publicações
         document.getElementById('pub-grid').innerHTML = db.pubs.map((p, i) => `
             <div class="dynamic-item">
-                <div style="flex:1"><label>Título/Desc</label><input type="text" value="${p.d}" oninput="db.pubs[${i}].d=this.value"></div>
-                <div style="flex:2"><label>Link YouTube/Shorts/Insta</label><input type="text" value="${p.l}" oninput="db.pubs[${i}].l=this.value"></div>
+                <input type="text" placeholder="Título" value="${p.d}" oninput="db.pubs[${i}].d=this.value" style="flex:1">
+                <input type="text" placeholder="Link YouTube/Insta" value="${p.l}" oninput="db.pubs[${i}].l=this.value" style="flex:2">
             </div>
         `).join('');
+        
+        // Fotos Espaço
+        for(let i=1; i<=3; i++) {
+            if(db.fotos['f'+i]) document.getElementById('prev-'+i).src = db.fotos['f'+i];
+        }
     }
 
-    function addArea() { db.areas.push({t:"", d:"", i:"fas fa-star"}); renderAll(); }
+    function addArea() { db.areas.push({t:"Nova Área", d:"Descrição aqui", i:"fas fa-star"}); renderAll(); }
+
+    function encodeImg(id, input) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            db.fotos['f'+id] = reader.result;
+            document.getElementById('prev-'+id).src = reader.result;
+        };
+        if (file) reader.readAsDataURL(file);
+    }
 
     function saveMaster() {
         db.nome = document.getElementById('in-nome').value;
@@ -124,7 +145,7 @@
         db.tema = document.getElementById('in-tema').value;
 
         localStorage.setItem('siteData', JSON.stringify(db));
-        alert("SITE ATUALIZADO!");
+        alert("SISTEMA ATUALIZADO!");
         window.location.href = 'index.html';
     }
 
@@ -135,7 +156,7 @@
         document.getElementById('in-sobre').value = db.sobre || "";
         document.getElementById('in-tel').value = db.tel || "";
         document.getElementById('in-email').value = db.email || "";
-        document.getElementById('in-tema').value = db.tema || "tema-advogado";
+        document.getElementById('in-tema').value = db.tema;
         renderAll();
     };
 </script>
