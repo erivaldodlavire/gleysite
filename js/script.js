@@ -66,12 +66,11 @@ function aplicarDadosNoSite(data) {
         if(footerRedes && redesHTML) footerRedes.innerHTML = redesHTML;
     }
 
-    // Publicações YT / Insta - CORREÇÃO PARA NÃO SUMIR
+    // Publicações YT / Insta
     const pubArea = document.getElementById('container-publicacoes');
     if(pubArea && data.pubs) {
         const pubsValidos = data.pubs.filter(p => p.l && p.l.trim() !== '');
         
-        // Só atualiza o HTML se realmente existirem links no banco
         if (pubsValidos.length > 0) {
             pubArea.innerHTML = pubsValidos.map(p => {
                 let thumbContent = "";
@@ -122,25 +121,33 @@ async function enviarLead(event) {
     btn.disabled = false;
 }
 
-// 4. INICIALIZAÇÃO
+// 4. INICIALIZAÇÃO REFORÇADA
 async function inicializarSite() {
-    // 1. Tentar buscar da nuvem
-    const { data, error } = await supabaseClient.from('site_config').select('*').eq('id', 1).single();
+    console.log("Iniciando busca de dados na nuvem...");
+    
+    // Tenta buscar da nuvem (Supabase)
+    const { data, error } = await supabaseClient
+        .from('site_config')
+        .select('*')
+        .eq('id', 1)
+        .single();
 
     if (data) {
+        console.log("Dados carregados com sucesso!");
         aplicarDadosNoSite(data);
     } else {
-        // 2. Se falhar nuvem, busca local
+        console.warn("Falha ao carregar nuvem, tentando local...", error);
         const localData = JSON.parse(localStorage.getItem('siteData'));
         if (localData) aplicarDadosNoSite(localData);
     }
 
-    // 3. Registrar Analytics
+    // Registrar Analytics
     supabaseClient.from('site_visitas').insert([{ 
         pagina: window.location.pathname, 
         origem: document.referrer || "Direto",
         dispositivo: window.innerWidth < 768 ? "Celular" : "Desktop"
-    }]);
+    }]).then(() => console.log("Visita registrada."));
 }
 
-window.onload = inicializarSite;
+// Executar ao carregar a janela
+window.addEventListener('load', inicializarSite);
