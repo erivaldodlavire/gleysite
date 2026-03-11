@@ -174,7 +174,7 @@
 
             if (error) throw error;
 
-            localStorage.setItem('siteData', JSON.stringify(db));
+           // localStorage.setItem('siteData', JSON.stringify(db)); <-- LINHA COMENTADA AQUI
             alert("🚀 SUCESSO! Site atualizado na nuvem.");
             window.location.href = 'index.html';
         } catch (err) {
