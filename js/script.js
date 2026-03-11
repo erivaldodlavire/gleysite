@@ -24,7 +24,7 @@ function aplicarDadosNoSite(data) {
     if(data.horario && document.getElementById('edit-horario')) document.getElementById('edit-horario').innerText = data.horario;
     if(data.copy && document.getElementById('edit-copyright')) document.getElementById('edit-copyright').innerText = data.copy;
 
-    // Fotos do Espaço (Garante que as fotos do banco apareçam)
+    // Fotos do Espaço
     if (data.fotos) {
         for(let i=1; i<=3; i++) {
             const img = document.getElementById(`img-espaco-${i}`);
@@ -60,36 +60,41 @@ function aplicarDadosNoSite(data) {
     const footerRedes = document.getElementById('edit-social-links-footer');
     
     if (data.redes) {
-        const redesHTML = data.redes.filter(l => l && l !== '').map(l => `
+        const redesHTML = data.redes.filter(l => l && l.trim() !== '').map(l => `
             <a href="${l}" target="_blank" class="icon-3d"><i class="${getIcon(l)}"></i></a>`).join('');
-        if(redesArea) redesArea.innerHTML = redesHTML;
-        if(footerRedes) footerRedes.innerHTML = redesHTML;
+        if(redesArea && redesHTML) redesArea.innerHTML = redesHTML;
+        if(footerRedes && redesHTML) footerRedes.innerHTML = redesHTML;
     }
 
-    // Publicações YT / Insta
+    // Publicações YT / Insta - CORREÇÃO PARA NÃO SUMIR
     const pubArea = document.getElementById('container-publicacoes');
     if(pubArea && data.pubs) {
-        pubArea.innerHTML = data.pubs.filter(p => p.l && p.l !== '').map(p => {
-            let thumbContent = "";
-            if (p.l.includes('instagram.com')) {
-                thumbContent = `<div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>`;
-            } else {
-                let videoId = "";
-                if (p.l.includes('shorts/')) {
-                    videoId = p.l.split('shorts/')[1].split(/[?#]/)[0];
-                } else if (p.l.includes('v=')) {
-                    videoId = p.l.split('v=')[1].split('&')[0];
-                } else if (p.l.includes('youtu.be/')) {
-                    videoId = p.l.split('youtu.be/')[1].split(/[?#]/)[0];
+        const pubsValidos = data.pubs.filter(p => p.l && p.l.trim() !== '');
+        
+        // Só atualiza o HTML se realmente existirem links no banco
+        if (pubsValidos.length > 0) {
+            pubArea.innerHTML = pubsValidos.map(p => {
+                let thumbContent = "";
+                if (p.l.includes('instagram.com')) {
+                    thumbContent = `<div class="insta-placeholder"><i class="fab fa-instagram"></i> Ver no Instagram</div>`;
+                } else {
+                    let videoId = "";
+                    if (p.l.includes('shorts/')) {
+                        videoId = p.l.split('shorts/')[1].split(/[?#]/)[0];
+                    } else if (p.l.includes('v=')) {
+                        videoId = p.l.split('v=')[1].split('&')[0];
+                    } else if (p.l.includes('youtu.be/')) {
+                        videoId = p.l.split('youtu.be/')[1].split(/[?#]/)[0];
+                    }
+                    thumbContent = `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg"><div class="play-overlay"><i class="fab fa-youtube"></i></div>`;
                 }
-                thumbContent = `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg"><div class="play-overlay"><i class="fab fa-youtube"></i></div>`;
-            }
-            return `<div class="pub-container"><p class="pub-desc">${p.d}</p><div class="pub-item"><a href="${p.l}" target="_blank">${thumbContent}</a></div></div>`;
-        }).join('');
+                return `<div class="pub-container"><p class="pub-desc">${p.d}</p><div class="pub-item"><a href="${p.l}" target="_blank">${thumbContent}</a></div></div>`;
+            }).join('');
+        }
     }
 }
 
-// 3. FUNÇÃO PARA ENVIAR CONTATO (NOVO)
+// 3. FUNÇÃO PARA ENVIAR CONTATO
 async function enviarLead(event) {
     event.preventDefault();
     const btn = event.target.querySelector('button');
@@ -112,7 +117,6 @@ async function enviarLead(event) {
         event.target.reset();
     } else {
         alert("Erro ao enviar mensagem. Tente pelo WhatsApp.");
-        console.error(error);
     }
     btn.innerText = originalText;
     btn.disabled = false;
@@ -120,22 +124,23 @@ async function enviarLead(event) {
 
 // 4. INICIALIZAÇÃO
 async function inicializarSite() {
-    // Carregar dados da nuvem
+    // 1. Tentar buscar da nuvem
     const { data, error } = await supabaseClient.from('site_config').select('*').eq('id', 1).single();
 
     if (data) {
         aplicarDadosNoSite(data);
     } else {
+        // 2. Se falhar nuvem, busca local
         const localData = JSON.parse(localStorage.getItem('siteData'));
         if (localData) aplicarDadosNoSite(localData);
     }
 
-    // Registrar Analytics (depois de carregar o site para não atrasar o visual)
+    // 3. Registrar Analytics
     supabaseClient.from('site_visitas').insert([{ 
         pagina: window.location.pathname, 
         origem: document.referrer || "Direto",
         dispositivo: window.innerWidth < 768 ? "Celular" : "Desktop"
-    }]).then(() => {});
+    }]);
 }
 
 window.onload = inicializarSite;
