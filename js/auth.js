@@ -27,14 +27,30 @@ window.Auth = (() => {
     // ------------------------------------------------------------------ //
     // CLIENTE SUPABASE (singleton)
     // ------------------------------------------------------------------ //
+    // 🔒 CRÍTICO: o schema precisa vir daqui, senão o Supabase usa o
+    // padrão "public" — e TODOS os clientes (Gleyciane, Erivaldo, etc.)
+    // acabariam lendo/escrevendo na MESMA tabela public.site_config.
+    // Isso é exatamente o que causava o vazamento entre os sites.
     const cfg = window.SUPABASE_CONFIG;
+    const schemaCliente = cfg.cliente.schema;
+
+    if (!schemaCliente || schemaCliente.trim() === '') {
+        throw new Error('❌ [Auth] schema do cliente não definido em SUPABASE_CONFIG. Abortando para evitar vazamento entre tenants.');
+    }
+
     const client = supabase.createClient(cfg.url, cfg.anonKey, {
         auth: {
             persistSession: true,       // mantém sessão entre abas/reloads
             autoRefreshToken: true,     // renova o JWT automaticamente
             detectSessionInUrl: true,   // captura tokens de links de recuperação
         },
+        db: {
+            schema: schemaCliente,      // 🔒 força TODAS as queries deste cliente
+                                         //    para o schema isolado (ex: "erivaldo")
+        },
     });
+
+    console.log(`🔒 [Auth] Cliente Supabase isolado no schema: "${schemaCliente}"`);
 
     // Tradução amigável dos erros mais comuns do Supabase Auth
     const MAPA_ERROS = {
