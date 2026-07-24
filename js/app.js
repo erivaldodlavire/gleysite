@@ -17,7 +17,14 @@
     'use strict';
 
     const cfgApp = window.SUPABASE_CONFIG;
-    const db = supabase.createClient(cfgApp.url, cfgApp.anonKey);
+    // 🔒 CRÍTICO: sem "db: { schema }" o client cai no padrão "public" —
+    // mesmo bug que existia no auth.js. O site público precisa ler do
+    // MESMO schema onde o admin salva, senão "salva mas não aparece".
+    const schemaCliente = cfgApp.cliente.schema;
+    const db = supabase.createClient(cfgApp.url, cfgApp.anonKey, {
+        db: { schema: schemaCliente },
+    });
+    console.log(`🔒 [App] Site público lendo do schema: "${schemaCliente}"`);
     const $ = (sel) => document.querySelector(sel);
 
     let config = null; // espelho do site_config
