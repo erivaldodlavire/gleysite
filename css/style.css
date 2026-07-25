@@ -43,11 +43,67 @@ body {
 }
 img { max-width: 100%; }
 
-/* ==================== SKELETON DE CARREGAMENTO ==========================
- * Enquanto o app.js busca a config, o conteúdo estático (fallback) fica
- * levemente esmaecido; quando os dados chegam, tudo "acende" suave.       */
-body.carregando #hero .hero-content { opacity: 0.35; filter: blur(1px); }
-#hero .hero-content { transition: opacity 0.5s, filter 0.5s; }
+/* ==================== TELA DE CARREGAMENTO ===============================
+ * Enquanto o app.js busca a config no Supabase, o site inteiro (incluindo
+ * o fallback estático genérico) fica ESCONDIDO atrás de uma capa sólida
+ * com o logo do próprio cliente pulsando no centro. Assim que os dados
+ * reais chegam e a classe "carregando" é removida do <body>, a capa
+ * desaparece com um fade suave e o conteúdo CERTO já aparece direto —
+ * sem "flash" de texto genérico ("Seu nome", "Digite Crea OAB aqui" etc).
+ * ========================================================================== */
+body.carregando {
+    overflow: hidden;
+    height: 100vh;
+}
+
+body.carregando::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: var(--primary);
+    z-index: 9999;
+    animation: fade-in-capa 0.15s ease both;
+}
+
+body.carregando::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 72px;
+    height: 72px;
+    margin: -36px 0 0 -36px;
+    background: url('assets/logo.png') center/contain no-repeat;
+    z-index: 10000;
+    animation: pulsar-logo 1.4s ease-in-out infinite;
+}
+
+@keyframes fade-in-capa {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes pulsar-logo {
+    0%, 100% { opacity: 0.45; transform: scale(0.92); }
+    50%      { opacity: 1;    transform: scale(1); }
+}
+
+/* Transição suave: quando "carregando" some, o site "acende" com fade
+ * em vez de aparecer de corte seco — sensação mais premium/polida. */
+#mapa-secoes, .main-header, footer, .whats-flutuante {
+    opacity: 1;
+    transition: opacity 0.35s ease;
+}
+body.carregando #mapa-secoes,
+body.carregando .main-header,
+body.carregando footer,
+body.carregando .whats-flutuante {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.carregando::after { animation: none; opacity: 1; transform: none; }
+}
 
 /* ==================== ANIMAÇÕES DE ENTRADA (scroll reveal) ==============
  * O app.js observa .reveal com IntersectionObserver e adiciona .visivel.  */

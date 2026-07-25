@@ -86,7 +86,10 @@
         $('#cfg-webhook-leads').value = estado.integracao?.webhookLeads || '';
         $('#cfg-webhook-eventos').value = estado.integracao?.webhookEventos || '';
         $('#topo-nome').textContent = estado.nome || SUPABASE_CONFIG.cliente.nome;
-        if (estado.identidade?.favicon) $('#topo-logo').src = estado.identidade.favicon;
+        if (estado.identidade?.favicon) {
+            $('#topo-logo').src = estado.identidade.favicon;
+            $('#site-favicon').href = estado.identidade.favicon;
+        }
     }
 
     function coletarCampos() {
