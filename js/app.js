@@ -119,7 +119,9 @@
                 : ['f1', 'f2', 'f3'].map(k => d.fotos?.[k]).filter(Boolean);
             if (fotos.length) {
                 $('#container-fotos-espaco').innerHTML = fotos.map(src => `
-                    <div class="office-photo"><img src="${esc(src)}" alt="Nosso espaço" loading="lazy"></div>`).join('');
+                    <div class="office-photo" data-fullsrc="${esc(src)}">
+                        <div class="office-photo-bg" style="background-image:url('${esc(src)}')"></div>
+                        <img src="${esc(src)}" alt="Nosso espaço" loading="lazy"></div>`).join('');
             } else {
                 $('#nosso-espaco').style.display = 'none'; // sem fotos → seção some
             }
@@ -385,4 +387,32 @@
     } else {
         iniciar();
     }
+
+    /* --- Lightbox de fotos (clique para ampliar) --- */
+    (() => {
+        const overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.innerHTML = `<button type="button" class="lightbox-fechar" aria-label="Fechar">&times;</button>
+            <img class="lightbox-img" alt="">`;
+        document.body.appendChild(overlay);
+        const imgEl = overlay.querySelector('.lightbox-img');
+
+        function abrir(src, alt) {
+            imgEl.src = src;
+            imgEl.alt = alt || '';
+            overlay.classList.add('ativo');
+            document.body.style.overflow = 'hidden';
+        }
+        function fechar() {
+            overlay.classList.remove('ativo');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('click', (e) => {
+            const alvo = e.target.closest('[data-fullsrc]');
+            if (alvo) { abrir(alvo.dataset.fullsrc, alvo.querySelector('img')?.alt); return; }
+            if (e.target === overlay || e.target.closest('.lightbox-fechar')) fechar();
+        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fechar(); });
+    })();
 })();
