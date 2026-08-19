@@ -199,9 +199,37 @@ h2::after {
     background: var(--card); padding: 30px; border-radius: 12px;
     box-shadow: var(--sombra-card); width: 350px; max-width: 82vw;
     text-align: left; border-left: 5px solid var(--accent);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
+.review-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12); }
+.client-name { display: block; font-weight: 800; font-size: 1.05rem; color: var(--primary); margin-bottom: 6px; }
 .stars { color: #f1c40f; margin-bottom: 10px; letter-spacing: 2px; }
-.client-name { display: block; margin-top: 15px; font-weight: 800; color: var(--accent); }
+
+/* --- Formulário público de avaliação --- */
+.avaliacao-form-wrapper { max-width: 480px; margin: 40px auto 0; text-align: left; }
+.avaliacao-form-wrapper h3 { margin-bottom: 14px; }
+#form-avaliacao input, #form-avaliacao textarea {
+    width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px;
+    border: 1px solid var(--accent); background: var(--card); color: inherit; font: inherit;
+    box-sizing: border-box;
+}
+.star-input { font-size: 1.6rem; color: #ccc; margin-bottom: 14px; cursor: pointer; }
+.star-input i { margin-right: 4px; transition: color 0.15s; }
+.star-input i.ativa { color: #f1c40f; }
+.btn-enviar-avaliacao {
+    background: var(--accent); color: #fff; border: none; padding: 12px 24px;
+    border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    letter-spacing: 0.04em; transition: 0.3s;
+}
+.btn-enviar-avaliacao:hover:not(:disabled) { opacity: 0.88; }
+.btn-enviar-avaliacao:disabled { opacity: 0.7; cursor: wait; }
+.av-feedback {
+    display: none; margin-top: 14px; padding: 12px 15px;
+    border-radius: 9px; font-size: 0.88rem; font-weight: 600;
+}
+.av-feedback.visivel { display: block; animation: heroEntrada 0.3s ease both; }
+.av-feedback.sucesso { background: #e8f7ef; color: #1d7a4c; }
+.av-feedback.erro { background: #fdecec; color: #a33030; }
 
 /* ============================ NOSSO ESPAÇO ============================== */
 .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px; }

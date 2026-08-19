@@ -141,6 +141,20 @@ textarea { resize: vertical; min-height: 90px; }
     padding: 11px 22px; border-radius: 9px; font: inherit;
     font-weight: 800; font-size: 0.8rem; cursor: pointer;
 }
+.badge-notif {
+    display: inline-block; background: var(--erro); color: #fff;
+    font-size: 0.68rem; font-weight: 800; min-width: 18px; height: 18px;
+    line-height: 18px; text-align: center; border-radius: 999px;
+    padding: 0 5px; margin-left: 6px; vertical-align: middle;
+}
+.btn-aprovar-avaliacao, .btn-rejeitar-avaliacao {
+    flex: 0 0 auto; border: none; border-radius: 8px; padding: 10px 16px;
+    font: inherit; font-weight: 800; font-size: 0.78rem; cursor: pointer; transition: 0.2s;
+}
+.btn-aprovar-avaliacao { background: var(--sucesso); color: #fff; }
+.btn-aprovar-avaliacao:hover { opacity: 0.85; }
+.btn-rejeitar-avaliacao { background: #fdecec; color: var(--erro); border: 1px solid #f3c8c8; }
+.btn-rejeitar-avaliacao:hover { background: var(--erro); color: #fff; }
 
 /* ------------------------- LAYOUT BUILDER (DnD) -------------------------- */
 .lista-layout { list-style: none; }

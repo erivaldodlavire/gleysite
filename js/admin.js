@@ -503,6 +503,58 @@
     }
 
     /* ==================================================================== */
+    /* MODERAÇÃO DE AVALIAÇÕES PÚBLICAS                                     */
+    /* ==================================================================== */
+    async function carregarAvaliacoesPendentes() {
+        const container = $('#lista-avaliacoes-pendentes');
+        if (!container) return;
+
+        const { data, error } = await db
+            .from('avaliacoes')
+            .select('id, nome, texto, nota, created_at')
+            .eq('aprovado', false)
+            .order('created_at', { ascending: true });
+
+        const badge = $('#badge-avaliacoes');
+
+        if (error || !data?.length) {
+            container.innerHTML = '<p class="dica">Nenhuma avaliação pendente no momento.</p>';
+            if (badge) badge.style.display = 'none';
+            return;
+        }
+
+        if (badge) {
+            badge.textContent = data.length;
+            badge.style.display = 'inline-block';
+        }
+
+        container.innerHTML = data.map(av => `
+            <div class="item-dinamico" data-id="${av.id}">
+                <div style="flex:1">
+                    <strong>${esc(av.nome)}</strong> — ${'⭐'.repeat(av.nota)}
+                    <p style="margin:6px 0 0">${esc(av.texto)}</p>
+                </div>
+                <button type="button" class="btn-aprovar-avaliacao" data-id="${av.id}">Aprovar</button>
+                <button type="button" class="btn-rejeitar-avaliacao" data-id="${av.id}">Rejeitar</button>
+            </div>`).join('');
+
+        container.querySelectorAll('.btn-aprovar-avaliacao').forEach(btn =>
+            btn.addEventListener('click', async () => {
+                btn.disabled = true;
+                await db.from('avaliacoes').update({ aprovado: true }).eq('id', btn.dataset.id);
+                carregarAvaliacoesPendentes();
+            }));
+
+        container.querySelectorAll('.btn-rejeitar-avaliacao').forEach(btn =>
+            btn.addEventListener('click', async () => {
+                if (!confirm('Rejeitar (e apagar) esta avaliação?')) return;
+                btn.disabled = true;
+                await db.from('avaliacoes').delete().eq('id', btn.dataset.id);
+                carregarAvaliacoesPendentes();
+            }));
+    }
+
+    /* ==================================================================== */
     /* INICIALIZAÇÃO                                                        */
     /* ==================================================================== */
     await carregar();
@@ -522,4 +574,5 @@
     passo('galeria-temas', renderizarTemas);
     passo('audio', ligarAudio);
     passo('preview-tema', aplicarPreview);   // painel abre já com o tema do cliente
+    passo('avaliacoes-pendentes', carregarAvaliacoesPendentes);
 })();

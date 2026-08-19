@@ -83,6 +83,23 @@
                 <div class="testimonial-wrapper">
                     <div class="testimonial-slider" id="container-depoimentos"></div>
                 </div>
+
+                <div class="avaliacao-form-wrapper">
+                    <h3>Deixe sua avaliação</h3>
+                    <form id="form-avaliacao">
+                        <input type="text" id="av-nome" placeholder="Seu nome" required maxlength="80">
+                        <div class="star-input" id="av-estrelas" data-nota="0">
+                            <i class="fas fa-star" data-valor="1"></i>
+                            <i class="fas fa-star" data-valor="2"></i>
+                            <i class="fas fa-star" data-valor="3"></i>
+                            <i class="fas fa-star" data-valor="4"></i>
+                            <i class="fas fa-star" data-valor="5"></i>
+                        </div>
+                        <textarea id="av-texto" placeholder="Conte como foi sua experiência" required maxlength="500" rows="3"></textarea>
+                        <button type="submit" class="btn-enviar-avaliacao">Enviar avaliação</button>
+                        <p id="av-feedback" class="av-feedback"></p>
+                    </form>
+                </div>
             </div>
         </section>
 

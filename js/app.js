@@ -139,19 +139,42 @@
             }
         });
 
-        /* --- Depoimentos --- */
-        blindado('depoimentos', () => {
+        /* --- Depoimentos (curados no Admin + avaliações públicas aprovadas) --- */
+        blindado('depoimentos', async () => {
             const contDep = $('#container-depoimentos');
-            if (d.depoimentos?.length) {
-                contDep.innerHTML = d.depoimentos.map(dep => `
+            const curados = (d.depoimentos || []).map(dep => ({ n: dep.n, t: dep.t, nota: 5 }));
+
+            let publicas = [];
+            try {
+                const { data: avals } = await db
+                    .from('avaliacoes')
+                    .select('nome, texto, nota, created_at')
+                    .eq('aprovado', true)
+                    .order('created_at', { ascending: false });
+                publicas = (avals || []).map(a => ({ n: a.nome, t: a.texto, nota: a.nota }));
+            } catch (erro) {
+                console.warn('[app.js] Avaliações públicas indisponíveis:', erro);
+            }
+
+            const todas = [...publicas, ...curados];
+
+            const wrapper = $('.testimonial-wrapper');
+            if (todas.length) {
+                contDep.innerHTML = todas.map(dep => {
+                    const primeiroNome = (dep.n || '').trim().split(/\s+/)[0] || dep.n;
+                    return `
                     <div class="review-card">
-                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <span class="client-name">${esc(primeiroNome)}</span>
+                        <div class="stars">${'⭐'.repeat(dep.nota)}${'☆'.repeat(5 - dep.nota)}</div>
                         <p>"${esc(dep.t)}"</p>
-                        <span class="client-name">— ${esc(dep.n)}</span>
-                    </div>`).join('');
+                    </div>`;
+                }).join('');
+                wrapper.style.display = '';
             } else {
-                // Sem depoimentos cadastrados → seção some sozinha (site nunca fica "oco")
-                $('#depoimentos').style.display = 'none';
+                // Sem depoimentos ainda → some só o carrossel, NUNCA a seção inteira
+                // (o formulário de avaliação pública mora aqui e precisa continuar visível
+                // para que a primeira avaliação possa ser enviada).
+                wrapper.style.display = 'none';
             }
         });
 
@@ -305,6 +328,58 @@
     }
 
     /* ==================================================================== */
+    /* 5b) FORMULÁRIO DE AVALIAÇÃO PÚBLICA (entra pendente de aprovação)    */
+    /* ==================================================================== */
+    function ligarAvaliacoes() {
+        const form = $('#form-avaliacao');
+        if (!form) return; // seção pode não existir em versões antigas do template
+
+        const estrelasEl = $('#av-estrelas');
+        const feedback = $('#av-feedback');
+
+        estrelasEl.addEventListener('click', (e) => {
+            const valor = e.target.dataset.valor;
+            if (!valor) return;
+            estrelasEl.dataset.nota = valor;
+            [...estrelasEl.children].forEach((star, i) => {
+                star.classList.toggle('ativa', i < valor);
+            });
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nota = Number(estrelasEl.dataset.nota || 0);
+            const nome = $('#av-nome').value.trim();
+            const texto = $('#av-texto').value.trim();
+
+            if (!nome || !texto || nota < 1) {
+                return mostrarFeedback('Preencha seu nome, o texto e escolha uma nota.', 'erro');
+            }
+
+            const btn = form.querySelector('button');
+            btn.disabled = true;
+
+            const { error } = await db.from('avaliacoes').insert([{ nome, texto, nota }]);
+
+            if (!error) {
+                form.reset();
+                estrelasEl.dataset.nota = '0';
+                [...estrelasEl.children].forEach(s => s.classList.remove('ativa'));
+                mostrarFeedback('Obrigado! Sua avaliação foi enviada e aparecerá após aprovação. ✔', 'sucesso');
+            } else {
+                mostrarFeedback('Não foi possível enviar agora. Tente novamente em instantes.', 'erro');
+            }
+            btn.disabled = false;
+        });
+
+        function mostrarFeedback(texto, tipo) {
+            feedback.textContent = texto;
+            feedback.className = `av-feedback visivel ${tipo}`;
+            setTimeout(() => feedback.classList.remove('visivel'), 6000);
+        }
+    }
+
+    /* ==================================================================== */
     /* 6) SCROLL REVEAL — seções entram suavemente ao rolar                 */
     /* ==================================================================== */
     function ligarReveal() {
@@ -375,6 +450,7 @@
         AudioEngine.ligarNoDom();                    // sons (se ativos no Admin)
         ligarRastreioDeCliques();
         ligarFormulario();
+        ligarAvaliacoes();
         ligarReveal();
         ligarCarrosseis();
 
