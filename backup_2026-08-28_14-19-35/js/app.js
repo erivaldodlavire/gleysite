@@ -157,76 +157,47 @@
             if (idv.heroFundoAlt) hero.style.backgroundImage = `url('${idv.heroFundoAlt}')`;
             $('#hero-pessoa-alt').src = idv.heroPessoaAlt;
 
+            // Ajustes finos feitos no editor visual do Admin (posição do texto/
+            // foto + degradê). Sem ajustes salvos, usa os mesmos valores padrão
+            // já fixados no CSS — comportamento idêntico a antes.
+            const aj = idv.heroAltAjustes || {};
+            const textoX = aj.textoX ?? 0, textoY = aj.textoY ?? 0;
+            const fotoX = aj.fotoX ?? 0, fotoEscala = (aj.fotoEscala ?? 100) / 100;
+            const gi = aj.gradInicio ?? 92, gf = aj.gradFim ?? 20;
+            const pa = aj.gradPontoA ?? 42, pb = aj.gradPontoB ?? 88;
+
+            // margin (não transform!) no texto — evita conflito com a animação
+            // de entrada do hero, que já usa "transform" nos próprios keyframes.
             const conteudo = hero.querySelector('.hero-content');
+            if (conteudo) { conteudo.style.marginLeft = textoX + '%'; conteudo.style.marginTop = textoY + '%'; }
+
             const foto = $('#hero-pessoa-alt');
+            foto.style.transform = `translateX(${fotoX}%) scale(${fotoEscala})`;
+
             const overlay = hero.querySelector('.hero-overlay');
+            if (overlay) overlay.style.background = `linear-gradient(to right,
+                color-mix(in srgb, var(--primary) ${gi}%, transparent) 0%,
+                color-mix(in srgb, var(--primary) ${gi}%, transparent) ${pa}%,
+                color-mix(in srgb, var(--primary) ${gf}%, transparent) ${pb}%,
+                color-mix(in srgb, var(--primary) ${gf}%, transparent) 100%)`;
+
+            // Rotação, tamanho e fonte de cada texto do hero (título, OAB, slogan)
+            // — sem afetar o resto do site. Fonte reaproveita o mesmo catálogo do
+            // seletor "Fonte Personalizada" (Aparência), mas escolhida à parte.
             const elementosTexto = {
                 titulo: hero.querySelector('h1'),
                 oab: hero.querySelector('.oab'),
                 slogan: hero.querySelector('.slogan'),
             };
-
-            // Ajustes finos (posição, rotação, tamanho, fonte, degradê) só fazem
-            // sentido em telas largas — no celular, o CSS já assume um layout
-            // de segurança sozinho (@media max-width:768px). Só que ESTILO
-            // INLINE sempre vence regra de CSS, mesmo dentro de @media — por
-            // isso, sem essa checagem, os ajustes do PC "vazavam" pro celular
-            // e atropelavam o layout de segurança. Por isso aplicamos (ou
-            // LIMPAMOS) esses estilos conforme a largura da tela.
-            function aplicarAjustesFinos() {
-                const desktop = window.matchMedia('(min-width: 769px)').matches;
-
-                if (!desktop) {
-                    // Celular: remove qualquer estilo inline, devolvendo o controle
-                    // 100% pro CSS (que já sabe como ficar bonito em tela estreita).
-                    if (conteudo) { conteudo.style.marginLeft = ''; conteudo.style.marginTop = ''; }
-                    foto.style.transform = '';
-                    if (overlay) overlay.style.background = '';
-                    Object.values(elementosTexto).forEach(el => {
-                        if (!el) return;
-                        el.style.transform = ''; el.style.fontSize = ''; el.style.fontFamily = '';
-                    });
-                    return;
-                }
-
-                // Ajustes feitos no editor visual do Admin. Sem ajustes salvos,
-                // usa os mesmos valores padrão já fixados no CSS.
-                const aj = idv.heroAltAjustes || {};
-                const textoX = aj.textoX ?? 0, textoY = aj.textoY ?? 0;
-                const fotoX = aj.fotoX ?? 0, fotoEscala = (aj.fotoEscala ?? 100) / 100;
-                const gi = aj.gradInicio ?? 92, gf = aj.gradFim ?? 20;
-                const pa = aj.gradPontoA ?? 42, pb = aj.gradPontoB ?? 88;
-
-                // margin (não transform!) no texto — evita conflito com a animação
-                // de entrada do hero, que já usa "transform" nos próprios keyframes.
-                if (conteudo) { conteudo.style.marginLeft = textoX + '%'; conteudo.style.marginTop = textoY + '%'; }
-
-                foto.style.transform = `translateX(${fotoX}%) scale(${fotoEscala})`;
-
-                if (overlay) overlay.style.background = `linear-gradient(to right,
-                    color-mix(in srgb, var(--primary) ${gi}%, transparent) 0%,
-                    color-mix(in srgb, var(--primary) ${gi}%, transparent) ${pa}%,
-                    color-mix(in srgb, var(--primary) ${gf}%, transparent) ${pb}%,
-                    color-mix(in srgb, var(--primary) ${gf}%, transparent) 100%)`;
-
-                // Rotação, tamanho e fonte de cada texto do hero (título, OAB,
-                // slogan) — Fonte reaproveita o catálogo do seletor "Fonte
-                // Personalizada" (Aparência), mas escolhida à parte.
-                Object.entries(elementosTexto).forEach(([id, el]) => {
-                    if (!el) return;
-                    const cfg = aj.elementos?.[id] || {};
-                    el.style.transform = `rotate(${cfg.rotacao ?? 0}deg)`;
-                    if (cfg.tamanho) el.style.fontSize = cfg.tamanho + 'px';
-                    const fonteEscolhida = cfg.fonte && window.ThemeEngine
-                        && ThemeEngine.listarFontes().find(f => f.id === cfg.fonte);
-                    el.style.fontFamily = fonteEscolhida ? fonteEscolhida.fontDisplay : '';
-                });
-            }
-
-            aplicarAjustesFinos();
-            // Reaplica ao girar o celular ou redimensionar a janela — troca de
-            // faixa (mobile ↔ desktop) sem precisar recarregar a página.
-            window.matchMedia('(min-width: 769px)').addEventListener('change', aplicarAjustesFinos);
+            Object.entries(elementosTexto).forEach(([id, el]) => {
+                if (!el) return;
+                const cfg = aj.elementos?.[id] || {};
+                el.style.transform = `rotate(${cfg.rotacao ?? 0}deg)`;
+                if (cfg.tamanho) el.style.fontSize = cfg.tamanho + 'px';
+                const fonteEscolhida = cfg.fonte && window.ThemeEngine
+                    && ThemeEngine.listarFontes().find(f => f.id === cfg.fonte);
+                el.style.fontFamily = fonteEscolhida ? fonteEscolhida.fontDisplay : '';
+            });
         });
 
         // Fundo do Corpo: imagem opcional com opacidade ajustável, aplicada por
