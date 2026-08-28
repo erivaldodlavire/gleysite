@@ -726,60 +726,30 @@
     /* ==================================================================== */
     /* 9) LEADS — leitura protegida por RLS (só logado enxerga)             */
     /* ==================================================================== */
-    const NOMES_STATUS_LEAD = { novo: 'Novo', andamento: 'Em andamento', concluido: 'Concluído' };
-
     async function carregarLeads() {
         const corpo = $('#corpo-leads');
-        corpo.innerHTML = `<tr><td colspan="7" class="vazio-leads"><span class="skeleton" style="display:inline-block;width:200px">&nbsp;</span></td></tr>`;
+        corpo.innerHTML = `<tr><td colspan="6" class="vazio-leads"><span class="skeleton" style="display:inline-block;width:200px">&nbsp;</span></td></tr>`;
         const { data, error } = await db.from('site_leads')
             .select('*').order('created_at', { ascending: false }).limit(200);
 
-        if (error) { corpo.innerHTML = `<tr><td colspan="7" class="vazio-leads">Erro ao carregar: ${esc(error.message)}</td></tr>`; return; }
-        if (!data.length) {
-            corpo.innerHTML = `<tr><td colspan="7" class="vazio-leads">Nenhuma mensagem ainda. Quando o formulário do site for enviado, aparece aqui.</td></tr>`;
-            atualizarBadgeLeads(0);
-            return;
-        }
+        if (error) { corpo.innerHTML = `<tr><td colspan="6" class="vazio-leads">Erro ao carregar: ${esc(error.message)}</td></tr>`; return; }
+        if (!data.length) { corpo.innerHTML = `<tr><td colspan="6" class="vazio-leads">Nenhuma mensagem ainda. Quando o formulário do site for enviado, aparece aqui.</td></tr>`; return; }
 
-        corpo.innerHTML = data.map(l => {
-            const status = l.status || 'novo';
-            return `
+        corpo.innerHTML = data.map(l => `
             <tr>
-                <td>
-                    <select class="select-status-lead ${status}" data-lead-status="${l.id}">
-                        ${Object.entries(NOMES_STATUS_LEAD).map(([v, n]) => `<option value="${v}" ${v === status ? 'selected' : ''}>${n}</option>`).join('')}
-                    </select>
-                </td>
                 <td>${new Date(l.created_at).toLocaleDateString('pt-BR')}<br><small>${new Date(l.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</small></td>
                 <td><strong>${esc(l.nome)}</strong></td>
                 <td>${esc(l.email || '')}<br><small>${esc(l.whatsapp || '')}</small></td>
                 <td>${esc(l.assunto || '')}</td>
                 <td class="msg">${esc(l.mensagem || '')}</td>
                 <td><button type="button" class="btn-remover" data-lead="${l.id}" title="Apagar"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
-        }).join('');
-
-        atualizarBadgeLeads(data.filter(l => (l.status || 'novo') === 'novo').length);
-
-        corpo.querySelectorAll('[data-lead-status]').forEach(select => select.addEventListener('change', async () => {
-            select.className = `select-status-lead ${select.value}`;
-            await db.from('site_leads').update({ status: select.value }).eq('id', select.dataset.leadStatus);
-            const novos = corpo.querySelectorAll('.select-status-lead.novo').length;
-            atualizarBadgeLeads(novos);
-        }));
+            </tr>`).join('');
 
         corpo.querySelectorAll('[data-lead]').forEach(btn => btn.addEventListener('click', async () => {
             if (!confirm('Apagar este lead definitivamente?')) return;
             await db.from('site_leads').delete().eq('id', btn.dataset.lead);
             carregarLeads();
         }));
-    }
-
-    function atualizarBadgeLeads(qtd) {
-        const badge = $('#badge-leads');
-        if (!badge) return;
-        badge.textContent = qtd;
-        badge.style.display = qtd > 0 ? 'inline-block' : 'none';
     }
     $('#btn-recarregar-leads').addEventListener('click', carregarLeads);
 
@@ -790,8 +760,6 @@
         cta_consultoria: 'Botão "Solicitar Consultoria"',
         cta_whatsapp_hero: 'WhatsApp (topo do site)',
         cta_whatsapp_flutuante: 'WhatsApp (botão flutuante)',
-        cta_whatsapp_area: 'WhatsApp (dentro de uma Área de Atuação)',
-        cta_whatsapp_pos_lead: 'WhatsApp (após enviar o formulário)',
         pub_click: 'Cliques em publicações/vídeos',
         rede_social: 'Cliques em redes sociais',
     };
@@ -808,18 +776,15 @@
         const dias = Number(select.value);
         const desde = dias > 0 ? new Date(Date.now() - dias * 86400000).toISOString() : '1970-01-01T00:00:00Z';
 
-        const [leadsResp, eventosResp, visitasResp] = await Promise.all([
+        const [leadsResp, eventosResp] = await Promise.all([
             db.from('site_leads').select('id', { count: 'exact', head: true }).gte('created_at', desde),
-            db.from('site_eventos').select('evento').neq('evento', 'visita_site').gte('created_at', desde),
-            db.from('site_eventos').select('id', { count: 'exact', head: true }).eq('evento', 'visita_site').gte('created_at', desde),
+            db.from('site_eventos').select('evento').gte('created_at', desde),
         ]);
 
         const totalLeads = leadsResp.count ?? 0;
         const eventos = eventosResp.data || [];
-        const totalVisitas = visitasResp.count ?? 0;
 
         resumo.innerHTML = `
-            <div class="stats-card"><strong>${totalVisitas}</strong><span>Visitas ao site</span></div>
             <div class="stats-card"><strong>${totalLeads}</strong><span>Leads recebidos</span></div>
             <div class="stats-card"><strong>${eventos.length}</strong><span>Cliques rastreados</span></div>
         `;
@@ -837,59 +802,6 @@
         barras.innerHTML = linhas.map(([evento, qtd]) => `
             <div class="stats-linha">
                 <span class="stats-nome">${esc(NOMES_EVENTOS[evento] || evento)}</span>
-                <div class="stats-barra-fundo"><div class="stats-barra" style="width:${(qtd / max) * 100}%"></div></div>
-                <span class="stats-qtd">${qtd}</span>
-            </div>`).join('');
-
-        // Detalhamento: quais publicações (por tema) e quais redes sociais
-        // específicas mais recebem cliques — não só o total por tipo.
-        const [{ data: pubEventos }, { data: redeEventos }] = await Promise.all([
-            db.from('site_eventos').select('texto_botao').eq('evento', 'pub_click').gte('created_at', desde),
-            db.from('site_eventos').select('destino').eq('evento', 'rede_social').gte('created_at', desde),
-        ]);
-        renderizarBarrasDetalhe('#stats-publicacoes', pubEventos, 'texto_botao', t => t || '(sem tema cadastrado)');
-        renderizarBarrasDetalhe('#stats-redes', redeEventos, 'destino', nomeRedeSocial);
-
-        const { data: areaEventos } = await db.from('site_eventos')
-            .select('texto_botao').eq('evento', 'cta_whatsapp_area').gte('created_at', desde);
-        renderizarBarrasDetalhe('#stats-areas-whats', areaEventos, 'texto_botao', t => t || '(sem área identificada)');
-    }
-
-    // Identifica a plataforma pela URL, reaproveitando a mesma lógica usada
-    // no site público para os ícones das redes sociais.
-    function nomeRedeSocial(url) {
-        const u = (url || '').toLowerCase();
-        if (u.includes('instagram')) return 'Instagram';
-        if (u.includes('youtube') || u.includes('youtu.be')) return 'YouTube';
-        if (u.includes('whatsapp') || u.includes('wa.me')) return 'WhatsApp';
-        if (u.includes('linkedin')) return 'LinkedIn';
-        if (u.includes('facebook')) return 'Facebook';
-        if (u.includes('tiktok')) return 'TikTok';
-        if (u.includes('t.me') || u.includes('telegram')) return 'Telegram';
-        if (u.includes('threads')) return 'Threads';
-        if (u.includes('x.com') || u.includes('twitter')) return 'X (Twitter)';
-        return url || '(link desconhecido)';
-    }
-
-    // Genérico: agrupa uma lista de linhas por um campo, conta e desenha barras
-    // — reaproveitado tanto pelas publicações quanto pelas redes sociais.
-    function renderizarBarrasDetalhe(seletor, linhasBrutas, campo, formatar) {
-        const container = $(seletor);
-        if (!container) return;
-        const contagem = {};
-        (linhasBrutas || []).forEach(l => {
-            const chave = formatar(l[campo]);
-            contagem[chave] = (contagem[chave] || 0) + 1;
-        });
-        const linhas = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
-        if (!linhas.length) {
-            container.innerHTML = '<p class="dica">Nenhum clique registrado nesse período ainda.</p>';
-            return;
-        }
-        const max = linhas[0][1];
-        container.innerHTML = linhas.map(([nome, qtd]) => `
-            <div class="stats-linha">
-                <span class="stats-nome">${esc(nome)}</span>
                 <div class="stats-barra-fundo"><div class="stats-barra" style="width:${(qtd / max) * 100}%"></div></div>
                 <span class="stats-qtd">${qtd}</span>
             </div>`).join('');
@@ -1037,5 +949,4 @@
     passo('audio', ligarAudio);
     passo('preview-tema', aplicarPreview);   // painel abre já com o tema do cliente
     passo('avaliacoes-pendentes', carregarAvaliacoesPendentes);
-    passo('leads-badge', carregarLeads); // carrega já na abertura, para o badge aparecer sem precisar clicar na aba
 })();

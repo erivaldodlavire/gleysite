@@ -790,8 +790,6 @@
         cta_consultoria: 'Botão "Solicitar Consultoria"',
         cta_whatsapp_hero: 'WhatsApp (topo do site)',
         cta_whatsapp_flutuante: 'WhatsApp (botão flutuante)',
-        cta_whatsapp_area: 'WhatsApp (dentro de uma Área de Atuação)',
-        cta_whatsapp_pos_lead: 'WhatsApp (após enviar o formulário)',
         pub_click: 'Cliques em publicações/vídeos',
         rede_social: 'Cliques em redes sociais',
     };
@@ -849,10 +847,6 @@
         ]);
         renderizarBarrasDetalhe('#stats-publicacoes', pubEventos, 'texto_botao', t => t || '(sem tema cadastrado)');
         renderizarBarrasDetalhe('#stats-redes', redeEventos, 'destino', nomeRedeSocial);
-
-        const { data: areaEventos } = await db.from('site_eventos')
-            .select('texto_botao').eq('evento', 'cta_whatsapp_area').gte('created_at', desde);
-        renderizarBarrasDetalhe('#stats-areas-whats', areaEventos, 'texto_botao', t => t || '(sem área identificada)');
     }
 
     // Identifica a plataforma pela URL, reaproveitando a mesma lógica usada

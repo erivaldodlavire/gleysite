@@ -233,22 +233,12 @@
         /* --- Áreas de atuação --- */
         blindado('áreas', () => {
             if (d.areas?.length) {
-                const numWhats = d.whats ? d.whats.replace(/\D/g, '') : '';
-                $('#container-servicos').innerHTML = d.areas.map((a, i) => {
-                    const botaoWhats = numWhats ? `
-                        <a class="card-whats-btn" target="_blank" rel="noopener"
-                           data-evento="cta_whatsapp_area" data-titulo="${esc(a.t)}"
-                           href="https://wa.me/${numWhats}?text=${encodeURIComponent('Olá! Gostaria de mais informações sobre ' + a.t + '.')}">
-                            <i class="fab fa-whatsapp"></i> Falar sobre isso
-                        </a>` : '';
-                    return `
+                $('#container-servicos').innerHTML = d.areas.map((a, i) => `
                     <div class="card" style="--i:${i}">
                         <i class="${esc(a.i)} gold-3d"></i>
                         <h3>${esc(a.t)}</h3>
                         <p>${esc(a.d)}</p>
-                        ${botaoWhats}
-                    </div>`;
-                }).join('');
+                    </div>`).join('');
             }
         });
 
@@ -311,7 +301,7 @@
                     }
                     return `<div class="pub-container">
                                 <p class="pub-desc">${esc(p.d)}</p>
-                                <div class="pub-item"><a href="${esc(p.l)}" target="_blank" rel="noopener" data-evento="pub_click" data-titulo="${esc((p.d || '').slice(0, 60))}">${thumb}</a></div>
+                                <div class="pub-item"><a href="${esc(p.l)}" target="_blank" rel="noopener" data-evento="pub_click">${thumb}</a></div>
                             </div>`;
                 }).join('');
             } else {
@@ -377,23 +367,12 @@
         } catch { /* automação nunca pode derrubar o site */ }
     }
 
-    // Contabiliza cada carregamento da página como uma visita — dispara e
-    // esquece, nunca atrasa nem trava a primeira pintura do site.
-    function registrarVisita() {
-        db.from('site_eventos').insert([{
-            evento: 'visita_site',
-            pagina_url: location.pathname,
-        }]).then(() => {}, () => {});
-    }
-
     // CTAs: um listener delegado cobre botões estáticos E gerados dinamicamente
     function ligarRastreioDeCliques() {
         document.addEventListener('click', (e) => {
             const alvo = e.target.closest('[data-evento]');
             if (!alvo) return;
-            // Publicações não têm texto visível (só a miniatura) — usamos a
-            // descrição/tema cadastrada no Admin via data-titulo, se existir.
-            const textoBotao = alvo.dataset.titulo || alvo.innerText.trim().slice(0, 60);
+            const textoBotao = alvo.innerText.trim().slice(0, 60);
             const destino = alvo.href || null;
 
             dispararWebhook(config?.integracao?.webhookEventos, {
@@ -435,9 +414,6 @@
                 return mostrarFeedback('Preencha ao menos o nome e a mensagem.', 'erro');
             }
 
-            const btnWhats = $('#whats-pos-lead');
-            if (btnWhats) btnWhats.style.display = 'none'; // esconde de uma tentativa anterior, se houver
-
             btn.disabled = true;
             const textoOriginal = btn.innerText;
             btn.innerText = 'Enviando...';
@@ -451,16 +427,6 @@
                     ...payloadBase('novo_lead'),
                     lead,
                 });
-
-                // Ponte pro WhatsApp: leva a mensagem que a pessoa já escreveu,
-                // sem precisar digitar tudo de novo lá.
-                if (btnWhats && config?.whats) {
-                    const numero = config.whats.replace(/\D/g, '');
-                    const texto = `Olá, meu nome é ${lead.nome}. Assunto: ${lead.assunto}. ${lead.mensagem}`;
-                    btnWhats.href = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
-                    btnWhats.style.display = 'inline-flex';
-                }
-
                 form.reset();
                 mostrarFeedback('Mensagem enviada com sucesso! Retornaremos em breve. ✔', 'sucesso');
             } else {
@@ -598,7 +564,6 @@
         }
 
         AudioEngine.ligarNoDom();                    // sons (se ativos no Admin)
-        registrarVisita();                           // contabiliza a visita, sem travar nada
         ligarRastreioDeCliques();
         ligarFormulario();
         ligarAvaliacoes();

@@ -248,13 +248,6 @@ textarea { resize: vertical; min-height: 90px; }
 .stats-qtd { flex: 0 0 34px; text-align: right; font-weight: 800; font-size: 0.85rem; }
 
 /* ------------------------------- LEADS ----------------------------------- */
-.select-status-lead {
-    padding: 6px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 800;
-    border: 2px solid; cursor: pointer; text-transform: uppercase; letter-spacing: 0.03em;
-}
-.select-status-lead.novo { background: #fdecec; color: var(--erro); border-color: #f3c8c8; }
-.select-status-lead.andamento { background: #fff8e1; color: #b8860b; border-color: #f0dca0; }
-.select-status-lead.concluido { background: #eafaf0; color: var(--sucesso); border-color: #b9e8c9; }
 .tabela-leads { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
 .tabela-leads th {
     text-align: left; padding: 10px 12px; font-size: 0.68rem;
