@@ -339,7 +339,7 @@
                                  <div class="play-overlay"><i class="fab fa-youtube"></i></div>`;
                     }
                     return `<div class="pub-container">
-                                <p class="pub-desc">${esc(p.d)}</p>
+                                <p class="pub-desc" title="${esc(p.d)}">${esc(p.d)}</p>
                                 <div class="pub-item"><a href="${esc(p.l)}" target="_blank" rel="noopener" data-evento="pub_click" data-titulo="${esc((p.d || '').slice(0, 60))}">${thumb}</a></div>
                             </div>`;
                 }).join('');

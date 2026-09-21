@@ -310,7 +310,15 @@ h2::after {
 
 /* ============================ PUBLICAÇÕES =============================== */
 .pub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; }
-.pub-desc { font-weight: 700; font-size: 0.88rem; margin-bottom: 10px; }
+/* Título padronizado: mesma fonte/tamanho/peso, no máx. 2 linhas e altura
+   fixa de 2 linhas → todos os cards da fileira ficam com a mesma altura.
+   O texto completo vai no atributo title (tooltip). */
+.pub-desc {
+    font-family: var(--font-body); font-weight: 700; font-size: 0.95rem; line-height: 1.35;
+    height: calc(2 * 1.35em); margin: 0 0 10px; overflow: hidden;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2;
+    overflow-wrap: anywhere;
+}
 .pub-item {
     position: relative; border-radius: 12px; overflow: hidden; height: 200px;
     background: #000; border: 1px solid var(--accent);
