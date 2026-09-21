@@ -151,6 +151,11 @@ body.carregando .whats-flutuante {
 .nav-menu a:not(.btn-contato-nav):hover::after { width: 100%; }
 .btn-contato-nav { background: var(--accent); color: var(--primary) !important; padding: 9px 16px; border-radius: 5px; font-weight: 800; }
 
+/* Botão do menu mobile (☰): só aparece em telas estreitas (ver @media). */
+.nav-toggle { display: none; }
+/* Âncoras não ficam escondidas atrás do header fixo ao rolar até a seção. */
+section[id] { scroll-margin-top: 74px; }
+
 /* =============================== HERO =================================== */
 #hero { width: 100%; min-height: 92vh; background: var(--primary) no-repeat center center/cover; margin-top: 70px; position: relative; overflow: hidden; }
 .hero-overlay {
@@ -455,7 +460,38 @@ footer {
 
 /* ============================= RESPONSIVO =============================== */
 @media (max-width: 768px) {
-    .nav-menu { display: none; }
+    /* Menu mobile: o botão ☰ abre/fecha o painel via classe .menu-aberto
+       (nunca por style inline, que venceria estas regras responsivas). */
+    .logo-area { min-width: 0; flex: 1; margin-right: 12px; }
+    .logo-text { font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-toggle {
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        width: 44px; height: 44px; padding: 0; cursor: pointer;
+        background: transparent; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px;
+    }
+    .nav-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .nav-toggle-barras, .nav-toggle-barras::before, .nav-toggle-barras::after {
+        display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px;
+        transition: transform 0.25s, background 0.25s;
+    }
+    .nav-toggle-barras { position: relative; }
+    .nav-toggle-barras::before, .nav-toggle-barras::after { content: ''; position: absolute; left: 0; }
+    .nav-toggle-barras::before { top: -7px; }
+    .nav-toggle-barras::after  { top: 7px; }
+    .menu-aberto .nav-toggle-barras { background: transparent; }
+    .menu-aberto .nav-toggle-barras::before { top: 0; transform: rotate(45deg); }
+    .menu-aberto .nav-toggle-barras::after  { top: 0; transform: rotate(-45deg); }
+
+    .nav-menu {
+        display: none; position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; padding: 8px 5% 18px;
+        background: var(--primary); border-bottom: 2px solid var(--accent);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+    }
+    .menu-aberto .nav-menu { display: flex; }
+    .nav-menu a { margin-left: 0; padding: 14px 4px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .nav-menu a:not(.btn-contato-nav)::after { display: none; }
+    .nav-menu .btn-contato-nav { margin-top: 12px; text-align: center; border-bottom: 0; padding: 14px 16px; }
     /* Modelo Alternativo do Hero: uma foto lateral grande não cabe bem
        em telas estreitas — volta automaticamente ao modelo padrão. */
     #hero.hero-alt .hero-pessoa-alt { display: none; }

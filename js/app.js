@@ -671,4 +671,30 @@
         });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fechar(); });
     })();
+
+    // ---------- Menu mobile (☰) ----------
+    // Só alterna a classe .menu-aberto no header; o visual fica todo no CSS.
+    (function menuMobile() {
+        const header = document.querySelector('.main-header');
+        const botao = document.getElementById('nav-toggle');
+        if (!header || !botao) return;
+
+        function definir(aberto) {
+            header.classList.toggle('menu-aberto', aberto);
+            botao.setAttribute('aria-expanded', String(aberto));
+            botao.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+        }
+
+        botao.addEventListener('click', () => definir(!header.classList.contains('menu-aberto')));
+        // Fecha ao tocar num link do menu ou fora do header.
+        document.addEventListener('click', (e) => {
+            if (!header.classList.contains('menu-aberto')) return;
+            if (e.target.closest('.nav-menu a') || !e.target.closest('.main-header')) definir(false);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && header.classList.contains('menu-aberto')) { definir(false); botao.focus(); }
+        });
+        // Girou o aparelho / alargou a janela: volta ao menu horizontal.
+        window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => { if (e.matches) definir(false); });
+    })();
 })();
