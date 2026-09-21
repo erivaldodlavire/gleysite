@@ -455,6 +455,13 @@ footer {
 .social-links { margin: 24px 0; }
 .footer-credits { margin-top: 26px; font-size: 0.78rem; opacity: 0.65; }
 .footer-credits a { color: var(--accent); text-decoration: none; }
+/* Botão "Instalar app" (PWA): discreto, só aparece quando o navegador permite instalar */
+.btn-instalar-app {
+    font: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    color: var(--accent); background: transparent; min-height: 44px; padding: 0 16px;
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 8px;
+}
+.btn-instalar-app:hover { background: color-mix(in srgb, var(--accent) 15%, transparent); }
 
 /* ======================= BOTÃO FLUTUANTE WHATSAPP ======================= */
 .whats-flutuante {

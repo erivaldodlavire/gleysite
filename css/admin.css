@@ -386,7 +386,8 @@ textarea { resize: vertical; min-height: 90px; }
     .topo { padding: 10px 14px; gap: 10px; min-height: var(--topo-h); }
     .topo-marca { min-width: 0; }
     .topo-marca > div { min-width: 0; }
-    .topo-marca strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* Nome pode quebrar em até 2 linhas (em vez de virar "Gl…") */
+    .topo-marca strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; line-height: 1.15; overflow-wrap: anywhere; }
     .topo-acoes { flex-shrink: 0; }
     .topo-acoes a, .topo-acoes button { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; }
 
@@ -467,6 +468,14 @@ textarea { resize: vertical; min-height: 90px; }
     .modal-caixa { max-height: 96vh; max-height: 96dvh; padding: 16px; }
     .modal-fixo { top: -16px; margin: -16px -16px 14px; padding: 16px 16px 10px; }
     .controle-slider input[type=number] { width: 70px; min-height: 44px; }
+}
+@media (max-width: 640px) {
+    /* "Instalar app" e "Ver Site" viram só o ícone (44x44) para não espremer o nome no topo */
+    .topo-acoes #btn-instalar-app, .topo-acoes a[aria-label="Ver site"] { width: 44px; padding: 0; justify-content: center; }
+    .topo-acoes #btn-instalar-app .rotulo-instalar, .topo-acoes .rotulo-acao { display: none; }
+}
+@media (max-width: 340px) {
+    .topo-marca img { display: none; } /* telas muito estreitas: o nome vale mais que o logo */
 }
 @media (max-width: 480px) {
     .topo-marca small { display: none; }
