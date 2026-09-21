@@ -672,6 +672,21 @@
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fechar(); });
     })();
 
+    // ---------- Acesso discreto ao login ----------
+    // O rodapé não tem mais link visível para o painel: 5 toques rápidos no
+    // ©  abrem o login (plano B; o caminho normal é o app/atalho do cliente).
+    // Não é segurança — a proteção real é o Supabase Auth + RLS.
+    (function acessoLogin() {
+        let toques = 0, timer = null;
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#edit-copyright')) return;
+            toques++;
+            clearTimeout(timer);
+            timer = setTimeout(() => { toques = 0; }, 1500);
+            if (toques >= 5) { toques = 0; window.location.href = 'login.html'; }
+        });
+    })();
+
     // ---------- Menu mobile (☰) ----------
     // Só alterna a classe .menu-aberto no header; o visual fica todo no CSS.
     (function menuMobile() {
