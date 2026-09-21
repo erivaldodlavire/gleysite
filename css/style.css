@@ -342,7 +342,11 @@ h2::after {
     scrollbar-width: none; -ms-overflow-style: none;
 }
 .carrossel-trilha::-webkit-scrollbar { display: none; }
-.carrossel-trilha > * { flex: 0 0 clamp(240px, calc(25% - 15px), 420px); scroll-snap-align: start; }
+.carrossel-trilha > * { flex: 0 0 clamp(240px, calc(25% - 15px), 420px); scroll-snap-align: center; }
+/* Poucos slides (sem overflow) ficam centralizados; com overflow as margens
+   auto valem 0 e nada é cortado (justify-content:center cortaria a esquerda). */
+.carrossel-trilha > :first-child { margin-left: auto; }
+.carrossel-trilha > :last-child { margin-right: auto; }
 .carrossel-trilha .office-photo { height: 240px; }
 
 .seta-carrossel {
@@ -517,6 +521,9 @@ footer {
     .full-section { padding: 64px 6%; }
     .whats-flutuante { bottom: 22px; right: 22px; }
     .carrossel-trilha > * { flex-basis: 80vw; }
+    /* Folga lateral = (largura da trilha − slide)/2: o 1º e o último slide
+       também conseguem parar no centro da tela. */
+    .carrossel-trilha { padding-left: calc((100% - 80vw) / 2); padding-right: calc((100% - 80vw) / 2); }
     .seta-carrossel.esquerda { left: 2px; }
     .seta-carrossel.direita { right: 2px; }
 }
