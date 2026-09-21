@@ -492,6 +492,19 @@ footer {
     .nav-menu a { margin-left: 0; padding: 14px 4px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.12); }
     .nav-menu a:not(.btn-contato-nav)::after { display: none; }
     .nav-menu .btn-contato-nav { margin-top: 12px; text-align: center; border-bottom: 0; padding: 14px 16px; }
+
+    /* Áreas de atuação: 2 colunas no celular. O botão do rodapé segue
+       alinhado (margin-top:auto no .card-whats-btn). Nº ímpar: o último
+       card fica centralizado, com a largura de uma coluna. */
+    .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .cards-grid > .card:last-child:nth-child(odd) {
+        grid-column: 1 / -1; justify-self: center; width: calc(50% - 6px);
+    }
+    .card { padding: 24px 12px 18px; }
+    .card h3 { font-size: 0.98rem; overflow-wrap: anywhere; }
+    .card p { font-size: 0.82rem; line-height: 1.5; margin-bottom: 14px; }
+    .card .gold-3d { font-size: 34px; margin-bottom: 12px; }
+    .card-whats-btn { font-size: 0.64rem; padding: 8px 6px; gap: 4px; white-space: nowrap; }
     /* Modelo Alternativo do Hero: uma foto lateral grande não cabe bem
        em telas estreitas — volta automaticamente ao modelo padrão. */
     #hero.hero-alt .hero-pessoa-alt { display: none; }
