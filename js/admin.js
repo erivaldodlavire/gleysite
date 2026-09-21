@@ -385,9 +385,16 @@
     /* ==================================================================== */
     function renderizarLayout() {
         const lista = $('#lista-layout');
+        // Seções conhecidas, na ordem atual (base p/ habilitar/desabilitar ↑↓)
+        const visiveis = estado.layout.filter(sec => CATALOGO_SECOES.some(c => c.id === sec.id));
+        const ehFixa = (sec) => !!CATALOGO_SECOES.find(c => c.id === sec.id)?.fixa;
+
         lista.innerHTML = estado.layout.map(sec => {
             const meta = CATALOGO_SECOES.find(c => c.id === sec.id);
             if (!meta) return '';
+            const pos = visiveis.indexOf(sec);
+            const podeSubir = pos > 0 && !ehFixa(visiveis[pos - 1]);
+            const podeDescer = pos < visiveis.length - 1;
             return `
             <li data-id="${sec.id}" draggable="${!meta.fixa}" class="${meta.fixa ? 'fixa' : ''}">
                 <i class="fas fa-grip-vertical alca"></i>
@@ -395,17 +402,41 @@
                 <span class="nome-secao">${meta.nome}</span>
                 ${meta.fixa
                     ? '<span class="etiqueta-fixa">Fixa</span>'
-                    : `<label class="interruptor chave-visivel" title="Exibir/ocultar no site">
+                    : `<span class="mover-btns">
+                         <button type="button" data-mover="-1" aria-label="Subir ${meta.nome}" ${podeSubir ? '' : 'disabled'}><i class="fas fa-arrow-up"></i></button>
+                         <button type="button" data-mover="1" aria-label="Descer ${meta.nome}" ${podeDescer ? '' : 'disabled'}><i class="fas fa-arrow-down"></i></button>
+                       </span>
+                       <label class="interruptor chave-visivel" title="Exibir/ocultar no site">
                          <input type="checkbox" data-visivel ${sec.visivel !== false ? 'checked' : ''}><span></span>
                        </label>`}
             </li>`;
         }).join('');
 
+        // Alternativa ao arrastar (que não funciona bem no toque): botões ↑ ↓
+        lista.querySelectorAll('[data-mover]').forEach(btn => btn.addEventListener('click', () => {
+            const id = btn.closest('li').dataset.id;
+            const dir = Number(btn.dataset.mover);
+            const i = estado.layout.findIndex(s => s.id === id);
+            let j = i + dir;
+            // pula ids desconhecidos (não aparecem na lista)
+            while (estado.layout[j] && !CATALOGO_SECOES.some(c => c.id === estado.layout[j].id)) j += dir;
+            const vizinho = estado.layout[j];
+            if (!vizinho || ehFixa(vizinho)) return;
+            [estado.layout[i], estado.layout[j]] = [estado.layout[j], estado.layout[i]];
+            renderizarLayout();
+            // mantém o foco no mesmo botão (teclado/leitor de tela), se ainda ativo
+            const novo = $('#lista-layout').querySelector(`li[data-id="${id}"] [data-mover="${dir}"]`);
+            if (novo && !novo.disabled) novo.focus();
+        }));
+
         let arrastado = null;
 
         lista.querySelectorAll('li:not(.fixa)').forEach(li => {
             li.addEventListener('dragstart', () => { arrastado = li; li.classList.add('arrastando'); });
-            li.addEventListener('dragend', () => { li.classList.remove('arrastando'); arrastado = null; sincronizarOrdem(); });
+            li.addEventListener('dragend', () => {
+                li.classList.remove('arrastando'); arrastado = null; sincronizarOrdem();
+                renderizarLayout(); // atualiza o estado habilitado/desabilitado dos botões ↑ ↓
+            });
             li.addEventListener('dragover', (e) => {
                 e.preventDefault(); // habilita o drop
                 if (!arrastado || arrastado === li) return;
@@ -546,7 +577,10 @@
 
         function calcularEscalaPreview() {
             const largura = $('#hero-preview').offsetWidth || 700;
-            return largura / (window.innerWidth || 1400);
+            // O Hero alternativo só aparece em telas de PC no site, então a
+            // referência nunca é menor que 1024px (senão, no celular, o texto
+            // da prévia saía ~4x maior que o real).
+            return largura / Math.max(window.innerWidth || 1400, 1024);
         }
 
         function atualizarPreview() {
@@ -610,9 +644,11 @@
             const fundo = estado.identidade.heroFundoAlt || estado.identidade.fundo || '';
             $('#hero-preview').style.backgroundImage = fundo ? `url('${fundo}')` : 'none';
 
+            // Abre ANTES de calcular a prévia: com o modal fechado a largura
+            // mede 0 e a escala do texto saía errada.
+            modal.classList.add('aberto');
             sincronizarTodosNumeros();
             atualizarPreview();
-            modal.classList.add('aberto');
         });
 
         $('#fechar-editor-hero').addEventListener('click', () => modal.classList.remove('aberto'));
@@ -745,17 +781,17 @@
             const status = l.status || 'novo';
             return `
             <tr>
-                <td>
+                <td data-label="Status">
                     <select class="select-status-lead ${status}" data-lead-status="${l.id}">
                         ${Object.entries(NOMES_STATUS_LEAD).map(([v, n]) => `<option value="${v}" ${v === status ? 'selected' : ''}>${n}</option>`).join('')}
                     </select>
                 </td>
-                <td>${new Date(l.created_at).toLocaleDateString('pt-BR')}<br><small>${new Date(l.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</small></td>
-                <td><strong>${esc(l.nome)}</strong></td>
-                <td>${esc(l.email || '')}<br><small>${esc(l.whatsapp || '')}</small></td>
-                <td>${esc(l.assunto || '')}</td>
-                <td class="msg">${esc(l.mensagem || '')}</td>
-                <td><button type="button" class="btn-remover" data-lead="${l.id}" title="Apagar"><i class="fas fa-trash"></i></button></td>
+                <td data-label="Data">${new Date(l.created_at).toLocaleDateString('pt-BR')}<br><small>${new Date(l.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</small></td>
+                <td data-label="Nome"><strong>${esc(l.nome)}</strong></td>
+                <td data-label="Contato">${esc(l.email || '')}<br><small>${esc(l.whatsapp || '')}</small></td>
+                <td data-label="Assunto">${esc(l.assunto || '')}</td>
+                <td data-label="Mensagem" class="msg">${esc(l.mensagem || '')}</td>
+                <td class="acao-lead"><button type="button" class="btn-remover" data-lead="${l.id}" title="Apagar" aria-label="Apagar mensagem"><i class="fas fa-trash"></i></button></td>
             </tr>`;
         }).join('');
 
@@ -937,6 +973,8 @@
         document.querySelectorAll('.menu-abas button').forEach(b => b.classList.remove('ativa'));
         document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
         btn.classList.add('ativa');
+        // Barra de abas rolável no celular: traz a aba escolhida para a vista
+        btn.scrollIntoView({ inline: 'center', block: 'nearest' });
         $('#' + btn.dataset.aba).classList.add('ativa');
         if (btn.dataset.aba === 'aba-leads') carregarLeads();
         if (btn.dataset.aba === 'aba-estatisticas') carregarEstatisticas();

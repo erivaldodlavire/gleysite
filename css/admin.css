@@ -367,18 +367,113 @@ textarea { resize: vertical; min-height: 90px; }
     text-align: center; font-size: 0.8rem;
 }
 
+/* Botões ↑ ↓ do layout (alternativa ao arrastar; só em telas de toque/estreitas) */
+.mover-btns { display: none; gap: 6px; }
+.mover-btns button {
+    width: 44px; height: 44px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--borda); background: #fff; color: var(--primary);
+}
+.mover-btns button:disabled { opacity: 0.3; cursor: default; }
+.mover-btns button:not(:disabled):active { background: var(--accent); }
+
 /* ---------------------------- RESPONSIVO --------------------------------- */
+@media (max-width: 900px), (pointer: coarse) {
+    .mover-btns { display: flex; }
+    .lista-layout li { cursor: default; }
+}
 @media (max-width: 900px) {
+    :root { --topo-h: 67px; }
+    .topo { padding: 10px 14px; gap: 10px; min-height: var(--topo-h); }
+    .topo-marca { min-width: 0; }
+    .topo-marca > div { min-width: 0; }
+    .topo-marca strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .topo-acoes { flex-shrink: 0; }
+    .topo-acoes a, .topo-acoes button { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; }
+
     .painel { grid-template-columns: 1fr; }
+    /* Barra de abas: faixa rolável na horizontal, grudada logo abaixo do topo */
     .menu-abas {
-        position: sticky; top: 66px; z-index: 800;
+        position: sticky; top: var(--topo-h); z-index: 800;
         display: flex; overflow-x: auto; gap: 6px;
-        padding: 10px 14px; background: var(--bg);
+        padding: 8px 14px; background: var(--bg);
         border-bottom: 1px solid var(--borda);
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
     }
-    .menu-abas button { width: auto; white-space: nowrap; margin: 0; }
+    .menu-abas::-webkit-scrollbar { display: none; }
+    .menu-abas button { width: auto; flex: 0 0 auto; white-space: nowrap; margin: 0; min-height: 44px; }
+
+    .conteudo-abas { padding: 16px 14px 110px; }
+    .bloco { padding: 16px; }
     .grade-2 { grid-template-columns: 1fr; }
-    .btn-salvar-mestre { right: 16px; bottom: 16px; padding: 15px 28px; }
+    /* 16px evita o zoom automático do iOS ao focar um campo */
+    input, textarea, select { font-size: 16px; min-height: 44px; }
+    input[type=range], input[type=checkbox], input[type=color] { min-height: 0; }
+    input[type=color] { min-height: 46px; }
+
+    /* Salvar sempre visível: barra fixa de largura total no rodapé */
+    .btn-salvar-mestre {
+        left: 0; right: 0; bottom: 0; width: 100%;
+        border-radius: 0; border-width: 3px 0 0; padding: 16px 20px;
+        box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
+    }
+    .toast { left: 14px; right: 14px; bottom: 76px; text-align: center; }
+
+    .grade-uploads { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .grade-temas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .tema-card { padding: 10px 8px; }
+    .item-dinamico > div { min-width: 100%; flex-basis: 100%; }
+    .btn-remover { width: 44px; height: 44px; }
+    .btn-adicionar, .btn-testar-som, .btn-aprovar-avaliacao, .btn-rejeitar-avaliacao { min-height: 44px; }
+    .linha-audio select, #select-periodo-stats { max-width: 100%; }
+    .interruptor { width: 56px; height: 32px; }
+    .interruptor span::before { width: 24px; height: 24px; }
+    .interruptor input:checked + span::before { transform: translateX(24px); }
+    .lista-layout li { padding: 12px; gap: 10px; flex-wrap: wrap; }
+    .lista-layout li .alca { display: none; }
+    .lista-layout li .nome-secao { flex: 1 1 120px; }
+
+    /* Estatísticas: nome da linha ocupa a linha toda, barra + número embaixo */
+    .stats-linha { flex-wrap: wrap; gap: 6px 12px; }
+    .stats-nome { flex: 1 0 100%; }
+    .stats-card { min-width: calc(50% - 7px); }
+
+    /* Botão "Atualizar" dos títulos (float inline no HTML): no celular vira
+       um botão de largura total sob o título, sem empurrar o conteúdo. */
+    .bloco h3 .btn-adicionar { float: none !important; display: block; width: 100%; margin-top: 10px; }
+
+    /* Leads: cada linha da tabela vira um cartão (sem rolagem lateral) */
+    .tabela-leads, .tabela-leads tbody, .tabela-leads tr, .tabela-leads td { display: block; width: 100%; }
+    .tabela-leads thead { display: none; }
+    .tabela-leads tr {
+        position: relative; margin-bottom: 14px; padding: 12px 14px;
+        border: 1px solid var(--borda); border-radius: 10px; background: #fafbfc;
+    }
+    .tabela-leads td { padding: 6px 0; border: 0; }
+    .tabela-leads td[data-label]::before {
+        content: attr(data-label); display: block; margin-bottom: 2px;
+        font-size: 0.64rem; font-weight: 800; letter-spacing: 0.06em;
+        text-transform: uppercase; color: #8a93a1;
+    }
+    .tabela-leads .msg { max-width: none; overflow-wrap: anywhere; }
+    .tabela-leads td, .tabela-leads small { overflow-wrap: anywhere; }
+    .tabela-leads tr:hover td { background: transparent; }
+    .tabela-leads td.acao-lead { position: absolute; top: 8px; right: 8px; width: auto; padding: 0; }
+    .tabela-leads td:first-child { padding-right: 56px; }
+    .tabela-leads .vazio-leads { padding: 24px 8px; }
+    .select-status-lead { width: auto; min-width: 150px; min-height: 44px; padding: 8px 14px; }
+
+    /* Editor visual do Hero (modal): quase tela cheia no celular */
+    .modal-overlay { padding: 8px; }
+    .modal-caixa { max-height: 96vh; max-height: 96dvh; padding: 16px; }
+    .modal-fixo { top: -16px; margin: -16px -16px 14px; padding: 16px 16px 10px; }
+    .controle-slider input[type=number] { width: 70px; min-height: 44px; }
+}
+@media (max-width: 480px) {
+    .topo-marca small { display: none; }
+    .topo-marca img { height: 32px; }
+    .topo-acoes { gap: 6px; }
+    .topo-acoes a, .topo-acoes button { padding: 0 11px; }
+    .stats-card strong { font-size: 1.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
