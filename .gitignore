@@ -1,3 +1,7 @@
 
 backup_*/
 *.patch
+
+# Arquivos de trabalho locais (nao versionar)
+PROMPT_MELHORIAS_SITE_GLEYSITE.md
+estado-atual-producao.zip
