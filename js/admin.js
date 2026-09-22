@@ -109,11 +109,47 @@
     }
 
     /* ==================================================================== */
-    /* 4) UPLOADS DE IMAGEM — redimensiona no navegador antes de salvar     */
+    /* 4) UPLOADS DE IMAGEM — redimensiona no navegador, envia ao Storage   */
     /* ==================================================================== */
-    // Por que redimensionar? As imagens vão em base64 dentro do site_config.
-    // Uma foto de celular tem ~4MB; comprimida a 1280px/qualidade 0.82 cai
-    // para ~150KB — banco leve, site rápido, sem servidor de arquivos.
+    // Histórico: a versão antiga guardava a imagem já em base64 dentro do
+    // site_config (comentário original dizia "banco leve, sem servidor de
+    // arquivos" — na prática o EFEITO FOI O CONTRÁRIO: uma única linha da
+    // Gleyciane chegou a ~2,8MB, baixado inteiro em TODA visita ao site).
+    // Agora: a imagem otimizada sobe pro bucket "site-imagens" do Supabase
+    // Storage, e só a URL pública (uma string curta) fica no site_config —
+    // o navegador do visitante ainda cacheia/CDN-cacheia a imagem sozinho.
+    const BUCKET_IMAGENS = 'site-imagens';
+
+    // Converte o dataURL (que otimizarImagem já produz, redimensionado e
+    // comprimido) num Blob de verdade, pronto pra subir no Storage.
+    function dataUrlParaBlob(dataUrl) {
+        const [cabecalho, base64] = dataUrl.split(',');
+        const mime = cabecalho.match(/data:(.*?);base64/)?.[1] || 'image/jpeg';
+        const bin = atob(base64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return new Blob([bytes], { type: mime });
+    }
+
+    // Sobe o dataURL pro Storage e devolve a URL pública. `nomeBase` só
+    // organiza o nome do arquivo (ex: "identidade-favicon"); o timestamp
+    // garante que cada envio ganhe um nome novo (evita cache velho de CDN
+    // servindo a imagem anterior sob a mesma URL).
+    async function enviarImagemStorage(dataUrl, nomeBase) {
+        const blob = dataUrlParaBlob(dataUrl);
+        const ext = blob.type === 'image/png' ? 'png' : 'jpg';
+        const caminho = `${SUPABASE_CONFIG.cliente.id}/${nomeBase}-${Date.now()}.${ext}`;
+        const { error } = await db.storage.from(BUCKET_IMAGENS).upload(caminho, blob, {
+            contentType: blob.type,
+            cacheControl: '31536000', // 1 ano — seguro porque o nome nunca se repete
+        });
+        if (error) throw error;
+        return db.storage.from(BUCKET_IMAGENS).getPublicUrl(caminho).data.publicUrl;
+    }
+
+    // Por que redimensionar? Uma foto de celular tem ~4MB; comprimida a
+    // 1280px/qualidade 0.82 cai para ~150KB antes mesmo de subir — upload
+    // rápido e imagem leve pro visitante também.
     function otimizarImagem(arquivo, larguraMax = 1280) {
         return new Promise((resolver, rejeitar) => {
             const img = new Image();
@@ -145,11 +181,12 @@
     };
 
     // Despachante único de upload: quem pede a imagem define o que fazer
-    // com o base64 resultante (moldura fixa OU galeria do espaço).
+    // com a URL resultante (moldura fixa OU galeria do espaço) e o nome
+    // base do arquivo no Storage.
     let acaoUpload = null;
 
-    function pedirImagem(largura, aplicar) {
-        acaoUpload = { largura, aplicar };
+    function pedirImagem(largura, aplicar, nomeBase) {
+        acaoUpload = { largura, aplicar, nomeBase };
         $('#input-upload').click();
     }
 
@@ -205,7 +242,7 @@
                 const largura = chave === 'identidade.fundo' || chave === 'identidade.fundoCorpo' || chave === 'identidade.heroFundoAlt' ? 1600
                               : chave === 'identidade.favicon' ? 400
                               : chave === 'identidade.heroPessoaAlt' ? 1000 : 1280;
-                pedirImagem(largura, (b64) => { setCaminho(chave, b64); preencherUploads(); });
+                pedirImagem(largura, (url) => { setCaminho(chave, url); preencherUploads(); }, chave.replace('.', '-'));
             });
         });
 
@@ -214,9 +251,14 @@
             if (!arquivo || !acaoUpload) return;
             try {
                 const base64 = await otimizarImagem(arquivo, acaoUpload.largura);
-                acaoUpload.aplicar(base64);
-                toast('Imagem otimizada! Clique em Salvar para publicar.', 'sucesso');
-            } catch { toast('Não consegui ler essa imagem.', 'erro'); }
+                toast('Enviando imagem...', 'sucesso');
+                const url = await enviarImagemStorage(base64, acaoUpload.nomeBase || 'imagem');
+                acaoUpload.aplicar(url);
+                toast('Imagem enviada! Clique em Salvar para publicar.', 'sucesso');
+            } catch (erro) {
+                console.warn('[admin.js] Upload de imagem falhou:', erro);
+                toast('Não consegui enviar essa imagem. Tente novamente.', 'erro');
+            }
             inputArquivo.value = ''; // permite reenviar o mesmo arquivo
             acaoUpload = null;
         });
@@ -290,7 +332,7 @@
             // Clicar na foto = substituir aquela posição
             item.querySelector('.moldura').addEventListener('click', (e) => {
                 if (e.target.closest('.btn-x-foto')) return;
-                pedirImagem(1280, (b64) => { estado.fotos.lista[i] = b64; renderizarGaleriaEspaco(); });
+                pedirImagem(1280, (url) => { estado.fotos.lista[i] = url; renderizarGaleriaEspaco(); }, `foto-espaco-${i}`);
             });
             item.querySelector('.btn-x-foto').addEventListener('click', () => {
                 estado.fotos.lista.splice(i, 1);
@@ -303,7 +345,68 @@
         const btn = $('#btn-add-foto-espaco');
         if (!btn) return; // idem: nunca derrubar o painel por um botão ausente
         btn.addEventListener('click', () =>
-            pedirImagem(1280, (b64) => { estado.fotos.lista.push(b64); renderizarGaleriaEspaco(); }));
+            pedirImagem(1280, (url) => { estado.fotos.lista.push(url); renderizarGaleriaEspaco(); }, 'foto-espaco-nova'));
+    }
+
+    /* --- Migração pontual: imagens antigas em base64 → Storage -----------
+       Clientes provisionados antes desta mudança (ex: Gleyciane) ainda têm
+       o site_config com "data:image/..." gigantes salvos direto no banco.
+       Este botão sobe cada uma dessas imagens pro Storage e substitui o
+       valor no `estado` pela URL — mas só GRAVA no banco quando o usuário
+       clicar em "Salvar e Publicar" depois, igual a qualquer outra edição.
+       Não migra sozinho, não se repete: só existe imagem "data:" pra achar
+       na primeira vez de cada cliente. */
+    async function migrarImagensAntigas() {
+        const btn = $('#btn-migrar-imagens');
+        if (!btn) return;
+
+        const camposIdentidade = ['favicon', 'perfil', 'fundo', 'fundoCorpo', 'heroFundoAlt', 'heroPessoaAlt'];
+        const alvos = []; // [{ tipo: 'identidade'|'foto', chave/indice }]
+
+        camposIdentidade.forEach(campo => {
+            if (String(estado.identidade?.[campo] || '').startsWith('data:')) alvos.push({ tipo: 'identidade', campo });
+        });
+        (estado.fotos?.lista || []).forEach((src, i) => {
+            if (String(src || '').startsWith('data:')) alvos.push({ tipo: 'foto', indice: i });
+        });
+
+        if (!alvos.length) return toast('Nenhuma imagem antiga encontrada — já está tudo no Storage.', 'sucesso');
+
+        btn.disabled = true;
+        const textoOriginal = btn.innerText;
+        let migradas = 0;
+        for (const alvo of alvos) {
+            btn.innerText = `Migrando ${migradas + 1}/${alvos.length}...`;
+            try {
+                if (alvo.tipo === 'identidade') {
+                    const url = await enviarImagemStorage(estado.identidade[alvo.campo], `identidade-${alvo.campo}`);
+                    estado.identidade[alvo.campo] = url;
+                } else {
+                    const url = await enviarImagemStorage(estado.fotos.lista[alvo.indice], `foto-espaco-${alvo.indice}`);
+                    estado.fotos.lista[alvo.indice] = url;
+                }
+                migradas++;
+            } catch (erro) {
+                console.warn(`[admin.js] Falha migrando imagem (${JSON.stringify(alvo)}):`, erro);
+            }
+        }
+
+        preencherUploads();
+        renderizarGaleriaEspaco();
+        btn.disabled = false;
+        btn.innerText = textoOriginal;
+
+        const falhas = alvos.length - migradas;
+        toast(
+            falhas
+                ? `${migradas} imagem(ns) migrada(s), ${falhas} falharam (veja o console). Clique em Salvar.`
+                : `${migradas} imagem(ns) migrada(s) para o Storage! Clique em "Salvar e Publicar" para confirmar.`,
+            falhas ? 'erro' : 'sucesso'
+        );
+    }
+
+    function ligarMigracaoImagens() {
+        $('#btn-migrar-imagens')?.addEventListener('click', migrarImagensAntigas);
     }
 
     /* ==================================================================== */
@@ -1067,6 +1170,7 @@
     passo('uploads-eventos', ligarUploads);
     passo('galeria-espaco', renderizarGaleriaEspaco);
     passo('galeria-espaco-eventos', ligarGaleriaEspaco);
+    passo('migrar-imagens-eventos', ligarMigracaoImagens);
     passo('listas-dinamicas', ligarListas);
     passo('layout-builder', renderizarLayout);
     passo('galeria-temas', renderizarTemas);
