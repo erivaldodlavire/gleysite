@@ -139,17 +139,20 @@ body.carregando .whats-flutuante {
 .logo-area { display: flex; align-items: center; gap: 10px; }
 .nav-logo { height: 44px; }
 .logo-text { color: #fff; font-weight: 700; font-size: 1.05rem; }
-.nav-menu a {
+.nav-menu a, .nav-menu button {
     color: #fff; text-decoration: none; margin-left: 22px;
     font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
     position: relative;
+    /* reset do <button>: no menu ele deve parecer um link, não um botão nativo */
+    background: none; border: none; padding: 0; font-family: inherit; cursor: pointer;
 }
-.nav-menu a:not(.btn-contato-nav)::after {
+.nav-menu a:not(.btn-contato-nav)::after, .nav-menu button:not(.btn-contato-nav)::after {
     content: ''; position: absolute; left: 0; bottom: -4px;
     width: 0; height: 2px; background: var(--accent); transition: width 0.25s;
 }
-.nav-menu a:not(.btn-contato-nav):hover::after { width: 100%; }
+.nav-menu a:not(.btn-contato-nav):hover::after, .nav-menu button:not(.btn-contato-nav):hover::after { width: 100%; }
 .btn-contato-nav { background: var(--accent); color: var(--primary) !important; padding: 9px 16px; border-radius: 5px; font-weight: 800; }
+.nav-share-btn i { margin-right: 5px; font-size: 0.9em; }
 
 /* Botão do menu mobile (☰): só aparece em telas estreitas (ver @media). */
 .nav-toggle { display: none; }
@@ -508,8 +511,8 @@ footer {
         box-shadow: 0 12px 24px rgba(0,0,0,0.25);
     }
     .menu-aberto .nav-menu { display: flex; }
-    .nav-menu a { margin-left: 0; padding: 14px 4px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.12); }
-    .nav-menu a:not(.btn-contato-nav)::after { display: none; }
+    .nav-menu a, .nav-menu button { margin-left: 0; padding: 14px 4px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.12); width: 100%; text-align: left; }
+    .nav-menu a:not(.btn-contato-nav)::after, .nav-menu button:not(.btn-contato-nav)::after { display: none; }
     .nav-menu .btn-contato-nav { margin-top: 12px; text-align: center; border-bottom: 0; padding: 14px 16px; }
 
     /* Áreas de atuação: 2 colunas no celular. O botão do rodapé segue

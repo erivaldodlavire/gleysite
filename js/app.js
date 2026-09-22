@@ -741,15 +741,54 @@
         }
 
         botao.addEventListener('click', () => definir(!header.classList.contains('menu-aberto')));
-        // Fecha ao tocar num link do menu ou fora do header.
+        // Fecha ao tocar num item do menu (link OU botão, ex: Compartilhar) ou fora do header.
         document.addEventListener('click', (e) => {
             if (!header.classList.contains('menu-aberto')) return;
-            if (e.target.closest('.nav-menu a') || !e.target.closest('.main-header')) definir(false);
+            if (e.target.closest('.nav-menu a, .nav-menu button') || !e.target.closest('.main-header')) definir(false);
         });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && header.classList.contains('menu-aberto')) { definir(false); botao.focus(); }
         });
         // Girou o aparelho / alargou a janela: volta ao menu horizontal.
         window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => { if (e.matches) definir(false); });
+    })();
+
+    // ---------- Botão "Compartilhar" (menu ☰) ----------
+    // Instalado como PWA, a barra de endereço some — e junto dela qualquer
+    // jeito nativo do navegador de compartilhar o link. Web Share API abre
+    // o menu de compartilhamento do próprio celular (WhatsApp, SMS, etc.),
+    // já levando nome + profissão — não só um link seco.
+    (function compartilhar() {
+        const botao = document.getElementById('btn-compartilhar');
+        if (!botao) return;
+
+        function dadosCompartilhamento() {
+            const nome = config?.nome || cfgApp.cliente?.nome || document.title;
+            const marca = config?.slogan || cfgApp.cliente?.marca || '';
+            return {
+                title: marca ? `${nome} — ${marca}` : nome,
+                text: `Conheça o site de ${nome}`,
+                url: location.origin + location.pathname,
+            };
+        }
+
+        botao.addEventListener('click', async () => {
+            const dados = dadosCompartilhamento();
+
+            if (navigator.share) {
+                try { await navigator.share(dados); } catch { /* usuário cancelou: nada a fazer */ }
+                return;
+            }
+
+            // Sem suporte (ex: desktop) → copia o link e avisa no próprio botão
+            try {
+                await navigator.clipboard.writeText(dados.url);
+                const htmlOriginal = botao.innerHTML;
+                botao.innerHTML = '<i class="fas fa-check"></i>Link copiado!';
+                setTimeout(() => { botao.innerHTML = htmlOriginal; }, 2500);
+            } catch {
+                window.open(`https://wa.me/?text=${encodeURIComponent(dados.text + ' ' + dados.url)}`, '_blank');
+            }
+        });
     })();
 })();
