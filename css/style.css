@@ -431,6 +431,12 @@ input:focus, textarea:focus {
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 textarea { margin-bottom: 20px; resize: vertical; }
+.form-consentimento {
+    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px;
+    font-size: 0.85rem; line-height: 1.5; opacity: 0.9;
+}
+.form-consentimento input[type="checkbox"] { width: auto; flex: none; margin-top: 3px; accent-color: var(--accent); }
+.form-consentimento a { color: var(--primary); font-weight: 700; }
 .btn-submit {
     background: var(--primary); color: var(--accent);
     border: 2px solid var(--accent); padding: 18px; width: 100%;

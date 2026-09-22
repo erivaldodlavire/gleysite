@@ -503,6 +503,12 @@
             if (!lead.nome || !lead.mensagem) {
                 return mostrarFeedback('Preencha ao menos o nome e a mensagem.', 'erro');
             }
+            // LGPD: o <form> usa novalidate (validação é toda manual aqui),
+            // então o "required" do checkbox não bloqueia nada por conta
+            // própria — precisa deste checa explícita.
+            if (!$('#consentimento-lgpd')?.checked) {
+                return mostrarFeedback('Você precisa concordar com a Política de Privacidade para enviar.', 'erro');
+            }
 
             const btnWhats = $('#whats-pos-lead');
             if (btnWhats) btnWhats.style.display = 'none'; // esconde de uma tentativa anterior, se houver

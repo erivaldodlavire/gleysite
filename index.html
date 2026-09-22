@@ -233,6 +233,10 @@
                             <input type="text" placeholder="Título do Assunto" id="titulo" required>
                         </div>
                         <textarea id="mensagem" placeholder="Descreva seu caso detalhadamente..." rows="5" required></textarea>
+                        <label class="form-consentimento">
+                            <input type="checkbox" id="consentimento-lgpd" required>
+                            Li e concordo com a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>, e autorizo o uso dos meus dados para retorno deste contato.
+                        </label>
                         <button type="submit" class="btn-submit">Enviar Mensagem</button>
                         <p class="form-feedback" id="form-feedback" role="alert"></p>
                         <a href="#" id="whats-pos-lead" class="btn-whatsapp" data-evento="cta_whatsapp_pos_lead" target="_blank" rel="noopener" style="display:none; margin-top:14px;">
@@ -255,6 +259,7 @@
             <div class="social-links" id="edit-social-links-footer"></div>
             <div class="footer-credits">
                 <p id="edit-copyright">© 2026 Seu Nome. Todos os direitos reservados.</p>
+                <p><a href="privacidade.html">Política de Privacidade</a></p>
                 <p>Desenvolvido  por <a href="https://goeyes.com.br/c/eriplayoficial" target="_blank" rel="noopener">Eng.Erivaldo G (19)98920-7576</a></p>
                 <p><button type="button" class="btn-instalar-app" data-pwa-instalar hidden><i class="fas fa-download"></i> Instalar app</button></p>
             </div>
