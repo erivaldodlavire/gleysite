@@ -436,6 +436,11 @@ textarea { margin-bottom: 20px; resize: vertical; }
     font-size: 0.85rem; line-height: 1.5; opacity: 0.9;
 }
 .form-consentimento input[type="checkbox"] { width: auto; flex: none; margin-top: 3px; accent-color: var(--accent); }
+/* O texto+link precisa estar num único <span> (não solto no label): com
+   display:flex no .form-consentimento, cada nó de texto solto e o <a>
+   viravam item flex separado cada um — o texto ficava espremido numa
+   "coluna" estreita em vez de fluir normalmente por baixo do checkbox. */
+.form-consentimento span { flex: 1 1 auto; min-width: 0; }
 .form-consentimento a { color: var(--primary); font-weight: 700; }
 .btn-submit {
     background: var(--primary); color: var(--accent);
