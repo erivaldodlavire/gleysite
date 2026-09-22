@@ -138,6 +138,46 @@
         if (d.tel) setTexto('footer-fone-texto', '📞 ' + d.tel);
         if (d.nome) document.title = `${d.nome} | ${d.oab || 'Site Oficial'}`;
 
+        /* --- SEO: mantém title/description/OG/JSON-LD sincronizados com o
+           que o Admin publicou (o HTML já vem com o valor real como
+           fallback estático — isto só evita que fiquem desatualizados se
+           o cliente editar nome/slogan/telefone/redes depois). --- */
+        blindado('seo', () => {
+            const setAttr = (sel, attr, valor) => { const el = $(sel); if (el && valor) el.setAttribute(attr, valor); };
+            const marca = (cfgApp.cliente && cfgApp.cliente.marca) || '';
+            const descCurta = d.slogan || (d.sobre ? d.sobre.slice(0, 155) : '');
+
+            if (descCurta) {
+                setAttr('#site-desc', 'content', descCurta);
+                setAttr('#og-desc', 'content', descCurta);
+                setAttr('#twitter-desc', 'content', descCurta);
+            }
+            if (d.nome) {
+                const tituloOg = `${d.nome} | ${d.oab || 'Site Oficial'}`;
+                setAttr('#og-title', 'content', tituloOg);
+                setAttr('#twitter-title', 'content', tituloOg);
+                setAttr('#og-site-name', 'content', `${d.nome} ${marca}`.trim());
+            }
+
+            // JSON-LD: só os campos planos (nome, descrição, contato, redes) —
+            // endereço/horário ficam com o valor estático já correto, pois
+            // parsear texto livre de endereço em PostalAddress é frágil.
+            const ld = $('#ld-json');
+            if (ld) {
+                try {
+                    const dados = JSON.parse(ld.textContent);
+                    if (d.nome) dados.name = d.nome;
+                    if (descCurta) dados.description = descCurta;
+                    if (d.email) dados.email = d.email;
+                    if (d.whats) dados.telephone = `+${d.whats}`;
+                    if (Array.isArray(d.redes) && d.redes.length) dados.sameAs = d.redes;
+                    ld.textContent = JSON.stringify(dados);
+                } catch (erro) {
+                    console.warn('[app.js] JSON-LD não pôde ser atualizado:', erro);
+                }
+            }
+        });
+
         /* --- Identidade visual --- */
         const idv = d.identidade || {};
         if (idv.perfil) $('#edit-perfil-foto').src = idv.perfil;

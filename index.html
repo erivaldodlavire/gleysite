@@ -3,11 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="site-title">Seu Nome | Sua Profissão</title>
-    <meta name="description" id="site-desc" content="Site profissional — em breve com seus dados reais">
+    <title id="site-title">Gleyciane Araújo | Advogada OAB/SP 473.457 — Indaiatuba</title>
+    <meta name="description" id="site-desc" content="Advocacia em Indaiatuba-SP: Direito Civil, Trabalhista, Previdenciário e Penal. Atendimento consultivo e contencioso com Gleyciane Araújo, OAB/SP 473.457.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gleycianearaujoadv.com.br/" id="site-canonical">
     <link rel="icon" href="assets/logo.png" id="site-favicon">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+
+    <!-- ==================== SEO: Open Graph / Twitter Card ====================
+         Estático (funciona para bots que NÃO executam JS, como WhatsApp/
+         Facebook/Twitter). O app.js mantém isto sincronizado se o Admin
+         alterar os dados, mas o valor aqui já reflete o conteúdo real. -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Gleyciane Araújo Advocacia" id="og-site-name">
+    <meta property="og:url" content="https://gleycianearaujoadv.com.br/" id="og-url">
+    <meta property="og:title" content="Gleyciane Araújo | Advogada OAB/SP 473.457" id="og-title">
+    <meta property="og:description" content="Estratégia jurídica. Segurança para decidir. Resultados para conquistar. Direito Civil, Trabalhista, Previdenciário e Penal em Indaiatuba-SP." id="og-desc">
+    <meta property="og:image" content="https://gleycianearaujoadv.com.br/assets/logo.png" id="og-image">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gleyciane Araújo | Advogada OAB/SP 473.457" id="twitter-title">
+    <meta name="twitter:description" content="Estratégia jurídica. Segurança para decidir. Resultados para conquistar. Direito Civil, Trabalhista, Previdenciário e Penal em Indaiatuba-SP." id="twitter-desc">
+    <meta name="twitter:image" content="https://gleycianearaujoadv.com.br/assets/logo.png" id="twitter-image">
+
+    <!-- ==================== SEO: Dados estruturados (JSON-LD) ====================
+         Schema.org "Attorney" — ajuda buscadores a entender quem é a
+         profissional, endereço, telefone e redes (rich results/Google
+         Meu Negócio). O app.js atualiza os campos se o Admin mudar algo. -->
+    <script type="application/ld+json" id="ld-json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Attorney",
+        "name": "Gleyciane Araújo",
+        "alternateName": "Gleyciane Bento de Araújo",
+        "description": "Advogada OAB/SP 473.457, atuação em Direito Civil, Trabalhista, Previdenciário e Penal.",
+        "image": "https://gleycianearaujoadv.com.br/assets/perfilrosto.jpg",
+        "url": "https://gleycianearaujoadv.com.br/",
+        "telephone": "+5519995566991",
+        "email": "gleyciane_araujo@adv.oabsp.org.br",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Rua 11 de Junho, 780, sala 53 - Centro",
+            "addressLocality": "Indaiatuba",
+            "addressRegion": "SP",
+            "postalCode": "13330-050",
+            "addressCountry": "BR"
+        },
+        "openingHours": "Mo-Fr 08:00-18:00",
+        "areaServed": "Indaiatuba, SP",
+        "knowsAbout": ["Direito Previdenciário", "Direito do Trabalho", "Direito Civil", "Direito Penal"],
+        "sameAs": [
+            "https://www.youtube.com/@Adv.Gleycianearaujo",
+            "https://www.facebook.com/gleyciane.araujo.2025",
+            "https://x.com/Gleyaraujo",
+            "https://www.instagram.com/gleycianearaujo.adv/",
+            "https://www.linkedin.com/in/gleyciane-araújo-1a3b0374/",
+            "https://www.tiktok.com/@gley.araujo?lang=pt-BR"
+        ]
+    }
+    </script>
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Fontes de TODOS os temas — o theme-engine só alterna a variável CSS -->
